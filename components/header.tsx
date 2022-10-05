@@ -1,6 +1,8 @@
 import React from "react"
+import {FC} from "react"
 import NextLink from 'next/link'
 import { NavItem ,NAV_ITEMS } from "../store/headerLink"
+import type { headerProps } from '../store/headerProps'
 
 import {
   Box,
@@ -15,9 +17,9 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useBreakpointValue,
   useDisclosure,
-  Link
+  Link,
+  forwardRef
 } from "@chakra-ui/react"
 
 import {
@@ -27,24 +29,22 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons'
 
-const header = () => {
-  // eslint-disable-next-line
-  const { isOpen, onToggle } = useDisclosure();
-
+const Header =forwardRef ((props ,ref) => {
+  const {bg ,color, borderColor, toggle, open, textAlign, textColor} = props
   return (
     <Box
       zIndex={1}
       position={"fixed"}
     >
       <Flex
-        bg={useColorModeValue<string,string>('white','grey.600')}
-        color={useColorModeValue<string,string>('gray.600','white')}
+        bg={bg}
+        color={color}
         minH={'60px'}
         py = {{ base: 2 }}
         px = {{ base: 2 }}
         borderBottom = {1}
         borderStyle = {'solid'}
-        borderColor = {useColorModeValue<string,string>('gray.200','gray.900')}
+        borderColor = {borderColor}
         align={'center'}
       >
         <Flex
@@ -53,9 +53,9 @@ const header = () => {
           display = {{ base: 'flex', md:'none'}}
         >
           <IconButton
-            onClick={onToggle}
+            onClick={toggle}
             icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+              open ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
             }
             variant = {'ghost'}
             aria-label = {'Toggle Navigation'}
@@ -63,9 +63,9 @@ const header = () => {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Text
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+            textAlign={textAlign}
             fontFamily={'heading'}
-            color={useColorModeValue('gray.800','white')}
+            color={textColor}
           >
             FlowTestHead
           </Text>
@@ -106,17 +106,17 @@ const header = () => {
         </Stack>
       </Flex>
 
-      <Collapse in={isOpen} animateOpacity>
+      <Collapse in={open} animateOpacity>
         <MobileNav />
       </Collapse>
     </Box>
   )
-}
+})
 
-const DesktopNav = () =>{
-  const linkColor = useColorModeValue('gray.600','gray.200')
-  const linkHoverColor = useColorModeValue('gray.800','white')
-  const popoverContentBgColor = useColorModeValue('white','gray.800')
+const DesktopNav = () => {
+  const linkColor = useColorModeValue('gray.600', 'gray.200');
+  const linkHoverColor = useColorModeValue('gray.800', 'white');
+  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
   return (
     <Stack direction={'row'} spacing={4}>
@@ -124,19 +124,18 @@ const DesktopNav = () =>{
         <Box key={navItem.label}>
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
-              <NextLink href={navItem.href ?? '#'}>
-                <Link
-                  p={2}
-                  fontSize={'sm'}
-                  fontWeight={500}
-                  color={linkColor}
-                  _hover={{
-                    textDecoration: 'none',
-                    color: linkHoverColor,
-                  }}>
-                  {navItem.label}
-                </Link>
-              </NextLink>
+              <Link
+                p={2}
+                href={navItem.href ?? '#'}
+                fontSize={'sm'}
+                fontWeight={500}
+                color={linkColor}
+                _hover={{
+                  textDecoration: 'none',
+                  color: linkHoverColor,
+                }}>
+                {navItem.label}
+              </Link>
             </PopoverTrigger>
 
             {navItem.children && (
@@ -158,8 +157,8 @@ const DesktopNav = () =>{
         </Box>
       ))}
     </Stack>
-  )
-}
+  );
+};
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   return (
@@ -209,7 +208,7 @@ const MobileNav = () => {
   );
 };
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+export const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -259,4 +258,4 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   );
 };
 
-export default header();
+export default Header;
