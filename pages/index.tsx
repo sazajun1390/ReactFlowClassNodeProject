@@ -2,8 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import Header from '../components/header'
-import type { headerProps } from '../store/headerProps'
+import Header from '../components/Header'
 import { 
   useDisclosure, 
   useColorModeValue,
@@ -11,24 +10,7 @@ import {
 } from '@chakra-ui/react'
 
 const Home: NextPage = () => {
-  const { isOpen, onToggle } = useDisclosure();
-  const bg = useColorModeValue('white','grey.600')
-  const flexColor = useColorModeValue('gray.600','white')
-  const borderColor = useColorModeValue('gray.200','gray.900')
-  const textAlign = useBreakpointValue({ base: 'center', md: 'left' })
-  const textColor = useColorModeValue('gray.800','white')
-
-  const headerHook: headerProps = {
-    toggle: onToggle,
-    open: isOpen,
-    bg: bg,
-    flexColor: flexColor,
-    borderColor: borderColor,
-    textAlign: textAlign,
-    textColor: textColor
-  }
-
-
+  const { isOpen, onToggle } = useDisclosure()
 
   return (
     <div className={styles.container}>
@@ -41,11 +23,11 @@ const Home: NextPage = () => {
       <Header 
         toggle={onToggle}
         open={isOpen}
-        bg={bg}
-        flexColor={flexColor}
-        borderColor={borderColor}
-        textAlign={textAlign}
-        textColor={textColor} 
+        bg={useColorModeValue('white','grey.600')}
+        color={useColorModeValue('gray.600','white')}
+        borderColor={useColorModeValue('gray.200','gray.900')}
+        textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+        textColor={useColorModeValue('gray.800','white')} 
       />
       
       <main className={styles.main}>

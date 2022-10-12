@@ -18,8 +18,7 @@ import {
   PopoverContent,
   useColorModeValue,
   useDisclosure,
-  Link,
-  forwardRef
+  Link
 } from "@chakra-ui/react"
 
 import {
@@ -29,36 +28,39 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons'
 
-const Header =forwardRef ((props ,ref) => {
+const Header =(props: headerProps) => {
   const {bg ,color, borderColor, toggle, open, textAlign, textColor} = props
   return (
     <Box
-      zIndex={1}
-      position={"fixed"}
+      pos="fixed"
+      w="100%" 
+      top="0" 
+      left="0"
+      zIndex={2}
     >
       <Flex
         bg={bg}
         color={color}
         minH={'60px'}
-        py = {{ base: 2 }}
-        px = {{ base: 2 }}
-        borderBottom = {1}
-        borderStyle = {'solid'}
-        borderColor = {borderColor}
+        py={{ base: 2 }}
+        px={{ base: 4 }}
+        borderBottom={1}
+        borderStyle={'solid'}
+        borderColor={borderColor}
         align={'center'}
       >
         <Flex
-          flex = {{ base: 1, md: 'auto'}}
-          ml = {{ base: -2}}
-          display = {{ base: 'flex', md:'none'}}
+          flex={{ base: 1, md: 'auto' }}
+          ml={{ base: -2 }}
+          display={{ base: 'flex', md: 'none' }}
         >
           <IconButton
             onClick={toggle}
             icon={
               open ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
             }
-            variant = {'ghost'}
-            aria-label = {'Toggle Navigation'}
+            variant={'ghost'}
+            aria-label={'Toggle Navigation'}
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
@@ -67,42 +69,51 @@ const Header =forwardRef ((props ,ref) => {
             fontFamily={'heading'}
             color={textColor}
           >
-            FlowTestHead
+            Logo
           </Text>
 
-          <Flex display={{ base: 'none', md: 'flex'}} ml={10}>
+          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
 
         <Stack
-          flex = {{base: 1, md: 0}}
-          justify = {'flex-end'}
-          direction = {'row'}
-          spacing = {6}
-        >
-          <Button
-            as= {'a'}
-            fontSize= {'sm'}
-            fontWeight= {400}
-            variant= {'link'}
-            href= {'#'}
+          flex={{ base: 1, md: 0 }}
+          justify={'flex-end'}
+          direction={'row'}
+          spacing={6}
           >
-            Sign In
-          </Button>
-          <Button
-            display={{ base: 'none', md: 'inline-flex' }}
-            fontSize={'sm'}
-            fontWeight={600}
-            color={'white'}
-            bg={'pink.400'}
-            href={'#'}
-            _hover={{
-              bg: 'pink.300',
-            }}
+          <NextLink
+            href={'/flowEditPage'}
+            passHref
           >
-            Sign Up
-          </Button>
+            <Button
+              as={'a'}
+              fontSize={'sm'}
+              fontWeight={400}
+              variant={'link'}
+            >
+              Sign In
+            </Button>
+          </NextLink>
+          <NextLink
+            href={'/'}
+            passHref
+          >
+            <Button
+              display={{ base: 'none', md: 'inline-flex' }}
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bg={'pink.400'}
+              _hover={{
+                bg: 'pink.300',
+              }}
+              mr={2}
+            >
+              Sign Up
+            </Button>
+          </NextLink>
         </Stack>
       </Flex>
 
@@ -111,7 +122,7 @@ const Header =forwardRef ((props ,ref) => {
       </Collapse>
     </Box>
   )
-})
+}
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
