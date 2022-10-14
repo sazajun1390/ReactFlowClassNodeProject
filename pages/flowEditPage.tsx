@@ -22,8 +22,10 @@ import {
   useColorModeValue,
   useBreakpointValue
 } from '@chakra-ui/react'
+import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 
 const fLowEditPage :NextPage = () =>{
+  const { height, width } = useToGetWindowSize();
   const { isOpen, onToggle } = useDisclosure();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -32,7 +34,7 @@ const fLowEditPage :NextPage = () =>{
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   return (
-    <Box>
+    <div>
       <Head>
         <title>fLowEditPage</title>
       </Head>
@@ -48,8 +50,8 @@ const fLowEditPage :NextPage = () =>{
       />
 
       <Box
-        w="800px"
-        h="800px"
+        w={width}
+        h={height-16}
         top="16px"
       >
         <ReactFlow
@@ -65,7 +67,7 @@ const fLowEditPage :NextPage = () =>{
         </ReactFlow>
 
       </Box>
-    </Box>
+    </div>
   )
 }
 
