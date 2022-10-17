@@ -1,5 +1,5 @@
 import React from "react"
-import {FC} from "react"
+import {FC,memo} from "react"
 import NextLink from 'next/link'
 import { NavItem ,NAV_ITEMS } from "../store/headerLink"
 import type { headerProps } from '../store/headerProps'
@@ -28,7 +28,8 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons'
 
-const Header =(props: headerProps) => {
+const Header =memo(function header(props: headerProps){
+  console.log("create header")
   const {bg ,color, borderColor, toggle, open, textAlign, textColor} = props
   return (
     <Box
@@ -122,13 +123,13 @@ const Header =(props: headerProps) => {
       </Collapse>
     </Box>
   )
-}
+})
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-
+  console.log("deskNav")
   return (
     <Stack direction={'row'} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
@@ -172,6 +173,7 @@ const DesktopNav = () => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+  console.log("deskSubNav")
   return (
     <Link
       href={href}
@@ -207,6 +209,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 
 
 const MobileNav = () => {
+  console.log("MobNav")
   return (
     <Stack
       bg={useColorModeValue('white', 'gray.800')}
@@ -220,6 +223,7 @@ const MobileNav = () => {
 };
 
 export const MobileNavItem = ({ label, children, href }: NavItem) => {
+  console.log("MobNavItem")
   const { isOpen, onToggle } = useDisclosure();
 
   return (
