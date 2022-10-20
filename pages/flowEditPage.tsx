@@ -22,16 +22,20 @@ import {
   useColorModeValue,
   useBreakpointValue
 } from '@chakra-ui/react'
+import type { 
+  Edge,
+  Connection 
+} from 'reactflow'
+
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 
-const fLowEditPage :NextPage = () =>{
+const FLowEditPage :NextPage = () =>{
   const { height, width } = useToGetWindowSize();
-  const { isOpen, onToggle } = useDisclosure();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback((params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   return (
     <div>
@@ -39,15 +43,7 @@ const fLowEditPage :NextPage = () =>{
         <title>fLowEditPage</title>
       </Head>
 
-      <Header
-        toggle={onToggle}
-        open={isOpen}
-        bg={useColorModeValue('white','grey.600')}
-        color={useColorModeValue('gray.600','white')}
-        borderColor={useColorModeValue('gray.200','gray.900')}
-        textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-        textColor={useColorModeValue('gray.800','white')}
-      />
+      <Header/>
 
       <Box
         w={width}
@@ -71,4 +67,4 @@ const fLowEditPage :NextPage = () =>{
   )
 }
 
-export default fLowEditPage;
+export default FLowEditPage;

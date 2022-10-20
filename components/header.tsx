@@ -1,8 +1,7 @@
 import React from "react"
-import {FC,memo} from "react"
+import { memo } from "react"
 import NextLink from 'next/link'
 import { NavItem ,NAV_ITEMS } from "../store/headerLink"
-import type { headerProps } from '../store/headerProps'
 
 import {
   Box,
@@ -18,7 +17,11 @@ import {
   PopoverContent,
   useColorModeValue,
   useDisclosure,
+  useBreakpointValue,
   Link
+} from "@chakra-ui/react"
+import type { 
+  ResponsiveValue, 
 } from "@chakra-ui/react"
 
 import {
@@ -28,9 +31,14 @@ import {
   ChevronRightIcon,
 } from '@chakra-ui/icons'
 
-const Header =memo(function header(props: headerProps){
+const Header =memo(function Header(){
   console.log("create header")
-  const {bg ,color, borderColor, toggle, open, textAlign, textColor} = props
+  const { isOpen, onToggle } = useDisclosure()
+  const bg = useColorModeValue('white','grey.600')
+  const color = useColorModeValue('gray.600','white')
+  const borderColor = useColorModeValue('gray.200','gray.900')
+  const textColor = useColorModeValue('gray.800','white')
+  const textAlign: ResponsiveValue<any> | undefined = useBreakpointValue({ base: 'center', md: 'left' })
   return (
     <Box
       pos="fixed"
@@ -56,9 +64,9 @@ const Header =memo(function header(props: headerProps){
           display={{ base: 'flex', md: 'none' }}
         >
           <IconButton
-            onClick={toggle}
+            onClick={onToggle}
             icon={
-              open ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
             }
             variant={'ghost'}
             aria-label={'Toggle Navigation'}
@@ -118,14 +126,14 @@ const Header =memo(function header(props: headerProps){
         </Stack>
       </Flex>
 
-      <Collapse in={open} animateOpacity>
+      <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
     </Box>
   )
 })
 
-const DesktopNav = () => {
+const DesktopNav = memo(function DesktopNav(){
   const linkColor = useColorModeValue('gray.600', 'gray.200');
   const linkHoverColor = useColorModeValue('gray.800', 'white');
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
@@ -170,9 +178,9 @@ const DesktopNav = () => {
       ))}
     </Stack>
   );
-};
+})
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+const DesktopSubNav = memo(function DesktopSubNav({ label, href, subLabel }: NavItem){
   console.log("deskSubNav")
   return (
     <Link
@@ -205,10 +213,10 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       </Stack>
     </Link>
   );
-};
+});
 
 
-const MobileNav = () => {
+const MobileNav = memo(function MobileNav(){
   console.log("MobNav")
   return (
     <Stack
@@ -220,9 +228,9 @@ const MobileNav = () => {
       ))}
     </Stack>
   );
-};
+});
 
-export const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: NavItem){
   console.log("MobNavItem")
   const { isOpen, onToggle } = useDisclosure();
 
@@ -271,6 +279,6 @@ export const MobileNavItem = ({ label, children, href }: NavItem) => {
       </Collapse>
     </Stack>
   );
-};
+});
 
 export default Header;

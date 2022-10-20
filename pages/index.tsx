@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react'
 
 const Home: NextPage = () => {
-  const { isOpen, onToggle } = useDisclosure()
 
   return (
     <div className={styles.container}>
@@ -20,15 +19,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header 
-        toggle={onToggle}
-        open={isOpen}
-        bg={useColorModeValue('white','grey.600')}
-        color={useColorModeValue('gray.600','white')}
-        borderColor={useColorModeValue('gray.200','gray.900')}
-        textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-        textColor={useColorModeValue('gray.800','white')} 
-      />
+      <Header/>
       
       <main className={styles.main}>
         <h1 className={styles.title}>
