@@ -28,12 +28,14 @@ import type {
 } from 'reactflow'
 
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
+import { useEditorDisclojure } from '../recoil/atoms/EditerDrawerState'
 
 const FLowEditPage :NextPage = () =>{
   const { height, width } = useToGetWindowSize();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
 
   const onConnect = useCallback((params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 

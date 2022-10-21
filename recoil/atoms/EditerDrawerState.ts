@@ -1,45 +1,71 @@
-import { atom ,useRecoilValue, useSetRecoilState, useRecoilState} from "recoil";
-import { useCallback } from "react";
+import { atom, useRecoilValue, useSetRecoilState } from "recoil";
+import { useCallback, useId } from "react";
 import { useCallbackRef } from "@chakra-ui/react";
+import type { UseDisclosureProps } from "@chakra-ui/react";
 
-const EditorDisclojureState = atom<boolean>({
+export const EditorDisclojureState = atom<boolean>({
   key: 'EditorDisclojureState',
   default: false
 })
 
+export const useEditorDisclojure = (props: UseDisclosureProps = {}) => {
 
-const EditorIsOpen = (): boolean => {
-  return useRecoilValue(EditorDisclojureState);
-}
+  const {
+    onClose: onCloseProp,
+    onOpen: onOpenProp,
+    isOpen: isOpenProp,
+    id: idProp,
+  } = props
 
-const EditorOnOpen = (): void=> {
-  const setState = useSetRecoilState(EditorDisclojureState);
-  useCallback(
-    () => { setState(true) },[setState]
-  );
-}
+  const handleOpen = useCallbackRef(onOpenProp)
+  const handleClose = useCallbackRef(onCloseProp)
 
-const EditorOnClose = (): void =>{
-  const setState = useSetRecoilState(EditorDisclojureState);
-  useCallback(
-    ()=>setState(false),[setState]
-  )
-}
+  const isOpen = useRecoilValue(EditorDisclojureState);
+  const isControlled = isOpenProp !== undefined
 
-const EditorOnToggele = ():void => {
-  const [state,setState] = useRecoilState(EditorDisclojureState);
-  useCallback(()=>{
-    if(state == true)
-      setState(false)
-    else
-      setState(true);
-  },[state,setState])
-}
+  const uid = useId()
+  const id = idProp ?? `disclosure-${uid}`
 
-export {
-  EditorDisclojureState,
-  EditorIsOpen,
-  EditorOnClose,
-  EditorOnOpen,
-  EditorOnToggele,
+  const EditorIsOpen = isOpen
+  
+  const EditorOnOpen = (): void=> {
+    const setState = useSetRecoilState(EditorDisclojureState);
+    useCallback(
+      () => {
+        if (!isControlled) 
+          setState(true)
+          
+        handleOpen?.()
+      },[setState,handleOpen]
+    );
+  }
+  
+  const EditorOnClose = (): void =>{
+    const setState = useSetRecoilState(EditorDisclojureState);
+    useCallback(
+      ()=>{
+        if(!isControlled)
+          setState(false)
+
+        handleClose?.()
+      },[setState,handleClose]
+    )
+  }
+  
+  const EditorOnToggele = ():void => {
+    const state = useRecoilValue(EditorDisclojureState);
+    useCallback(()=>{
+      if(state == true)
+        EditorOnClose()
+      else
+        EditorOnOpen()
+    },[state,EditorOnClose,EditorOnOpen])
+  }
+
+  return {
+    EditorIsOpen,
+    EditorOnClose,
+    EditorOnOpen,
+    EditorOnToggele,
+  }
 }

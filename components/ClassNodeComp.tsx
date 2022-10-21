@@ -8,6 +8,8 @@ import {
   useDisclosure
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
+import { useEditorDisclojure } from '../recoil/atoms/EditerDrawerState';
+
 
 const EditNode = ({ value, handleId, nodeId }) => {
   
@@ -25,7 +27,7 @@ const ClassNodeComp: FC = (props) => {
     toObject
   } = useReactFlow();
   const store = useStoreApi();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
   return (
     <Box>
       <Box>
