@@ -20,7 +20,8 @@ import {
   Box,
   useDisclosure, 
   useColorModeValue,
-  useBreakpointValue
+  useBreakpointValue,
+  Drawer
 } from '@chakra-ui/react'
 import type { 
   Edge,
@@ -46,7 +47,12 @@ const FLowEditPage :NextPage = () =>{
       </Head>
 
       <Header/>
+      <Drawer
+        isOpen={EditorIsOpen}
+        onClose={EditorOnClose}
+      >
 
+      </Drawer>
       <Box
         w={width}
         h={height-16}
