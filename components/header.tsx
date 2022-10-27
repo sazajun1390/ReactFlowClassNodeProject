@@ -30,6 +30,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons'
+import { useDisclojureStore } from "../zustand/EditorDIscrojure"
 
 const Header =memo(function Header(){
   console.log("create header")
@@ -39,6 +40,7 @@ const Header =memo(function Header(){
   const borderColor = useColorModeValue('gray.200','gray.900')
   const textColor = useColorModeValue('gray.800','white')
   const textAlign: ResponsiveValue<any> | undefined = useBreakpointValue({ base: 'center', md: 'left' })
+  const EditorOnOpen = useDisclojureStore((state)=>state.onOpen)
   return (
     <Box
       pos="fixed"
@@ -101,6 +103,7 @@ const Header =memo(function Header(){
               fontSize={'sm'}
               fontWeight={400}
               variant={'link'}
+              onClick={EditorOnOpen}
             >
               Sign In
             </Button>
