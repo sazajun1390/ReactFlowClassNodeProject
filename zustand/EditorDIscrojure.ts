@@ -1,4 +1,6 @@
-import create from "zustand"
+import { NodeProps } from "reactflow";
+import create from "zustand/react";
+import { ClassNode, ClassNodeData } from "../type/ClassNodeComp";
 
 type disclosure = {
   isOpen:  boolean;

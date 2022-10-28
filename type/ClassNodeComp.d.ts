@@ -17,23 +17,11 @@ interface FunctionObj {
   type: string
 }
 
-interface ClassNode1 {
-  id: string,
-  type: string,
-  data: ClassNodeData,
-  children: ReactNode[]
-}
-
 type ClassNode = Node<ClassNodeData>
-
-interface ClassNodeProps extends NodeTypes{
-  data:ClassNodeData
-}
 
 export {
   ClassNodeData,
   VariableObj,
   FunctionObj,
-  ClassNode1,
   ClassNode
 }

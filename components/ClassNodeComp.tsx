@@ -10,6 +10,7 @@ import {
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode} from '../type/ClassNodeComp'
 import { useDisclojureStore } from '../zustand/EditorDIscrojure';
+import { useEditData } from '../zustand/EditData';
 
 const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
   const { id, data } = props
@@ -25,7 +26,9 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
   } = useReactFlow();
   const store = useStoreApi();
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
-  const EditorOnOpen = useDisclojureStore((state)=>state.onOpen)
+  const EditorOnOpen = useDisclojureStore(useCallback(state => state.onOpen , []));
+  const setClassNodeData = useEditData(state => state.setData(props))
+
   return (
     <>
       <Stack p={3} bg='white' border='1px' borderColor='gray.800' borderRadius='10'>
@@ -70,7 +73,13 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
           </Box>
         </Box>
         <Box>
-          <Button leftIcon ={<EditIcon/>} onClick={EditorOnOpen}></Button>
+          <Button 
+            leftIcon ={<EditIcon/>} 
+            onClick={() => { 
+              EditorOnOpen()
+              setClassNodeData
+            }}
+          ></Button>
         </Box> 
         <Handle type="target" position ={Position.Left} />
         <Handle type='source' position ={Position.Left} />

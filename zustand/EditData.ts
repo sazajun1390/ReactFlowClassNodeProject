@@ -12,13 +12,13 @@ type sendData = {
 export const useEditData = create<sendData>( set =>({
   id: '',
   data: null,
-  setData: (NodeData:NodeProps<ClassNode>) => set(state =>{
+  setData: (NodeData:NodeProps<ClassNode>) => set(() =>{
     return {
       id: NodeData.id,
       data: NodeData.data.data
     }
   }),
-  resetData: () => set(state => {
+  resetData: () => set(() => {
     return {
       id: '',
       data: null
