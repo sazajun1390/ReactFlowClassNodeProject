@@ -1,27 +1,27 @@
 import { NodeProps } from "reactflow";
-import create from "zustand/react";
+import create from "zustand";
 import { ClassNode, ClassNodeData } from "../type/ClassNodeComp";
   
 type sendData = {
   id: string,
-  data: ClassNodeData | null,
-  setData: (NodeData:NodeProps<ClassNode>) => void;
+  data: Object,
+  setData: (id: string, data: ClassNode) => void;
   resetData: () => void;
 }
 
-export const useEditData = create<sendData>( set =>({
+export const useEditData = create<sendData>( (set) =>({
   id: '',
-  data: null,
-  setData: (NodeData:NodeProps<ClassNode>) => set(() =>{
+  data: {},
+  setData: (id, data) => set(() =>{
     return {
-      id: NodeData.id,
-      data: NodeData.data.data
+      id: id,
+      data: data
     }
   }),
   resetData: () => set(() => {
     return {
       id: '',
-      data: null
+      data: {}
     }
   })
 }))

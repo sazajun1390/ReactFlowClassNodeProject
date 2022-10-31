@@ -1,5 +1,5 @@
 import { NodeProps } from "reactflow";
-import create from "zustand/react";
+import create from "zustand";
 import { ClassNode, ClassNodeData } from "../type/ClassNodeComp";
 
 type disclosure = {

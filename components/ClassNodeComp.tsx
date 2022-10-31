@@ -14,31 +14,23 @@ import { useEditData } from '../zustand/EditData';
 
 const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
   const { id, data } = props
-  const { 
-    setNodes, 
-    getNodes, 
-    addNodes, 
-    addEdges, 
-    getEdge, 
-    getEdges, 
-    getNode,
-    toObject
-  } = useReactFlow();
   const store = useStoreApi();
-  //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
-  const EditorOnOpen = useDisclojureStore(useCallback(state => state.onOpen , []));
-  const setClassNodeData = useEditData(state => state.setData(props))
+  //const [ idState, setId ] = useState(id);
 
+  //const EditorOnOpen = useDisclojureStore.subscribe( ()=>{}, state => state.onOpen);
+  const EditorOnOpen = useDisclojureStore.getState().onOpen;
+  //const setClassNodeData = () => useEditData(state => state.setData(id));
+  const setClassNodeData = () => useEditData.getState().setData(id,data);
   return (
     <>
-      <Stack p={3} bg='white' border='1px' borderColor='gray.800' borderRadius='10'>
+      <Stack p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' >
         <Box>
           <Box>
             {data.className}
           </Box>
           <Divider />
           <Box>
-            {data.data.functions.map((items:FunctionObj, index: Key)=>{
+            {useCallback(data.functions.map((items:FunctionObj, index: Key)=>{
               console.log(items)
               return(
               <HStack spacing={6} justify='center' key={index}>
@@ -52,9 +44,9 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
                   :{items.type}
                 </Box>
               </HStack>)
-            })}
+            }),[data])}
             <Divider/>
-            {data.data.variables.map((items:VariableObj, index: Key)=>{
+            {useCallback(data.variables.map((items:VariableObj, index: Key)=>{
               console.log(items)
                 return(
                   <HStack spacing={6} justify='center' key={index}>
@@ -68,7 +60,7 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
                       :{items.type}
                     </Box>
                   </HStack>
-            )})}
+            )}),[data])}
             <Divider/>
           </Box>
         </Box>
@@ -77,7 +69,7 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
             leftIcon ={<EditIcon/>} 
             onClick={() => { 
               EditorOnOpen()
-              setClassNodeData
+              setClassNodeData()
             }}
           ></Button>
         </Box> 
