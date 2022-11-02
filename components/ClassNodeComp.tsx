@@ -8,11 +8,11 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
-import type { VariableObj, FunctionObj, ClassNode} from '../type/ClassNodeComp'
+import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
 import { useDisclojureStore } from '../zustand/EditorDIscrojure';
 import { useEditData } from '../zustand/EditData';
 
-const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
+const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const { id, data } = props
   const store = useStoreApi();
   //const [ idState, setId ] = useState(id);
@@ -30,7 +30,7 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
           </Box>
           <Divider />
           <Box>
-            {useCallback(data.functions.map((items:FunctionObj, index: Key)=>{
+            {data.functions.map((items:FunctionObj, index: Key)=>{
               console.log(items)
               return(
               <HStack spacing={6} justify='center' key={index}>
@@ -44,9 +44,9 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
                   :{items.type}
                 </Box>
               </HStack>)
-            }),[data])}
+            })}
             <Divider/>
-            {useCallback(data.variables.map((items:VariableObj, index: Key)=>{
+            {data.variables.map((items:VariableObj, index: Key)=>{
               console.log(items)
                 return(
                   <HStack spacing={6} justify='center' key={index}>
@@ -60,7 +60,7 @@ const ClassNodeComp: FC<NodeProps<ClassNode>> = ( props ) => {
                       :{items.type}
                     </Box>
                   </HStack>
-            )}),[data])}
+            )})}
             <Divider/>
           </Box>
         </Box>

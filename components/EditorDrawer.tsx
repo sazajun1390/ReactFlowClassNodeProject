@@ -29,10 +29,13 @@ const EditDrawer:FC = (props) => {
     EditorOnClose: state.onClose
   }),shallow)
 
-  const { editId, editData } = useEditData( state => ({
+  const { editId, editClassName, editFuncs, editVars } = useEditData( state => ({
     editId: state.id,
-    editData: state.data
+    editClassName: state.className,
+    editFuncs: state.functions,
+    editVars: state.variables
   }))
+
   return (
     <Drawer
       isOpen={EditorIsOpen}

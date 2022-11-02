@@ -4,21 +4,25 @@ import ClassNodeComp from "../components/ClassNodeComp";
 import type { FunctionObj, VariableObj, ClassNode} from "../type/ClassNodeComp";
 
 const Variable1: VariableObj = {
+  VarId:1,
   variableName: 'Num',
   type: 'Integer'
 }
 
 const FunctionData1: FunctionObj = {
+  funcId:1,
   functionName: 'Calc',
   type: 'Integer'
 }
 
 const FunctionData2: FunctionObj = {
+  funcId:2,
   functionName: 'Calc2',
   type: 'Integer'
 }
 
 const Variable2: VariableObj = {
+  VarId:2,
   variableName: 'Num2',
   type: 'Integer'
 }
