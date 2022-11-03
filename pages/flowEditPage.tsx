@@ -15,7 +15,7 @@ import { useCallback,useMemo } from 'react'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Header from '../components/header'
+import Header from '../components/Header'
 import { 
   Box,
   useColorModeValue,

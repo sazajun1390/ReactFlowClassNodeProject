@@ -1,7 +1,7 @@
-import { NodeProps } from "reactflow";
 import create from "zustand";
-import { ClassNode, ClassNodeData, FunctionObj, VariableObj } from "../type/ClassNodeComp";
+import { ClassNodeData, FunctionObj, VariableObj } from "../type/ClassNodeComp";
 import { devtools } from "zustand/middleware";
+import { ClassNames } from "@emotion/react";
   
 /*type sendData = {
   id: string,
@@ -33,9 +33,12 @@ type sendData = {
   variables: VariableObj[],
   functions: FunctionObj[],
   setData: (id: string, data: ClassNodeData) => void;
+  reWriteClassName: (setName: string) => void;
+  reWriteVariables: (variable: VariableObj) => void;
+  reWriteFunctions: (func: FunctionObj) => void;
   resetData: () => void;
 }
-
+//reWriteFunctions: (func: FunctionObj) => void;
 
 export const useEditData = create( devtools<sendData>((set) =>({
   id: '',
@@ -48,6 +51,21 @@ export const useEditData = create( devtools<sendData>((set) =>({
       className: data.className,
       variables: data.variables,
       functions: data.functions
+    }
+  }),
+  reWriteClassName: (setName) => set(() => {
+    return {
+      className: setName
+    }
+  }),
+  reWriteVariables: (variable) => set(()=>{
+    return {
+
+    }
+  }),
+  reWriteFunctions: (func) => set(()=>{
+    return {
+
     }
   }),
   resetData: () => set(() => {

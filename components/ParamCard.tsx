@@ -12,11 +12,11 @@ import {
   StackDivider,
   HStack
 } from '@chakra-ui/react'
-import { FuncCard, FunctionObj, VarCard, VariableObj } from '../type/ClassNodeComp';
+import { FuncCard, VarCard, } from '../type/ClassNodeComp';
 import { CloseIcon, EditIcon } from '@chakra-ui/icons';
 
 const paramCard: FC< FuncCard | VarCard > = (props) =>{
-  
+  const {setter, ...Obj} = props;
   let contxt: JSX.Element;
   
   if('variableName' in props){
@@ -26,7 +26,9 @@ const paramCard: FC< FuncCard | VarCard > = (props) =>{
           <Box>{props.VarId}. </Box>
           <Button 
             rightIcon={<CloseIcon/>}
-            onClick={()=>{}}
+            onClick={()=>{
+
+            }}
           >
           </Button>
         </HStack>
@@ -36,6 +38,8 @@ const paramCard: FC< FuncCard | VarCard > = (props) =>{
           <Button 
             leftIcon ={<EditIcon/>} 
             onClick={() => { 
+              //setter({state:Obj,type:'variables'});
+              setter(Obj)
             }}
           ></Button>
         </Box>
@@ -44,7 +48,7 @@ const paramCard: FC< FuncCard | VarCard > = (props) =>{
     contxt = 
       <>
         <HStack>
-          <Box>{props.funcId}. </Box>
+          <Box>{props.FuncId}. </Box>
           <Button 
             rightIcon={<CloseIcon/>}
             onClick={()=>{}}
@@ -57,6 +61,8 @@ const paramCard: FC< FuncCard | VarCard > = (props) =>{
           <Button 
             leftIcon ={<EditIcon/>} 
             onClick={() => { 
+              //setter({state:Obj,type:'functions'});
+              setter(Obj)
             }}
           ></Button>
         </Box>

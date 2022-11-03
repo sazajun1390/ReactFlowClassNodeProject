@@ -10,13 +10,13 @@ const Variable1: VariableObj = {
 }
 
 const FunctionData1: FunctionObj = {
-  funcId:1,
+  FuncId:1,
   functionName: 'Calc',
   type: 'Integer'
 }
 
 const FunctionData2: FunctionObj = {
-  funcId:2,
+  FuncId:2,
   functionName: 'Calc2',
   type: 'Integer'
 }
