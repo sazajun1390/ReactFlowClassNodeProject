@@ -55,7 +55,7 @@ const EditDrawer:FC = (props) => {
   )
 }*/
 
-import { FC, useEffect, Key, useState, memo,useCallback,useReducer} from 'react'
+import { FC, Key, useState, memo,useCallback,useReducer,Dispatch,SetStateAction} from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import shallow from 'zustand/shallow'
 import { useDisclojureStore } from '../zustand/EditorDIscrojure'
@@ -72,7 +72,11 @@ import {
   Button,
   useDisclosure,
   Collapse,
-  Box
+  Box,
+  DrawerBody,
+  DrawerHeader,
+  IconButton,
+  Flex
 } from '@chakra-ui/react'
 import { useEditData } from '../zustand/EditData'
 import { ClassNodeData, formObjectReducerState, formObjectType, FunctionObj, VariableObj } from '../type/ClassNodeComp'
@@ -81,16 +85,18 @@ import Slider from "react-slick";
 import type { Settings } from 'react-slick'
 import ParamCard from './ParamCard'
 import { memoryUsage } from 'process'
+import type { Node } from 'reactflow'
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { AddIcon } from '@chakra-ui/icons'
 
-const EditDrawer:FC = () => {
+export interface EditDrawerProps {
+  setNodes:Dispatch<SetStateAction<Node<any>[]>>
+}
 
-  const cardSetting:Settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-  }
-  const { setNodes } = useReactFlow();
+const EditDrawer:FC<EditDrawerProps> = (props) => {
+  const { setNodes } = props;
+  
   const {
     handleSubmit,
     register,
@@ -110,9 +116,34 @@ const EditDrawer:FC = () => {
     editFuncs: state.functions,
     editVars: state.variables
   }),shallow)
+  const cardSetting:Settings = {
+    dots: true,
+    infinite: true,
+    speed: 500
+  }
+  //Cardの枚数制御
+  const [funcCardState,setFuncCardState] = useState<Settings>({
+    ...cardSetting,
+    slidesToShow: 2,
+    slidesToScroll: 1 
+  });
+  const [varCardState,setVarCardState] =useState<Settings>({
+    ...cardSetting,
+    slidesToShow: 2,
+    slidesToScroll: 1
+  });
 
-  
   useCallback(() => {
+    setFuncCardState(state=>({
+      ...state,
+      slidesToShow: editFuncs.length-1,
+      slidesToScroll: editFuncs.length-1 
+    }))
+    setVarCardState(state=>({
+      ...state,
+      slidesToShow: editVars.length-1,
+      slidesToScroll: editVars.length-1
+    }))
     setNodes((nodes)=>
       nodes.map(node=>{
         if(node.id === editId){
@@ -124,62 +155,64 @@ const EditDrawer:FC = () => {
         }
       return node;}
     ))
-  }, [editClassName,editVars,editFuncs,editId,setNodes])
+  }, [editClassName,editVars,editFuncs,editId,setNodes,setFuncCardState,setVarCardState])
 
   const { isOpen, onToggle } = useDisclosure();
-  const [ formData, setFormData ] = useState<formObjectType>(null);
+  //const [ formData, setFormData ] = useState<formObjectType>(null);
   
   const editReducer = (state: formObjectType, act: formObjectReducerState) => {
     switch (act.type) {
       case "variables":
-        return state=act.state;
+        return act.state;
       case "functions":
-        return state=act.state;
+        return act.state;
       default:
-        return state=null;
+        return null;
     }
   }
 
-  //const [ formData, setFormData ] = useReducer(editReducer,null);
+  const [ formData, setFormData ] = useReducer(editReducer,null);
   
-  
-  useEffect(()=>{
-    
-  },[formData])
-  
-
   return (
     <Drawer
       isOpen={EditorIsOpen}
       onClose={EditorOnClose}
       placement='right'
+      size={'sm'}
     >
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
-        <Box>
+        <DrawerHeader>
+          Editor
+        </DrawerHeader>
+        <DrawerBody>
+          <Box>
 
-        </Box>
-        <Slider {...cardSetting}>
-          {editFuncs.map((items:FunctionObj, index: Key)=>{
-            console.log(items)
-            return(
-              <ParamCard functionName={items.functionName} type={items.type} FuncId={items.FuncId} setter={setFormData} key={index}/>
-            )
-          })}
-        </Slider>
-        <Collapse>
-        </Collapse>
+          </Box>
+          <Box my={5}>
+            <Slider {...funcCardState}>
+              {editFuncs.map((items:FunctionObj, index: Key)=>{
+                console.log(items)
+                return(
+                  <ParamCard functionName={items.functionName} type={items.type} FuncId={items.FuncId} setter={setFormData} key={index}/>
+                )
+              })}
+              <IconButton colorScheme='teal' aria-label='addFunctions' icon={<AddIcon />}/>
+            </Slider>
+          </Box>
 
-        <Slider {...cardSetting}>
-          {editVars.map((items:VariableObj, index: Key)=>{
-            return(
-              <ParamCard variableName={items.variableName} type={items.type} VarId={items.VarId} setter={setFormData} key={index} />
-            )
-          })}
-        </Slider>
-        <Collapse>
-        </Collapse>
+          <Box mt={8}>
+            <Slider {...varCardState}>
+              {editVars.map((items:VariableObj, index: Key)=>{
+                return(
+                  <ParamCard variableName={items.variableName} type={items.type} VarId={items.VarId} setter={setFormData} key={index} />
+                )
+              })}
+              <IconButton colorScheme='teal' aria-label='addVariables' icon={<AddIcon />}/>
+            </Slider>
+          </Box>
+        </DrawerBody>
       </DrawerContent>
     </Drawer>
   )

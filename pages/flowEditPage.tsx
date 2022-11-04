@@ -36,6 +36,7 @@ import shallow from "zustand/shallow"
 import { TestNode } from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodeComp'
 import { useForm } from 'react-hook-form'
+import EditorDrawer from '../components/EditorDrawer'
 
 
 const FLowEditPage :NextPage = () =>{
@@ -63,17 +64,8 @@ const FLowEditPage :NextPage = () =>{
       </Head>
 
       <Header/>
-      <Drawer
-        isOpen={EditorIsOpen}
-        onClose={EditorOnClose}
-        placement='right'
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-
-        </DrawerContent>
-      </Drawer>
+      <EditorDrawer setNodes={setNodes}/>
+      
       <Box
         w={width}
         h={height-16}
@@ -97,3 +89,17 @@ const FLowEditPage :NextPage = () =>{
 }
 
 export default FLowEditPage;
+
+/*
+  <Drawer
+        isOpen={EditorIsOpen}
+        onClose={EditorOnClose}
+        placement='right'
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+
+        </DrawerContent>
+      </Drawer>
+*/

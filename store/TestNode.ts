@@ -21,9 +21,21 @@ const FunctionData2: FunctionObj = {
   type: 'Integer'
 }
 
+const FunctionData3: FunctionObj = {
+  FuncId:3,
+  functionName: 'Calc3',
+  type: 'Integer'
+}
+
 const Variable2: VariableObj = {
   VarId:2,
   variableName: 'Num2',
+  type: 'Integer'
+}
+
+const Variable3: VariableObj = {
+  VarId:3,
+  variableName: 'Num3',
   type: 'Integer'
 }
 
@@ -33,8 +45,8 @@ const testClass: ClassNode = {
   position: { x:0, y:0},
   data: {
     className: 'calcNum',
-    variables: [Variable1,Variable2],
-    functions: [FunctionData1,FunctionData2]
+    variables: [Variable1,Variable2,Variable3],
+    functions: [FunctionData1,FunctionData2,FunctionData3]
   }
 }
 

@@ -13,13 +13,13 @@ interface VariableObj {
   type: string
 }
 
-interface VarCard extends VariableObj {
-  setter: Dispatch<SetStateAction<VariableObj | FunctionObj | null>>
-}
-
 /*interface VarCard extends VariableObj {
-  setter: Dispatch<formObjectReducerState>
+  setter: Dispatch<SetStateAction<VariableObj | FunctionObj | null>>
 }*/
+
+interface VarCard extends VariableObj {
+  setter: Dispatch<formObjectReducerState>
+}
 
 
 interface FunctionObj {
@@ -28,13 +28,14 @@ interface FunctionObj {
   type: string
 }
 
-interface FuncCard extends FunctionObj {
+/*interface FuncCard extends FunctionObj {
   setter: Dispatch<SetStateAction<VariableObj | FunctionObj | null>>
+}*/
+
+interface FuncCard extends FunctionObj {
+  setter: Dispatch<formObjectReducerState>
 }
 
-/*interface FuncCard extends FunctionObj {
-  setter: Dispatch<formObjectReducerState>
-}*/
 type ClassNode = Node<ClassNodeData>
 
 type formObjectType = null | FunctionObj | VariableObj
