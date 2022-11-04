@@ -10,7 +10,8 @@ import {
   Stack,
   Button,
   StackDivider,
-  HStack
+  HStack,
+  IconButton
 } from '@chakra-ui/react'
 import { FuncCard, VarCard, } from '../type/ClassNodeComp';
 import { CloseIcon, EditIcon } from '@chakra-ui/icons';
@@ -22,49 +23,57 @@ const paramCard: FC< FuncCard | VarCard > = (props) =>{
   if('variableName' in props){
     contxt = 
       <>
-        <HStack>
+        <HStack justify={'space-between'} pb={2}>
           <Box>{props.VarId}. </Box>
-          <Button 
-            rightIcon={<CloseIcon/>}
+          <IconButton 
+            icon={<CloseIcon/>}
+            aria-label='delete varCard'
+            size={'sm'}
             onClick={()=>{
 
             }}
           >
-          </Button>
-        </HStack>
+          </IconButton>
+        </HStack >
         <Box>VarName: {props.variableName}</Box>
         <Box>type: {props.type}</Box>
         <Box>
-          <Button 
-            leftIcon ={<EditIcon/>} 
+          <IconButton 
+            icon ={<EditIcon/>}
+            aria-label='edit variable' 
+            size={'sm'}
             onClick={() => { 
               setter({state:Obj,type:'variables'});
               //setter(Obj)
             }}
-          ></Button>
+          ></IconButton>
         </Box>
       </>
   }else{
     contxt = 
       <>
-        <HStack>
+        <HStack justify={'space-between'} pb={2}>
           <Box>{props.FuncId}. </Box>
-          <Button 
-            rightIcon={<CloseIcon/>}
+          <IconButton
+            aria-label='delete funcCard'
+            icon={<CloseIcon/>}
+            size={'sm'}
             onClick={()=>{}}
           >
-          </Button>
+          </IconButton>
         </HStack>
         <Box>FuncName: {props.functionName}</Box>
         <Box>type: {props.type}</Box>
         <Box>
-          <Button 
-            leftIcon ={<EditIcon/>} 
+          <IconButton 
+            aria-label='edit Function'
+            icon ={<EditIcon/>} 
+            size={'sm'}
             onClick={() => { 
               setter({state:Obj,type:'functions'});
               //setter(Obj)
             }}
-          ></Button>
+          ></IconButton>
         </Box>
       </>
   }

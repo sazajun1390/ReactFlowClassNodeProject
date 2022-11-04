@@ -50,4 +50,15 @@ const testClass: ClassNode = {
   }
 }
 
-export const TestNode:Array<any> = [testClass] 
+const testClass2: ClassNode = {
+  id: '1',
+  type: 'custom',
+  position: { x:30, y:30},
+  data: {
+    className: 'calcNum',
+    variables: [Variable1,Variable1,Variable1],
+    functions: [FunctionData3,FunctionData3,FunctionData3]
+  }
+}
+
+export const TestNode:Array<any> = [testClass,testClass2] 

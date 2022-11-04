@@ -80,7 +80,6 @@ import {
 } from '@chakra-ui/react'
 import { useEditData } from '../zustand/EditData'
 import { ClassNodeData, formObjectReducerState, formObjectType, FunctionObj, VariableObj } from '../type/ClassNodeComp'
-import { useReactFlow } from 'react-flow-renderer'
 import Slider from "react-slick";
 import type { Settings } from 'react-slick'
 import ParamCard from './ParamCard'
@@ -118,31 +117,29 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
   }),shallow)
   const cardSetting:Settings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500
   }
   //Cardの枚数制御
   const [funcCardState,setFuncCardState] = useState<Settings>({
     ...cardSetting,
     slidesToShow: 2,
-    slidesToScroll: 1 
+    slidesToScroll: 2 
   });
   const [varCardState,setVarCardState] =useState<Settings>({
     ...cardSetting,
     slidesToShow: 2,
-    slidesToScroll: 1
+    slidesToScroll: 2
   });
 
   useCallback(() => {
     setFuncCardState(state=>({
       ...state,
-      slidesToShow: editFuncs.length-1,
-      slidesToScroll: editFuncs.length-1 
+      slidesToScroll: editFuncs.length-2 
     }))
     setVarCardState(state=>({
       ...state,
-      slidesToShow: editVars.length-1,
-      slidesToScroll: editVars.length-1
+      slidesToScroll: editVars.length-2
     }))
     setNodes((nodes)=>
       nodes.map(node=>{
@@ -190,7 +187,7 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
           <Box>
 
           </Box>
-          <Box my={5}>
+          <Box mt={10} mb={25}>
             <Slider {...funcCardState}>
               {editFuncs.map((items:FunctionObj, index: Key)=>{
                 console.log(items)
@@ -201,8 +198,9 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
               <IconButton colorScheme='teal' aria-label='addFunctions' icon={<AddIcon />}/>
             </Slider>
           </Box>
-
-          <Box mt={8}>
+          <Collapse>
+          </Collapse>
+          <Box mb={10} mt={25}>
             <Slider {...varCardState}>
               {editVars.map((items:VariableObj, index: Key)=>{
                 return(
