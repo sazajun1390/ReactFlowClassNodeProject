@@ -28,22 +28,21 @@ const ParamCard: FC< FuncCard | VarCard > = (props) =>{
   const {setter, ...Obj} = props;
   const [typeState] = useState(('variableName' in props)? 'variables' : 'functions');
   // 'variables' 'functions'
-  const [cardState] = useState<cardProps>(('variableName' in props)?
-  {
-    Name: 'VarName: '+ props.variableName,
-    id: props.VarId,
-    type:'type: '+ props.type,
-    closeAriaLabel:'delete varCard',
-    editAriaLabel:''
-  }
-  :
-  {
-    Name: 'FuncName: '+ props.functionName,
-    id:props.FuncId,
-    type:'type: '+ props.type,
-    closeAriaLabel:'delete funcCard',
-    editAriaLabel:''
-  })
+  const [cardState] = useState<cardProps>(
+    ('variableName' in props)?{
+      Name: 'VarName: '+ props.variableName,
+      id: props.VarId,
+      type:'type: '+ props.type,
+      closeAriaLabel:'delete varCard',
+      editAriaLabel:''
+    }:{
+      Name: 'FuncName: '+ props.functionName,
+      id:props.FuncId,
+      type:'type: '+ props.type,
+      closeAriaLabel:'delete funcCard',
+      editAriaLabel:''
+    }
+  )
 
   return(
     <Box>
