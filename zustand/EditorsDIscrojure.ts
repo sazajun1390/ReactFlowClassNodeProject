@@ -9,6 +9,10 @@ type disclosure = {
   onOpen: () => void;
 }
 
+type editorDiscrojureKey = {
+  
+}
+
 export const useDisclojureStore = create(devtools<disclosure>((set) => ({
   isOpen: false,
   onClose: () => set({isOpen: false}),

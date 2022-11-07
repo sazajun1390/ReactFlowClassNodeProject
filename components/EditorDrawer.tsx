@@ -58,7 +58,7 @@ const EditDrawer:FC = (props) => {
 import { FC, Key, useState, memo,useCallback,useReducer,Dispatch,SetStateAction} from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import shallow from 'zustand/shallow'
-import { useDisclojureStore } from '../zustand/EditorDIscrojure'
+import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import { 
   Drawer, 
   DrawerContent, 
@@ -118,7 +118,7 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
   const cardSetting:Settings = {
     dots: true,
     infinite: false,
-    speed: 500
+    speed: 500,
   }
   //Cardの枚数制御
   const [funcCardState,setFuncCardState] = useState<Settings>({
@@ -169,7 +169,8 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
   }
 
   const [ formData, setFormData ] = useReducer(editReducer,null);
-  
+  //functionName={items.functionName} type={items.type} FuncId={items.FuncId}
+  //variableName={items.variableName} type={items.type} VarId={items.VarId} 
   return (
     <Drawer
       isOpen={EditorIsOpen}
@@ -192,10 +193,14 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
               {editFuncs.map((items:FunctionObj, index: Key)=>{
                 console.log(items)
                 return(
-                  <ParamCard functionName={items.functionName} type={items.type} FuncId={items.FuncId} setter={setFormData} key={index}/>
+                  <ParamCard setter={setFormData} {...items} key={index}/>
                 )
               })}
-              <IconButton colorScheme='teal' aria-label='addFunctions' icon={<AddIcon />}/>
+              <Box>
+                <Box justifyContent={'center'}>
+                  <IconButton colorScheme='teal' aria-label='addFunctions' icon={<AddIcon />}/>
+                </Box>
+              </Box>
             </Slider>
           </Box>
           <Collapse>
@@ -204,12 +209,18 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
             <Slider {...varCardState}>
               {editVars.map((items:VariableObj, index: Key)=>{
                 return(
-                  <ParamCard variableName={items.variableName} type={items.type} VarId={items.VarId} setter={setFormData} key={index} />
+                  <ParamCard setter={setFormData} {...items} key={index} />
                 )
               })}
-              <IconButton colorScheme='teal' aria-label='addVariables' icon={<AddIcon />}/>
+              <Box>
+                <Box justifyContent={'center'}>
+                  <IconButton colorScheme='teal' aria-label='addVariables' icon={<AddIcon />}/>
+                </Box>
+              </Box>
             </Slider>
           </Box>
+          <Collapse>
+          </Collapse>
         </DrawerBody>
       </DrawerContent>
     </Drawer>

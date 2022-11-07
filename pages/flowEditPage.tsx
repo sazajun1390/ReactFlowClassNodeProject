@@ -31,7 +31,7 @@ import type {
 } from 'reactflow'
 
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
-import { useDisclojureStore } from '../zustand/EditorDIscrojure'
+import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import shallow from "zustand/shallow"
 import { TestNode } from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodeComp'

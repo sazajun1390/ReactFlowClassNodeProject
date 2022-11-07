@@ -30,7 +30,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons'
-import { useDisclojureStore } from "../zustand/EditorDIscrojure"
+import { useDisclojureStore } from "../zustand/EditorsDIscrojure"
 
 const Header =memo(function Header(){
   console.log("create header")
@@ -103,7 +103,6 @@ const Header =memo(function Header(){
               fontSize={'sm'}
               fontWeight={400}
               variant={'link'}
-              onClick={EditorOnOpen}
             >
               Sign In
             </Button>

@@ -4,6 +4,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import { ReactFlowProvider } from 'reactflow'
 import { RecoilRoot } from 'recoil'
+import { AnimatePresence } from 'framer-motion'
 
 const colors = {
   brand: {
@@ -19,9 +20,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <ChakraProvider theme={theme}>
-        <ReactFlowProvider>
-          <Component {...pageProps} />
-        </ReactFlowProvider>
+        <AnimatePresence>
+          <ReactFlowProvider>
+            <Component {...pageProps} />
+          </ReactFlowProvider>
+        </AnimatePresence>
       </ChakraProvider>
     </RecoilRoot>
   )

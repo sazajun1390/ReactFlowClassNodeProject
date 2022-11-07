@@ -9,18 +9,26 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
-import { useDisclojureStore } from '../zustand/EditorDIscrojure';
+import { useDisclojureStore } from '../zustand/EditorsDIscrojure';
 import { useEditData } from '../zustand/EditData';
+import shallow from 'zustand/shallow';
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const { id, data } = props
   const store = useStoreApi();
   //const [ idState, setId ] = useState(id);
-
   //const EditorOnOpen = useDisclojureStore.subscribe( ()=>{}, state => state.onOpen);
   const EditorOnOpen = useDisclojureStore.getState().onOpen;
   //const setClassNodeData = () => useEditData(state => state.setData(id));
   const setClassNodeData = () => useEditData.getState().setData(id,data);
+
+  const { editId, editClassName, editFuncs, editVars } = useEditData( state => ({
+    editId: state.id,
+    editClassName: state.className,
+    editFuncs: state.functions,
+    editVars: state.variables
+  }),shallow)
+  
   return (
     <>
       <Stack p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' >
@@ -67,9 +75,9 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
         <Box>
           <Button 
             leftIcon ={<EditIcon/>} 
-            onClick={() => { 
-              EditorOnOpen()
+            onClick={() => {
               setClassNodeData()
+              EditorOnOpen()
             }}
           ></Button>
         </Box> 

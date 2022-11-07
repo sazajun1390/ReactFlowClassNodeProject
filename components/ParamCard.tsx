@@ -1,4 +1,4 @@
-import { FC, useEffect, Key, memo} from 'react'
+import { FC, useEffect, Key, memo, useState} from 'react'
 import { 
   Box,
   useColorModeValue,
@@ -16,76 +16,151 @@ import {
 import { FuncCard, VarCard, } from '../type/ClassNodeComp';
 import { CloseIcon, EditIcon } from '@chakra-ui/icons';
 
-const paramCard: FC< FuncCard | VarCard > = (props) =>{
-  const {setter, ...Obj} = props;
-  let contxt: JSX.Element;
-  
-  if('variableName' in props){
-    contxt = 
-      <>
-        <HStack justify={'space-between'} pb={2}>
-          <Box>{props.VarId}. </Box>
-          <IconButton 
-            icon={<CloseIcon/>}
-            aria-label='delete varCard'
-            size={'sm'}
-            onClick={()=>{
+interface cardProps {
+  Name:string,
+  id:number,
+  type:string,
+  closeAriaLabel:string,
+  editAriaLabel:string
+}
 
-            }}
-          >
-          </IconButton>
+const ParamCard: FC< FuncCard | VarCard > = (props) =>{
+  const {setter, ...Obj} = props;
+  const [typeState] = useState(('variableName' in props)? 'variables' : 'functions');
+  // 'variables' 'functions'
+  const [cardState] = useState<cardProps>(('variableName' in props)?
+  {
+    Name: 'VarName: '+ props.variableName,
+    id: props.VarId,
+    type:'type: '+ props.type,
+    closeAriaLabel:'delete varCard',
+    editAriaLabel:''
+  }
+  :
+  {
+    Name: 'FuncName: '+ props.functionName,
+    id:props.FuncId,
+    type:'type: '+ props.type,
+    closeAriaLabel:'delete funcCard',
+    editAriaLabel:''
+  })
+
+  return(
+    <Box>
+      <Stack w={40} p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' divider={<StackDivider borderColor='gray.200' />}>
+      <HStack justify={'space-between'} pb={2}>
+        <Box>{cardState.id}. </Box>
+        <IconButton 
+          icon={<CloseIcon/>}
+          aria-label = { cardState.closeAriaLabel }
+          size={'sm'}
+          onClick={()=>{
+          }}
+        >
+        </IconButton>
         </HStack >
-        <Box>VarName: {props.variableName}</Box>
-        <Box>type: {props.type}</Box>
+        <Box>{ cardState.Name }</Box>
+        <Box>{ cardState.type }</Box>
         <Box>
           <IconButton 
             icon ={<EditIcon/>}
             aria-label='edit variable' 
             size={'sm'}
             onClick={() => { 
-              setter({state:Obj,type:'variables'});
-              //setter(Obj)
+              setter({state:Obj,type:typeState});
+            //setter(Obj)
             }}
           ></IconButton>
         </Box>
-      </>
-  }else{
-    contxt = 
-      <>
-        <HStack justify={'space-between'} pb={2}>
-          <Box>{props.FuncId}. </Box>
-          <IconButton
-            aria-label='delete funcCard'
-            icon={<CloseIcon/>}
-            size={'sm'}
-            onClick={()=>{}}
-          >
-          </IconButton>
-        </HStack>
-        <Box>FuncName: {props.functionName}</Box>
-        <Box>type: {props.type}</Box>
-        <Box>
-          <IconButton 
-            aria-label='edit Function'
-            icon ={<EditIcon/>} 
-            size={'sm'}
-            onClick={() => { 
-              setter({state:Obj,type:'functions'});
-              //setter(Obj)
-            }}
-          ></IconButton>
-        </Box>
-      </>
-  }
-
-  return(
-    <Box>
-      <Stack w={40} p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' divider={<StackDivider borderColor='gray.200' />}>
-        {contxt}
       </Stack>
     </Box>
   )
 
+  /*
+  const contxt: JSX.Element = ('variableName' in props)? 
+  //variableが存在
+  <>
+    <HStack justify={'space-between'} pb={2}>
+      <Box>{cardState.id}. </Box>
+      <IconButton 
+        icon={<CloseIcon/>}
+        aria-label = { cardState.closeAriaLabel }
+        size={'sm'}
+        onClick={()=>{
+        }}
+      >
+      </IconButton>
+    </HStack >
+    <Box>{ cardState.Name }</Box>
+    <Box>{ cardState.type }</Box>
+    <Box>
+      <IconButton 
+        icon ={<EditIcon/>}
+        aria-label='edit variable' 
+        size={'sm'}
+        onClick={() => { 
+          setter({state:Obj,type:typeState});
+          //setter(Obj)
+        }}
+      ></IconButton>
+    </Box>
+  </>
+  :
+  <>
+    <HStack justify={'space-between'} pb={2}>
+      <Box>{cardState.id}. </Box>
+        <IconButton
+          aria-label={ cardState.closeAriaLabel }
+          icon={<CloseIcon/>}
+          size={'sm'}
+          onClick={()=>{}}
+        >
+        </IconButton>
+      </HStack>
+      <Box>{ cardState.Name }</Box>
+      <Box>{ cardState.type }</Box>
+      <Box>
+      <IconButton 
+        aria-label='edit Function'
+        icon ={<EditIcon/>} 
+        size={'sm'}
+        onClick={() => { 
+          setter({state:Obj,type:typeState});
+          //setter(Obj)
+        }}
+      ></IconButton>
+    </Box>
+  </>
+  */
+
+/*
+  <Stack w={40} p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' divider={<StackDivider borderColor='gray.200' />}>
+        <HStack justify={'space-between'} pb={2}>
+        <Box>{cardState.id}. </Box>
+        <IconButton 
+          icon={<CloseIcon/>}
+          aria-label = { cardState.closeAriaLabel }
+          size={'sm'}
+          onClick={()=>{
+          }}
+        >
+        </IconButton>
+        </HStack >
+        <Box>{ cardState.Name }</Box>
+        <Box>{ cardState.type }</Box>
+        <Box>
+          <IconButton 
+            icon ={<EditIcon/>}
+            aria-label='edit variable' 
+            size={'sm'}
+            onClick={() => { 
+              setter({state:Obj,type:typeState});
+            //setter(Obj)
+            }}
+          ></IconButton>
+        </Box>
+      </Stack>    
+*/
 }
 
-export default memo(paramCard);
+export default memo(ParamCard);
