@@ -32,6 +32,9 @@ type sendData = {
   className: string,
   variables: VariableObj[],
   functions: FunctionObj[],
+  edit: boolean,
+  allowEdit: () => void;
+  denyEdit: () => void;
   setData: (id: string, data: ClassNodeData) => void;
   reWriteClassName: (setName: string) => void;
   reWriteVariables: (variable: VariableObj) => void;
@@ -45,6 +48,17 @@ export const useEditData = create( devtools<sendData>((set) =>({
   className:'',
   variables:[],
   functions:[],
+  edit:false,
+  allowEdit: ()=> set(()=>{
+    return {
+      edit: true
+    }
+  }),
+  denyEdit: () => set(()=>{
+    return {
+      edit: false
+    }
+  }),
   setData: (id, data) => set(() =>{
     return {
       id: id,

@@ -45,6 +45,7 @@ interface formObjectReducerState {
   type:string
 }
 
+
 export {
   ClassNodeData,
   VariableObj,
@@ -53,5 +54,5 @@ export {
   FuncCard,
   ClassNode,
   formObjectReducerState,
-  formObjectType
+  formObjectType,
 }

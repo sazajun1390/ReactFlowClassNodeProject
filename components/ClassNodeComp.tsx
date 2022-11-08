@@ -1,4 +1,4 @@
-import { useCallback, useRef, memo , FC ,useState, Key} from 'react';
+import { useCallback, useRef, memo , FC ,useState, Key, useEffect} from 'react';
 import { Handle, NodeProps, Position, useReactFlow, useStoreApi } from 'reactflow';
 import {
   Divider,
@@ -12,15 +12,16 @@ import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure';
 import { useEditData } from '../zustand/EditData';
 import shallow from 'zustand/shallow';
+import FramerBox from '../chakraFactory/FramerBox';
+import { useForm } from 'react-hook-form';
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
-  const { id, data } = props
-  const store = useStoreApi();
+  const { data } = props;
   //const [ idState, setId ] = useState(id);
   //const EditorOnOpen = useDisclojureStore.subscribe( ()=>{}, state => state.onOpen);
   const EditorOnOpen = useDisclojureStore.getState().onOpen;
   //const setClassNodeData = () => useEditData(state => state.setData(id));
-  const setClassNodeData = () => useEditData.getState().setData(id,data);
+  const { getNode } = useReactFlow()
 
   const { editId, editClassName, editFuncs, editVars } = useEditData( state => ({
     editId: state.id,
@@ -28,14 +29,27 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
     editFuncs: state.functions,
     editVars: state.variables
   }),shallow)
+
+  useCallback(()=>{
+
+  },[editId,editClassName,editFuncs,editVars])
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   
   return (
-    <>
+    <Box>
       <Stack p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' >
         <Box>
-          <Box>
+          <FramerBox onClick={()=>{
+
+          }}>
             {data.className}
-          </Box>
+          </FramerBox>
           <Divider />
           <Box>
             {data.functions.map((items:FunctionObj, index: Key)=>{
@@ -76,7 +90,6 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
           <Button 
             leftIcon ={<EditIcon/>} 
             onClick={() => {
-              setClassNodeData()
               EditorOnOpen()
             }}
           ></Button>
@@ -86,7 +99,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
         <Handle type="target" position = {Position.Right} />
         <Handle type="source" position = {Position.Right} />
       </Stack>
-    </>
+    </Box>
   );
 }
 

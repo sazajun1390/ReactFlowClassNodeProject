@@ -87,15 +87,15 @@ import { memoryUsage } from 'process'
 import type { Node } from 'reactflow'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon } from '@chakra-ui/icons';
+import { useReactFlow } from 'reactflow'
 
 export interface EditDrawerProps {
   setNodes:Dispatch<SetStateAction<Node<any>[]>>
 }
 
 const EditDrawer:FC<EditDrawerProps> = (props) => {
-  const { setNodes } = props;
-  
+  const { setNodes } = useReactFlow()
   const {
     handleSubmit,
     register,
@@ -180,7 +180,9 @@ const EditDrawer:FC<EditDrawerProps> = (props) => {
     >
       <DrawerOverlay />
       <DrawerContent>
-        <DrawerCloseButton />
+        <DrawerCloseButton onClick={()=>{
+          useEditData.getState().resetData()
+        }}/>
         <DrawerHeader>
           Editor
         </DrawerHeader>

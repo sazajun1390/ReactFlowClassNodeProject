@@ -1,7 +1,7 @@
 import React from "react";
 import { NodeProps } from "reactflow";
 import ClassNodeComp from "../components/ClassNodeComp";
-import type { FunctionObj, VariableObj, ClassNode} from "../type/ClassNodeComp";
+import type { FunctionObj, VariableObj, ClassNode, ClassNodeData} from "../type/ClassNodeComp";
 
 const Variable1: VariableObj = {
   VarId:1,
@@ -61,4 +61,18 @@ const testClass2: ClassNode = {
   }
 }
 
-export const TestNode:Array<any> = [testClass,testClass2] 
+const storyTestClass: NodeProps<ClassNodeData>={
+  id: testClass.id,
+  type: testClass.type as string,
+  data: testClass.data,
+  selected: true,
+  isConnectable: true,
+  xPos: testClass.position.x,
+  yPos: testClass.position.y,
+  zIndex:2,
+  dragging: false
+}
+
+const TestNode:Array<any> = [testClass,testClass2] 
+
+export { TestNode, testClass, testClass2, storyTestClass};
