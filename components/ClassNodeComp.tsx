@@ -6,6 +6,7 @@ import {
   Button,
   Stack,
   HStack,
+  Heading,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
@@ -38,17 +39,22 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-  
+
   return (
     <Box>
       <Stack p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' >
         <Box>
-          <FramerBox onClick={()=>{
+          <FramerBox
+            animate
+            onClick={()=>{
 
-          }}>
-            {data.className}
+            }}
+          >
+            <Heading as='h2' size='md'>
+              {data.className}
+            </Heading>
           </FramerBox>
           <Divider />
           <Box>
