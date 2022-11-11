@@ -92,7 +92,7 @@ const FLowEditPage :NextPage = () =>{
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             onNodeMouseEnter={(e,node)=>{
-              if(implementsClassNode(node)){
+              if(implementsClassNode(node) && useEditData.getState().dnotEdit){
                 useEditData.getState().setData(node.id,node.data);
                 useEditData.getState().allowEdit()
               }

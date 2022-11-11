@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ReactFlowProvider>
       <ChakraProvider theme={theme}>
         <AnimatePresence>
-            <Component {...pageProps} />
+          <Component {...pageProps} />
         </AnimatePresence>
       </ChakraProvider>
     </ReactFlowProvider>  

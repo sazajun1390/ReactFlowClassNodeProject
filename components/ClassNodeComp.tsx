@@ -7,6 +7,15 @@ import {
   Stack,
   HStack,
   Heading,
+  FormControl,
+  Collapse,
+  useDisclosure,
+  Fade,
+  Input,
+  Editable,
+  EditablePreview,
+  EditableInput,
+  FormLabel,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
@@ -14,7 +23,8 @@ import { useDisclojureStore } from '../zustand/EditorsDIscrojure';
 import { useEditData } from '../zustand/EditData';
 import shallow from 'zustand/shallow';
 import FramerBox from '../chakraFactory/FramerBox';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { useAnimationControls } from 'framer-motion';
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const { data } = props;
@@ -24,38 +34,65 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   //const setClassNodeData = () => useEditData(state => state.setData(id));
   const { getNode } = useReactFlow()
 
-  const { editId, editClassName, editFuncs, editVars } = useEditData( state => ({
+  const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData( state => ({
     editId: state.id,
     editClassName: state.className,
     editFuncs: state.functions,
-    editVars: state.variables
+    editVars: state.variables,
+    diseditable: state.dnotEdit,
   }),shallow)
 
-  useCallback(()=>{
+  const { allowEdit, denyEdit } = useEditData( state => ({
+    allowEdit: state.allowEdit,
+    denyEdit: state.denyEdit
+  }))
+  const [isOpen,setOpen] = useState(false)
 
-  },[editId,editClassName,editFuncs,editVars])
-
-  const {
+  const [ nodeClass,setNodeClass ] = useState(data)
+  const { 
+    getValues,
+    control, 
+    watch,
+    setValue,
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    setFocus,
+    formState: {errors,isSubmitting,isValid}
+  } =useForm({
+    defaultValues:{
+      className: nodeClass.className,
+    }
+  })
+  
+  const animationControls = useAnimationControls()
 
+
+  useCallback(()=>{
+    setOpen((isOpen)?false:true);
+    (isOpen)?allowEdit:denyEdit
+  },[isOpen])
+
+  const onSubmit = useCallback(()=>{},[nodeClass.className])
   return (
     <Box>
       <Stack p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' >
         <Box>
-          <FramerBox
-            animate
-            onClick={()=>{
-
-            }}
-          >
-            <Heading as='h2' size='md'>
-              {data.className}
-            </Heading>
-          </FramerBox>
+          <form>
+            <Controller
+              name='className'
+              defaultValue={getValues('className')}
+              control={control}
+              render={(controlProps)=>(
+                <Editable
+                  value={controlProps.field.value}
+                >
+                  <EditablePreview/>
+                  <EditableInput />
+                </Editable>
+              )}
+            />
+          </form>
           <Divider />
           <Box>
             {data.functions.map((items:FunctionObj, index: Key)=>{
@@ -96,7 +133,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
           <Button 
             leftIcon ={<EditIcon/>} 
             onClick={() => {
-              EditorOnOpen()
+              //EditorOnOpen()
+              
             }}
           ></Button>
         </Box> 
@@ -108,6 +146,51 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
     </Box>
   );
 }
+/*
+  <Controller
+              name='ClassName'
+              defaultValue={data.className}
+              control={control}
+              render={(controlProps)=>(
+                <Editable
+                  fontSize='lg'
+                  fontWeight='bold'
+                  isPreviewFocusable={false}
+                  submitOnBlur={false}
+                  value={controlProps.field.value}
+                >
+                  {(props)=> (
+                    <>
+                      <EditablePreview/>
+                      <EditableInput {...controlProps.field} />
+                    </>
+                  )}
 
+                </Editable>
+              )}
+            >
+
+            </Controller>
+
+          
+          <Box
+            display={(isOpen)?'none':'block'}
+          >
+            <form onSubmit={handleSubmit(onSubmit)} >
+              <FormControl isInvalid={isValid}>
+                <FormLabel htmlFor='className'></FormLabel>
+                <Input id='className'
+                  size='md'
+                ></Input>
+              </FormControl>
+            </form>
+          </Box>
+          <Box
+            display={(isOpen)?'none':'block'}
+          >
+            {data.className}
+          </Box>
+          
+*/
 
 export default memo(ClassNodeComp);
