@@ -12,5 +12,10 @@ import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure';
 import { useEditData } from '../zustand/EditData';
 
-
+const VarsComp: FC = (props) => {
+  return (
+    <>
+    </>
+  )
+}
 

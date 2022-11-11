@@ -24,7 +24,7 @@ import { useDisclojureStore } from '../zustand/EditorsDIscrojure';
 import { useEditData } from '../zustand/EditData';
 import shallow from 'zustand/shallow';
 import FramerBox from '../chakraFactory/FramerBox';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useAnimationControls } from 'framer-motion';
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
@@ -50,22 +50,22 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const [isOpen,setOpen] = useState(false)
 
   const [ nodeClass,setNodeClass ] = useState(data)
-  const { 
-    getValues,
-    control, 
-    watch,
-    setValue,
-    register,
-    handleSubmit,
-    reset,
-    setFocus,
-    formState: {errors,isSubmitting,isValid}
-  } =useForm({
+  const {control} =useForm({
     defaultValues:{
       className: nodeClass.className,
+      funcArrayNames: nodeClass.functions,
+      varArrayNames: nodeClass.variables
     }
   })
-  
+  const functions = useFieldArray({
+    name:'funcArrayNames',
+    control
+  });
+  const vars = useFieldArray({
+    name:'varArrayNames',
+    control
+  })
+
   const animationControls = useAnimationControls()
 
 
@@ -82,7 +82,6 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
           <form>
             <Controller
               name='className'
-              defaultValue={getValues('className')}
               control={control}
               render={(controlProps)=>(
                 <Editable
@@ -114,6 +113,49 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
               </HStack>)
             })}
             <Divider/>
+            {functions.fields.map((item, index)=> {
+              return(
+              <HStack
+                spacing={6} justify='center' key={index}
+              >
+                <Box>
+                  -
+                </Box>
+                <Controller
+                name={`funcArrayNames.${index}.functionName`}
+                control={control}
+                render={(controlProps)=>(
+                  <Editable
+                    value={controlProps.field.value}
+                  >
+                    <EditablePreview />
+                    <EditableInput 
+                      {...controlProps.field}
+                    />
+                  </Editable>
+                )}
+                />
+                <Box>
+                  {': '}
+                </Box>
+                <Controller
+                name={`funcArrayNames.${index}.type`}
+                control={control}
+                render={(controlProps)=>(
+                  <Editable
+                    value={controlProps.field.value}
+                  >
+                    <EditablePreview />
+                    <EditableInput 
+                      {...controlProps.field}
+                    />
+                  </Editable>
+                )}
+                />
+              </HStack>
+              )
+            })}
+            <Divider/>
             {data.variables.map((items:VariableObj, index: Key)=>{
               console.log(items)
                 return(
@@ -130,6 +172,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                   </HStack>
             )})}
             <Divider/>
+            
           </Box>
         </Box>
         <Box>
@@ -150,6 +193,21 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   );
 }
 /*
+  {vars.fields.map((item, index)=>{
+              return(
+                <Controller
+                  name={`varArrayNames.${index}.variableName`}
+                  control={control}
+                  render={(controlProps)=>(
+                    <Editable>
+
+                    </Editable>
+                  )}
+                />
+              )
+            })}
+
+
   <Controller
               name='ClassName'
               defaultValue={data.className}
