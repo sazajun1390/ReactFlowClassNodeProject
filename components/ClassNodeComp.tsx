@@ -16,6 +16,7 @@ import {
   EditablePreview,
   EditableInput,
   FormLabel,
+  useEditableControls,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
@@ -88,7 +89,9 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                   value={controlProps.field.value}
                 >
                   <EditablePreview/>
-                  <EditableInput />
+                  <EditableInput
+                    {...controlProps.field}
+                  />
                 </Editable>
               )}
             />
