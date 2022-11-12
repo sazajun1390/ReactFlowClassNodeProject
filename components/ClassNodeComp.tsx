@@ -139,17 +139,17 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                   {': '}
                 </Box>
                 <Controller
-                name={`funcArrayNames.${index}.type`}
-                control={control}
-                render={(controlProps)=>(
-                  <Editable
-                    value={controlProps.field.value}
-                  >
-                    <EditablePreview />
-                    <EditableInput 
-                      {...controlProps.field}
-                    />
-                  </Editable>
+                  name={`funcArrayNames.${index}.type`}
+                  control={control}
+                  render={(controlProps)=>(
+                    <Editable
+                      value={controlProps.field.value}
+                    >
+                      <EditablePreview />
+                      <EditableInput 
+                        {...controlProps.field}
+                      />
+                    </Editable>
                 )}
                 />
               </HStack>
