@@ -17,13 +17,15 @@ import {
   EditableInput,
   FormLabel,
   useEditableControls,
+  IconButton,
+  CloseButton,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure';
 import { useEditData } from '../zustand/EditData';
 import shallow from 'zustand/shallow';
-import FramerBox from '../chakraFactory/FramerBox';
+import {FramerBox,FramerLayoutGroup} from '../chakraFactory/Framer';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useAnimationControls } from 'framer-motion';
 
@@ -50,7 +52,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const [isOpen,setOpen] = useState(false)
 
   const [ nodeClass,setNodeClass ] = useState(data)
-  const {control} =useForm({
+  const {control,getFieldState} =useForm({
     defaultValues:{
       className: nodeClass.className,
       funcArrayNames: nodeClass.functions,
@@ -68,56 +70,48 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
 
   const animationControls = useAnimationControls()
 
-
   useCallback(()=>{
     setOpen((isOpen)?false:true);
     (isOpen)?allowEdit:denyEdit
   },[isOpen])
 
-  const onSubmit = useCallback(()=>{},[nodeClass.className])
+  const onSubmit = useCallback(()=>{},[nodeClass])
+
+  
   return (
     <Box>
       <Stack p={3} bg='white' rounded="md" shadow="md" border='1px' borderColor='gray.500' >
-        <Box>
-          <form>
-            <Controller
-              name='className'
-              control={control}
-              render={(controlProps)=>(
-                <Editable
-                  value={controlProps.field.value}
-                >
-                  <EditablePreview/>
-                  <EditableInput
-                    {...controlProps.field}
-                  />
-                </Editable>
-              )}
-            />
-          </form>
+        <form>
+          <Controller
+            name='className'
+            control={control}
+            render={(controlProps)=>(
+              <Editable
+                value={controlProps.field.value}
+              >
+                <EditablePreview/>
+                <EditableInput
+                  {...controlProps.field}
+                />
+              </Editable>
+            )}
+          />
           <Divider />
           <Box>
-            {data.functions.map((items:FunctionObj, index: Key)=>{
-              console.log(items)
-              return(
-              <HStack spacing={6} justify='center' key={index}>
-                <Box>
-                  -
-                </Box>
-                <Box>
-                  {items.functionName}
-                </Box>
-                <Box>
-                  :{items.type}
-                </Box>
-              </HStack>)
-            })}
-            <Divider/>
             {functions.fields.map((item, index)=> {
               return(
               <HStack
-                spacing={6} justify='center' key={index}
+              spacing={6} justify='center' key={index}
               >
+                <FramerBox
+                  visibility={(getFieldState(`funcArrayNames.${index}.functionName`).isTouched || getFieldState(`funcArrayNames.${index}.type`).isTouched)?'visible':'hidden'}
+                  display={(getFieldState(`funcArrayNames.${index}.functionName`).isTouched || getFieldState(`funcArrayNames.${index}.type`).isTouched)?'block':'none'}
+                >
+                  <IconButton
+                    aria-label='deleteFunction' 
+                    icon={<CloseButton />}
+                  />
+                </FramerBox>
                 <Box>
                   -
                 </Box>
@@ -156,25 +150,50 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
               )
             })}
             <Divider/>
-            {data.variables.map((items:VariableObj, index: Key)=>{
-              console.log(items)
-                return(
-                  <HStack spacing={6} justify='center' key={index}>
+            {vars.fields.map((item, index)=>{
+              return(
+                <HStack spacing={6} justify='center' key={index} >
+                  <FramerLayoutGroup>
                     <Box>
-                      +
+                      {'+ '}
                     </Box>
+                    <Controller
+                      name={`varArrayNames.${index}.variableName`}
+                      control={control}
+                      render={(controlProps)=>(
+                        <Editable
+                          value={controlProps.field.value}
+                        >
+                          <EditablePreview />
+                          <EditableInput
+                            {...controlProps.field}
+                          />
+                        </Editable>
+                      )}
+                    />
                     <Box>
-                      {items.variableName}
+                      {': '}
                     </Box>
-                    <Box>
-                      :{items.type}
-                    </Box>
-                  </HStack>
-            )})}
-            <Divider/>
-            
+                    <Controller
+                      name={`varArrayNames.${index}.type`}
+                      control={control}
+                      render={(controlProps)=>(
+                        <Editable
+                          value={controlProps.field.value}
+                        >
+                          <EditablePreview />
+                          <EditableInput
+                            {...controlProps.field}
+                          />
+                        </Editable>
+                      )}
+                    />
+                  </FramerLayoutGroup>
+                </HStack>
+              )
+            })}
           </Box>
-        </Box>
+        </form>
         <Box>
           <Button 
             leftIcon ={<EditIcon/>} 
@@ -192,20 +211,40 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
     </Box>
   );
 }
-/*
-  {vars.fields.map((item, index)=>{
+/*          
+            {data.functions.map((items:FunctionObj, index: Key)=>{
+              console.log(items)
               return(
-                <Controller
-                  name={`varArrayNames.${index}.variableName`}
-                  control={control}
-                  render={(controlProps)=>(
-                    <Editable>
-
-                    </Editable>
-                  )}
-                />
-              )
+              <HStack spacing={6} justify='center' key={index}>
+                <Box>
+                  -
+                </Box>
+                <Box>
+                  {items.functionName}
+                </Box>
+                <Box>
+                  :{items.type}
+                </Box>
+              </HStack>)
             })}
+  
+            <Divider/>
+            {data.variables.map((items:VariableObj, index: Key)=>{
+              console.log(items)
+                return(
+                  <HStack spacing={6} justify='center' key={index}>
+                    <Box>
+                      +
+                    </Box>
+                    <Box>
+                      {items.variableName}
+                    </Box>
+                    <Box>
+                      :{items.type}
+                    </Box>
+                  </HStack>
+            )})}
+
 
 
   <Controller
