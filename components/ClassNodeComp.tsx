@@ -77,6 +77,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
 
   const onSubmit = useCallback(()=>{},[nodeClass])
 
+  const [focusFieldNum,setFocusFieldNum] = useState<Number | null>(null);
   
   return (
     <Box>
@@ -101,7 +102,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
             {functions.fields.map((item, index)=> {
               return(
               <HStack
-              spacing={6} justify='center' key={index}
+                spacing={6} justify='center' key={index}
               >
                 <FramerBox
                   visibility={(getFieldState(`funcArrayNames.${index}.functionName`).isTouched || getFieldState(`funcArrayNames.${index}.type`).isTouched)?'visible':'hidden'}
@@ -109,6 +110,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                 >
                   <IconButton
                     aria-label='deleteFunction' 
+                    key={index}
                     icon={<CloseButton />}
                   />
                 </FramerBox>
@@ -125,6 +127,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                     <EditablePreview />
                     <EditableInput 
                       {...controlProps.field}
+                      onFocus={()=>{}}
+                      onBlur={()=>{}}
                     />
                   </Editable>
                 )}
@@ -142,6 +146,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                       <EditablePreview />
                       <EditableInput 
                         {...controlProps.field}
+                        onFocus={()=>{}}
+                        onBlur={()=>{}}
                       />
                     </Editable>
                 )}
