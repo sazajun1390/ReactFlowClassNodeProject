@@ -30,7 +30,8 @@ import {FramerBox,FramerLayoutGroup} from '../chakraFactory/Framer';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useAnimationControls } from 'framer-motion';
 //import * as yup from 'yup';
-import * as zod from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { classNodeDataSchema } from '../type/zodClassNodeComp';
 
 
 
@@ -39,10 +40,6 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const EditorOnOpen = useDisclojureStore.getState().onOpen;
   const { getNode, setNodes } = useReactFlow()
   
-  const schema = zod.object({
-    
-  })
-
   const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData( state => ({
     editId: state.id,
     editClassName: state.className,
@@ -67,7 +64,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
       className: nodeClass.className,
       functions: nodeClass.functions,
       variables: nodeClass.variables
-    }
+    },
+    resolver: zodResolver(classNodeDataSchema)
   })
   const functions = useFieldArray({
     name:'functions',
@@ -146,7 +144,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                       {...controlProps.field}
                     />
                     <FormErrorMessage>
-                      {}
+                      {errors.functions?.[index]?.functionName && errors.functions?.[index]?.functionName?.message}
                     </FormErrorMessage>
                   </Editable>
                 )}
@@ -161,11 +159,9 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                     <Editable
                       value={controlProps.field.value}
                       onFocus={()=>{
-                        console.log('focus')
                         setFocusFuncFieldNum(`functions.${index}.FunId`);
                       }}
                       onBlur={()=>{
-                        console.log('blur')
                         setFocusFuncFieldNum(null);
                       }}
                     >
