@@ -19,6 +19,7 @@ import {
   useEditableControls,
   IconButton,
   CloseButton,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData} from '../type/ClassNodeComp'
@@ -28,14 +29,19 @@ import shallow from 'zustand/shallow';
 import {FramerBox,FramerLayoutGroup} from '../chakraFactory/Framer';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useAnimationControls } from 'framer-motion';
+//import * as yup from 'yup';
+import * as zod from 'zod';
+
+
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const { data } = props;
-  //const [ idState, setId ] = useState(id);
-  //const EditorOnOpen = useDisclojureStore.subscribe( ()=>{}, state => state.onOpen);
   const EditorOnOpen = useDisclojureStore.getState().onOpen;
-  //const setClassNodeData = () => useEditData(state => state.setData(id));
-  const { getNode } = useReactFlow()
+  const { getNode, setNodes } = useReactFlow()
+  
+  const schema = zod.object({
+    
+  })
 
   const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData( state => ({
     editId: state.id,
@@ -52,23 +58,25 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
   const [isOpen,setOpen] = useState(false)
 
   const [ nodeClass,setNodeClass ] = useState(data)
-  const {control,getFieldState} =useForm({
+  const {
+    control,
+    getFieldState,
+    formState: {errors, isSubmitted}
+  } =useForm<ClassNodeData>({
     defaultValues:{
       className: nodeClass.className,
-      funcArrayNames: nodeClass.functions,
-      varArrayNames: nodeClass.variables
+      functions: nodeClass.functions,
+      variables: nodeClass.variables
     }
   })
   const functions = useFieldArray({
-    name:'funcArrayNames',
+    name:'functions',
     control
   });
   const vars = useFieldArray({
-    name:'varArrayNames',
+    name:'variables',
     control
   })
-
-  const animationControls = useAnimationControls()
 
   useCallback(()=>{
     setOpen((isOpen)?false:true);
@@ -77,7 +85,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
 
   const onSubmit = useCallback(()=>{},[nodeClass])
 
-  const [focusFieldNum,setFocusFieldNum] = useState<Number | null>(null);
+  const [focusFuncFieldNum,setFocusFuncFieldNum] = useState<string | null>(null);
+  const [focusVarFieldNum,setFocusVarFieldNum] = useState<string | null>(null);
   
   return (
     <Box>
@@ -105,8 +114,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                 spacing={6} justify='center' key={index}
               >
                 <FramerBox
-                  visibility={(getFieldState(`funcArrayNames.${index}.functionName`).isTouched || getFieldState(`funcArrayNames.${index}.type`).isTouched)?'visible':'hidden'}
-                  display={(getFieldState(`funcArrayNames.${index}.functionName`).isTouched || getFieldState(`funcArrayNames.${index}.type`).isTouched)?'block':'none'}
+                  visibility={(focusFuncFieldNum==`functions.${index}.FunId`)?'visible':'hidden'}
+                  display={(focusFuncFieldNum==`functions.${index}.FunId`)?'block':'none'}
                 >
                   <IconButton
                     aria-label='deleteFunction' 
@@ -118,18 +127,27 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                   -
                 </Box>
                 <Controller
-                name={`funcArrayNames.${index}.functionName`}
+                name={`functions.${index}.functionName`}
                 control={control}
                 render={(controlProps)=>(
                   <Editable
                     value={controlProps.field.value}
+                    onFocus={()=>{
+                      console.log('focus')
+                      setFocusFuncFieldNum(`functions.${index}.FunId`);
+                    }}
+                    onBlur={()=>{
+                      console.log('blur')
+                      setFocusFuncFieldNum(null);
+                    }}
                   >
                     <EditablePreview />
                     <EditableInput 
                       {...controlProps.field}
-                      onFocus={()=>{}}
-                      onBlur={()=>{}}
                     />
+                    <FormErrorMessage>
+                      {}
+                    </FormErrorMessage>
                   </Editable>
                 )}
                 />
@@ -137,17 +155,23 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                   {': '}
                 </Box>
                 <Controller
-                  name={`funcArrayNames.${index}.type`}
+                  name={`functions.${index}.type`}
                   control={control}
                   render={(controlProps)=>(
                     <Editable
                       value={controlProps.field.value}
+                      onFocus={()=>{
+                        console.log('focus')
+                        setFocusFuncFieldNum(`functions.${index}.FunId`);
+                      }}
+                      onBlur={()=>{
+                        console.log('blur')
+                        setFocusFuncFieldNum(null);
+                      }}
                     >
                       <EditablePreview />
                       <EditableInput 
                         {...controlProps.field}
-                        onFocus={()=>{}}
-                        onBlur={()=>{}}
                       />
                     </Editable>
                 )}
@@ -160,15 +184,33 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
               return(
                 <HStack spacing={6} justify='center' key={index} >
                   <FramerLayoutGroup>
+                    <FramerBox
+                      visibility={(focusVarFieldNum==`variables.${index}.VarId`)?'visible':'hidden'}
+                      display={(focusVarFieldNum==`variables.${index}.VarId`)?'block':'none'}
+                    >
+                      <IconButton
+                        aria-label='deleteVars' 
+                        key={index}
+                        icon={<CloseButton />}
+                      />
+                    </FramerBox>
                     <Box>
                       {'+ '}
                     </Box>
                     <Controller
-                      name={`varArrayNames.${index}.variableName`}
+                      name={`variables.${index}.variableName`}
                       control={control}
                       render={(controlProps)=>(
                         <Editable
                           value={controlProps.field.value}
+                          onFocus={()=>{
+                            console.log('focus')
+                            setFocusVarFieldNum(`variables.${index}.VarId`);
+                          }}
+                          onBlur={()=>{
+                            console.log('blur')
+                            setFocusVarFieldNum(null);
+                          }}
                         >
                           <EditablePreview />
                           <EditableInput
@@ -181,11 +223,19 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
                       {': '}
                     </Box>
                     <Controller
-                      name={`varArrayNames.${index}.type`}
+                      name={`variables.${index}.type`}
                       control={control}
                       render={(controlProps)=>(
                         <Editable
                           value={controlProps.field.value}
+                          onFocus={()=>{
+                            console.log('focus')
+                            setFocusVarFieldNum(`variables.${index}.VarId`);
+                          }}
+                          onBlur={()=>{
+                            console.log('blur')
+                            setFocusVarFieldNum(null);
+                          }}
                         >
                           <EditablePreview />
                           <EditableInput
@@ -217,86 +267,5 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = ( props ) => {
     </Box>
   );
 }
-/*          
-            {data.functions.map((items:FunctionObj, index: Key)=>{
-              console.log(items)
-              return(
-              <HStack spacing={6} justify='center' key={index}>
-                <Box>
-                  -
-                </Box>
-                <Box>
-                  {items.functionName}
-                </Box>
-                <Box>
-                  :{items.type}
-                </Box>
-              </HStack>)
-            })}
-  
-            <Divider/>
-            {data.variables.map((items:VariableObj, index: Key)=>{
-              console.log(items)
-                return(
-                  <HStack spacing={6} justify='center' key={index}>
-                    <Box>
-                      +
-                    </Box>
-                    <Box>
-                      {items.variableName}
-                    </Box>
-                    <Box>
-                      :{items.type}
-                    </Box>
-                  </HStack>
-            )})}
-
-
-
-  <Controller
-              name='ClassName'
-              defaultValue={data.className}
-              control={control}
-              render={(controlProps)=>(
-                <Editable
-                  fontSize='lg'
-                  fontWeight='bold'
-                  isPreviewFocusable={false}
-                  submitOnBlur={false}
-                  value={controlProps.field.value}
-                >
-                  {(props)=> (
-                    <>
-                      <EditablePreview/>
-                      <EditableInput {...controlProps.field} />
-                    </>
-                  )}
-
-                </Editable>
-              )}
-            >
-
-            </Controller>
-
-          
-          <Box
-            display={(isOpen)?'none':'block'}
-          >
-            <form onSubmit={handleSubmit(onSubmit)} >
-              <FormControl isInvalid={isValid}>
-                <FormLabel htmlFor='className'></FormLabel>
-                <Input id='className'
-                  size='md'
-                ></Input>
-              </FormControl>
-            </form>
-          </Box>
-          <Box
-            display={(isOpen)?'none':'block'}
-          >
-            {data.className}
-          </Box>
-          
-*/
 
 export default memo(ClassNodeComp);
