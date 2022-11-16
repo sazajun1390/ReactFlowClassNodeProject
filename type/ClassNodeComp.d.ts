@@ -2,6 +2,11 @@ import { Node, NodeTypes } from 'reactflow';
 import { ReactNode,Dispatch,SetStateAction } from 'react';
 
 interface ClassNodeData {
+  /** 
+  *
+  * @minimum 1
+  * 
+  */
   className: string,
   variables: Array<VariableObj>
   functions: Array<FunctionObj>
@@ -46,7 +51,7 @@ interface formObjectReducerState {
 }
 
 
-export {
+export type {
   ClassNodeData,
   VariableObj,
   VarCard,
