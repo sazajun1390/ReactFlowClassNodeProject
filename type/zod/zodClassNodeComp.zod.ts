@@ -16,9 +16,11 @@ const functionObjSchema = z.object({
 const formObjectTypeSchema = z.union([functionObjSchema, variableObjSchema]).nullable()
 
 const classNodeDataSchema = z.object({
-  className: z.string().min(1),
+  className: z.string().max(8),
   variables: z.array(variableObjSchema),
   functions: z.array(functionObjSchema),
 })
 
-export { classNodeDataSchema }
+export {
+  classNodeDataSchema
+}

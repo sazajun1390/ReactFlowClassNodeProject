@@ -10,7 +10,8 @@ import {
   EditableInput,
   FormControl,
   FormErrorMessage,
-  Input
+  Input,
+  useEditableControls,
 } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
@@ -74,15 +75,33 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
 
   const onSubmit = useCallback(() => {}, [nodeClass])
 
+
   return (
     <Box>
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormProvider {...methods}>
             <Editable value={watch('className')}>
-              <EditablePreview />
+              <EditablePreview
+                {...(!!errors.className && {
+                  boxShadow: '0 0 0 2px red',
+                  color: 'transparent',
+                  px: 3,
+                })}
+                w='100%'
+              />
               <FormControl id='className' isInvalid={!!errors.className}>
-                <Input as={EditableInput} {...register('className')} />
+                <EditableInput
+                  {...(!!errors.className && {
+                    color: '0 0 0 2px red'
+                  })}
+                  {...register('className', {
+                    required: {
+                      value: true,
+                      message: 'Please enter an instruction step.',
+                    },
+                  })}
+                />
                 <FormErrorMessage>{errors.className?.message}</FormErrorMessage>
               </FormControl>
             </Editable>

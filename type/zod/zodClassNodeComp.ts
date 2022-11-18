@@ -4,7 +4,8 @@ import { ReactNode, Dispatch, SetStateAction } from 'react'
 interface ClassNodeData {
   /**
    *
-   * @minimum 1
+   * @miniLength 2
+   * @maxLength 8
    *
    */
   className: string
@@ -15,19 +16,19 @@ interface ClassNodeData {
 interface VariableObj {
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   VarId: number
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   variableName: string
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   type: string
@@ -44,21 +45,21 @@ interface VarCard extends VariableObj {
 interface FunctionObj {
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   FuncId: number
 
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   functionName: string
 
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   type: string
@@ -82,7 +83,7 @@ interface formObjectReducerState {
 
   /**
    *
-   * @minimum 1
+   * @minLength 1
    *
    */
   type: string
