@@ -1,10 +1,13 @@
 {
+  /*
+    
+    
+  */
   "extends": [
     "next/core-web-vitals",
     "plugin:storybook/recommended",
-    "next", 
-    "prettier", 
+    "next",
+    "prettier",
     "next/babel"
   ]
-  
 }

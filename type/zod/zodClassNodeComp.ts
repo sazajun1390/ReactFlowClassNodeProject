@@ -1,36 +1,36 @@
-import { Node, NodeTypes } from 'reactflow';
-import { ReactNode,Dispatch,SetStateAction } from 'react';
+import { Node, NodeTypes } from 'reactflow'
+import { ReactNode, Dispatch, SetStateAction } from 'react'
 
 interface ClassNodeData {
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  className: string,
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  className: string
   variables: Array<VariableObj>
   functions: Array<FunctionObj>
 }
 
 interface VariableObj {
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  VarId:number;
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  variableName: string;
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  type: string;
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  VarId: number
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  variableName: string
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  type: string
 }
 
 /*interface VarCard extends VariableObj {
@@ -41,28 +41,27 @@ interface VarCard extends VariableObj {
   setter: Dispatch<formObjectReducerState>
 }
 
-
 interface FunctionObj {
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  FuncId:number;
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  FuncId: number
 
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  functionName: string;
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  functionName: string
 
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  type: string;
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  type: string
 }
 
 /*interface FuncCard extends FunctionObj {
@@ -78,16 +77,16 @@ type ClassNode = Node<ClassNodeData>
 type formObjectType = null | FunctionObj | VariableObj
 
 interface formObjectReducerState {
-  state:formObjectState;
-  
-  /** 
-  *
-  * @minimum 1
-  * 
-  */
-  type:string;
-}
+  /* eslint no-unused-vars: 0 */
+  state: formObjectState
 
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  type: string
+}
 
 export type {
   ClassNodeData,

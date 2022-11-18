@@ -1,8 +1,8 @@
 export interface NavItem {
-  label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
+  label: string
+  subLabel?: string
+  children?: Array<NavItem>
+  href?: string
 }
 
 const NAV_ITEMS: Array<NavItem> = [
@@ -46,5 +46,4 @@ const NAV_ITEMS: Array<NavItem> = [
   },
 ]
 
-export {NAV_ITEMS};
-
+export { NAV_ITEMS }

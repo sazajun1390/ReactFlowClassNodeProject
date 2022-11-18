@@ -1,7 +1,4 @@
-import create from "zustand";
-import { ClassNode, ClassNodeData } from "../type/ClassNodeComp";
+import create from 'zustand'
+import { ClassNode, ClassNodeData } from '../type/ClassNodeComp'
 
-type editCard = {
-  
-}
-  
+type editCard = {}

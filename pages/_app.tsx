@@ -2,9 +2,9 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
-import { ReactFlowProvider ,useReactFlow } from 'reactflow'
+import { ReactFlowProvider, useReactFlow } from 'reactflow'
 import { AnimatePresence } from 'framer-motion'
-import 'reactflow/dist/style.css';
+import 'reactflow/dist/style.css'
 
 const colors = {
   brand: {
@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </AnimatePresence>
       </ChakraProvider>
-    </ReactFlowProvider>  
+    </ReactFlowProvider>
   )
 }
 

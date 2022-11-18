@@ -2,15 +2,15 @@
 import { z } from 'zod'
 
 const variableObjSchema = z.object({
-  VarId: z.number(),
-  variableName: z.string(),
-  type: z.string(),
+  VarId: z.number().min(1),
+  variableName: z.string().min(1),
+  type: z.string().min(1),
 })
 
 const functionObjSchema = z.object({
-  FuncId: z.number(),
-  functionName: z.string(),
-  type: z.string(),
+  FuncId: z.number().min(1),
+  functionName: z.string().min(1),
+  type: z.string().min(1),
 })
 
 const formObjectTypeSchema = z.union([functionObjSchema, variableObjSchema]).nullable()
@@ -21,4 +21,4 @@ const classNodeDataSchema = z.object({
   functions: z.array(functionObjSchema),
 })
 
-export { variableObjSchema, functionObjSchema, formObjectTypeSchema, classNodeDataSchema }
+export { classNodeDataSchema }

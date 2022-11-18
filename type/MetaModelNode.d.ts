@@ -1,9 +1,9 @@
 interface MetaModelNode {
-  className: string,
-  variableName: Array<MetaVarObj>  
+  className: string
+  variableName: Array<MetaVarObj>
 }
 
 interface MetaVarObj {
-  variableName: string,
+  variableName: string
   type: string
 }

@@ -1,4 +1,4 @@
-import ReactFlow,{
+import ReactFlow, {
   MiniMap,
   Controls,
   useNodesState,
@@ -7,35 +7,29 @@ import ReactFlow,{
   Background,
   NodeProps,
   ReactFlowInstance,
-  ReactFlowProvider
+  ReactFlowProvider,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
-import {
-  initialEdges,
-  initialNodes
-} from '../store/ReactFlowStarterDeck'
-import { useCallback,useMemo } from 'react'
+import { initialEdges, initialNodes } from '../store/ReactFlowStarterDeck'
+import { useCallback, useMemo } from 'react'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Header from '../components/Header'
-import { 
+import {
   Box,
   useColorModeValue,
   useBreakpointValue,
   Drawer,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton
+  DrawerCloseButton,
 } from '@chakra-ui/react'
-import type { 
-  Edge,
-  Connection 
-} from 'reactflow'
+import type { Edge, Connection } from 'reactflow'
 
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
-import shallow from "zustand/shallow"
+import shallow from 'zustand/shallow'
 import { TestNode } from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodeComp'
 import { useForm } from 'react-hook-form'
@@ -45,30 +39,35 @@ import { useReactFlow } from 'reactflow'
 import { implementsClassNode } from '../type/ClassNodeCompTypeGuard'
 import { ClassNodeData } from '../type/ClassNodeComp'
 
+const FLowEditPage: NextPage = () => {
+  const { height, width } = useToGetWindowSize()
 
-const FLowEditPage :NextPage = () =>{
-  const { height, width } = useToGetWindowSize();
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(TestNode);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(TestNode)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
-  
 
-  const { EditorIsOpen, EditorOnClose } = useDisclojureStore((state)=> ({
-    EditorIsOpen: state.isOpen,
-    EditorOnClose: state.onClose
-  }),shallow)
+  const { EditorIsOpen, EditorOnClose } = useDisclojureStore(
+    (state) => ({
+      EditorIsOpen: state.isOpen,
+      EditorOnClose: state.onClose,
+    }),
+    shallow,
+  )
 
-  const EditorOnOpen = useDisclojureStore.getState().onOpen;
-  const setClassNodeData = (id:string,data:ClassNodeData) => useEditData(state => state.setData(id,data));
-  const allowEdit = () => useEditData(state => state.allowEdit());
-  const denyEdit = () => useEditData(state => state.denyEdit());
+  const EditorOnOpen = useDisclojureStore.getState().onOpen
+  const setClassNodeData = (id: string, data: ClassNodeData) =>
+    useEditData((state) => state.setData(id, data))
+  const allowEdit = () => useEditData((state) => state.allowEdit())
+  const denyEdit = () => useEditData((state) => state.denyEdit())
 
   const { getNode } = useReactFlow()
-  const onConnect = useCallback((params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback(
+    (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  )
 
-  console.log("EditPageRendering");
-  const nodeTypes = useMemo(()=>({ custom: ClassNodeComp}),[]);
+  console.log('EditPageRendering')
+  const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
 
   return (
     <div>
@@ -76,14 +75,10 @@ const FLowEditPage :NextPage = () =>{
         <title>fLowEditPage</title>
       </Head>
 
-      <Header/>
-      <EditorDrawer setNodes={setNodes}/>
-      
-      <Box
-        w={width}
-        h={height-16}
-        top="16px"
-      >
+      <Header />
+      <EditorDrawer setNodes={setNodes} />
+
+      <Box w={width} h={height - 16} top='16px'>
         <>
           <ReactFlow
             nodes={nodes}
@@ -91,28 +86,27 @@ const FLowEditPage :NextPage = () =>{
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
-            onNodeMouseEnter={(e,node)=>{
-              if(implementsClassNode(node) && useEditData.getState().dnotEdit){
-                useEditData.getState().setData(node.id,node.data);
+            onNodeMouseEnter={(e, node) => {
+              if (implementsClassNode(node) && useEditData.getState().dnotEdit) {
+                useEditData.getState().setData(node.id, node.data)
                 useEditData.getState().allowEdit()
               }
             }}
-            onNodeMouseLeave={()=>{
-              useEditData.getState().denyEdit();
+            onNodeMouseLeave={() => {
+              useEditData.getState().denyEdit()
             }}
           >
-            <MiniMap/>
-            <Controls/>
-            <Background/>
+            <MiniMap />
+            <Controls />
+            <Background />
           </ReactFlow>
         </>
-        
       </Box>
     </div>
   )
 }
 
-export default FLowEditPage;
+export default FLowEditPage
 
 /*
   const reactFlowInstance = useReactFlow();

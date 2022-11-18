@@ -1,7 +1,7 @@
-import React from "react"
-import { memo } from "react"
+import React from 'react'
+import { memo } from 'react'
 import NextLink from 'next/link'
-import { NavItem ,NAV_ITEMS } from "../store/headerLink"
+import { NavItem, NAV_ITEMS } from '../store/headerLink'
 
 import {
   Box,
@@ -18,37 +18,27 @@ import {
   useColorModeValue,
   useDisclosure,
   useBreakpointValue,
-  Link
-} from "@chakra-ui/react"
-import type { 
-  ResponsiveValue, 
-} from "@chakra-ui/react"
+  Link,
+} from '@chakra-ui/react'
+import type { ResponsiveValue } from '@chakra-ui/react'
 
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from '@chakra-ui/icons'
-import { useDisclojureStore } from "../zustand/EditorsDIscrojure"
+import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 
-const Header =memo(function Header(){
-  console.log("create header")
+const Header = memo(function Header() {
+  console.log('create header')
   const { isOpen, onToggle } = useDisclosure()
-  const bg = useColorModeValue('white','grey.600')
-  const color = useColorModeValue('gray.600','white')
-  const borderColor = useColorModeValue('gray.200','gray.900')
-  const textColor = useColorModeValue('gray.800','white')
-  const textAlign: ResponsiveValue<any> | undefined = useBreakpointValue({ base: 'center', md: 'left' })
-  const EditorOnOpen = useDisclojureStore((state)=>state.onOpen)
+  const bg = useColorModeValue('white', 'grey.600')
+  const color = useColorModeValue('gray.600', 'white')
+  const borderColor = useColorModeValue('gray.200', 'gray.900')
+  const textColor = useColorModeValue('gray.800', 'white')
+  const textAlign: ResponsiveValue<any> | undefined = useBreakpointValue({
+    base: 'center',
+    md: 'left',
+  })
+  const EditorOnOpen = useDisclojureStore((state) => state.onOpen)
   return (
-    <Box
-      pos="fixed"
-      w="100%" 
-      top="0" 
-      left="0"
-      zIndex={10}
-    >
+    <Box pos='fixed' w='100%' top='0' left='0' zIndex={10}>
       <Flex
         bg={bg}
         color={color}
@@ -67,19 +57,13 @@ const Header =memo(function Header(){
         >
           <IconButton
             onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
+            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
             variant={'ghost'}
             aria-label={'Toggle Navigation'}
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            textAlign={textAlign}
-            fontFamily={'heading'}
-            color={textColor}
-          >
+          <Text textAlign={textAlign} fontFamily={'heading'} color={textColor}>
             Logo
           </Text>
 
@@ -88,29 +72,13 @@ const Header =memo(function Header(){
           </Flex>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={'flex-end'}
-          direction={'row'}
-          spacing={6}
-          >
-          <NextLink
-            href={'/flowEditPage'}
-            passHref
-          >
-            <Button
-              as={'a'}
-              fontSize={'sm'}
-              fontWeight={400}
-              variant={'link'}
-            >
+        <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
+          <NextLink href={'/flowEditPage'} passHref>
+            <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'}>
               Sign In
             </Button>
           </NextLink>
-          <NextLink
-            href={'/'}
-            passHref
-          >
+          <NextLink href={'/'} passHref>
             <Button
               display={{ base: 'none', md: 'inline-flex' }}
               fontSize={'sm'}
@@ -135,11 +103,11 @@ const Header =memo(function Header(){
   )
 })
 
-const DesktopNav = memo(function DesktopNav(){
-  const linkColor = useColorModeValue('gray.600', 'gray.200');
-  const linkHoverColor = useColorModeValue('gray.800', 'white');
-  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
-  console.log("deskNav")
+const DesktopNav = memo(function DesktopNav() {
+  const linkColor = useColorModeValue('gray.600', 'gray.200')
+  const linkHoverColor = useColorModeValue('gray.800', 'white')
+  const popoverContentBgColor = useColorModeValue('white', 'gray.800')
+  console.log('deskNav')
   return (
     <Stack direction={'row'} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
@@ -155,7 +123,8 @@ const DesktopNav = memo(function DesktopNav(){
                 _hover={{
                   textDecoration: 'none',
                   color: linkHoverColor,
-                }}>
+                }}
+              >
                 {navItem.label}
               </Link>
             </PopoverTrigger>
@@ -167,7 +136,8 @@ const DesktopNav = memo(function DesktopNav(){
                 bg={popoverContentBgColor}
                 p={4}
                 rounded={'xl'}
-                minW={'sm'}>
+                minW={'sm'}
+              >
                 <Stack>
                   {navItem.children.map((child) => (
                     <DesktopSubNav key={child.label} {...child} />
@@ -179,11 +149,11 @@ const DesktopNav = memo(function DesktopNav(){
         </Box>
       ))}
     </Stack>
-  );
+  )
 })
 
-const DesktopSubNav = memo(function DesktopSubNav({ label, href, subLabel }: NavItem){
-  console.log("deskSubNav")
+const DesktopSubNav = memo(function DesktopSubNav({ label, href, subLabel }: NavItem) {
+  console.log('deskSubNav')
   return (
     <Link
       href={href}
@@ -191,13 +161,11 @@ const DesktopSubNav = memo(function DesktopSubNav({ label, href, subLabel }: Nav
       display={'block'}
       p={2}
       rounded={'md'}
-      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}>
+      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
+    >
       <Stack direction={'row'} align={'center'}>
         <Box>
-          <Text
-            transition={'all .3s ease'}
-            _groupHover={{ color: 'pink.400' }}
-            fontWeight={500}>
+          <Text transition={'all .3s ease'} _groupHover={{ color: 'pink.400' }} fontWeight={500}>
             {label}
           </Text>
           <Text fontSize={'sm'}>{subLabel}</Text>
@@ -209,32 +177,29 @@ const DesktopSubNav = memo(function DesktopSubNav({ label, href, subLabel }: Nav
           _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
           justify={'flex-end'}
           align={'center'}
-          flex={1}>
+          flex={1}
+        >
           <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
-  );
-});
+  )
+})
 
-
-const MobileNav = memo(function MobileNav(){
-  console.log("MobNav")
+const MobileNav = memo(function MobileNav() {
+  console.log('MobNav')
   return (
-    <Stack
-      bg={useColorModeValue('white', 'gray.800')}
-      p={4}
-      display={{ md: 'none' }}>
+    <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
     </Stack>
-  );
-});
+  )
+})
 
-const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: NavItem){
-  console.log("MobNavItem")
-  const { isOpen, onToggle } = useDisclosure();
+const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: NavItem) {
+  console.log('MobNavItem')
+  const { isOpen, onToggle } = useDisclosure()
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
@@ -246,10 +211,9 @@ const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: Na
         align={'center'}
         _hover={{
           textDecoration: 'none',
-        }}>
-        <Text
-          fontWeight={600}
-          color={useColorModeValue('gray.600', 'gray.200')}>
+        }}
+      >
+        <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
           {label}
         </Text>
         {children && (
@@ -270,7 +234,8 @@ const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: Na
           borderLeft={1}
           borderStyle={'solid'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
-          align={'start'}>
+          align={'start'}
+        >
           {children &&
             children.map((child) => (
               <Link key={child.label} py={2} href={child.href}>
@@ -280,7 +245,7 @@ const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: Na
         </Stack>
       </Collapse>
     </Stack>
-  );
-});
+  )
+})
 
-export default Header;
+export default Header
