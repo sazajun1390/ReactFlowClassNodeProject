@@ -56,6 +56,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
       variables: nodeClass.variables,
     },
     resolver: zodResolver(classNodeDataSchema),
+    mode: 'all',
   })
 
   const {
@@ -75,36 +76,30 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
 
   const onSubmit = useCallback(() => {}, [nodeClass])
 
-
   return (
     <Box>
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormProvider {...methods}>
-            <Editable value={watch('className')}>
-              <EditablePreview
-                {...(!!errors.className && {
-                  boxShadow: '0 0 0 2px red',
-                  color: 'transparent',
-                  px: 3,
-                })}
-                w='100%'
-              />
-              <FormControl id='className' isInvalid={!!errors.className}>
+            <FormControl isRequired isInvalid={!!errors.className}>
+              <Editable defaultValue={getValues('className')}>
+                <EditablePreview
+                  {...(!!errors.className && {
+                    boxShadow: '0 0 0 2px red',
+                    px: 3,
+                  })}
+                  w='100%'
+                />
+
                 <EditableInput
                   {...(!!errors.className && {
-                    color: '0 0 0 2px red'
+                    color: '0 0 0 2px red',
                   })}
-                  {...register('className', {
-                    required: {
-                      value: true,
-                      message: 'Please enter an instruction step.',
-                    },
-                  })}
+                  {...register('className')}
                 />
                 <FormErrorMessage>{errors.className?.message}</FormErrorMessage>
-              </FormControl>
-            </Editable>
+              </Editable>
+            </FormControl>
             <Divider />
             <Box>
               <FunctionsFormField />

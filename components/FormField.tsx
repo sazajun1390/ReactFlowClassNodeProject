@@ -63,43 +63,52 @@ const FunctionsFormField = memo((props) => {
               name={`functions.${index}.functionName`}
               control={control}
               render={(controlProps) => (
-                <Editable
-                  value={controlProps.field.value}
-                  onFocus={() => {
-                    console.log('focus')
-                    setFocusFuncFieldNum(`functions.${index}.FunId`)
-                  }}
-                  onBlur={() => {
-                    console.log('blur')
-                    setFocusFuncFieldNum(null)
-                  }}
-                >
-                  <EditablePreview />
-                  <EditableInput {...controlProps.field} />
-                  <FormErrorMessage>
-                    {errors.functions?.[index]?.functionName &&
-                      errors.functions?.[index]?.functionName?.message}
-                  </FormErrorMessage>
-                </Editable>
+                <FormControl isRequired isInvalid={!!errors.functions?.[index]?.functionName}>
+                  <Editable
+                    defaultValue={controlProps.field.value}
+                    onFocus={() => setFocusFuncFieldNum(`functions.${index}.FunId`)}
+                    onBlur={() => setFocusFuncFieldNum(null)}
+                  >
+                    <EditablePreview
+                      {...(!!errors.functions?.[index]?.functionName && {
+                        boxShadow: '0 0 0 2px red',
+                        px: 3,
+                      })}
+                      w='100%'
+                    />
+                    <EditableInput {...controlProps.field} />
+                    <FormErrorMessage>
+                      {errors.functions?.[index]?.functionName &&
+                        errors.functions?.[index]?.functionName?.message}
+                    </FormErrorMessage>
+                  </Editable>
+                </FormControl>
               )}
             />
             <Box>{': '}</Box>
             <Controller
-              name={`functions.${index}.type`}
+              name={`functions.${index}.funcType`}
               control={control}
               render={(controlProps) => (
-                <Editable
-                  value={controlProps.field.value}
-                  onFocus={() => {
-                    setFocusFuncFieldNum(`functions.${index}.FunId`)
-                  }}
-                  onBlur={() => {
-                    setFocusFuncFieldNum(null)
-                  }}
-                >
-                  <EditablePreview />
-                  <EditableInput {...controlProps.field} />
-                </Editable>
+                <FormControl isRequired isInvalid={!!errors.functions?.[index]?.funcType}>
+                  <Editable
+                    value={controlProps.field.value}
+                    onFocus={() =>  setFocusFuncFieldNum(`functions.${index}.FunId`)}
+                    onBlur={() => setFocusFuncFieldNum(null)}
+                  >
+                    <EditablePreview 
+                    {...(!!errors.functions?.[index]?.funcType && {
+                        boxShadow: '0 0 0 2px red',
+                        px: 3,
+                      })}
+                      w='100%'/>
+                    <EditableInput {...controlProps.field} />
+                    <FormErrorMessage>
+                      {errors.functions?.[index]?.funcType &&
+                        errors.functions?.[index]?.funcType?.message}
+                    </FormErrorMessage>
+                  </Editable>
+                </FormControl>
               )}
             />
           </HStack>
@@ -142,35 +151,29 @@ const VarsFormField = memo((props) => {
                 render={(controlProps) => (
                   <Editable
                     value={controlProps.field.value}
-                    onFocus={() => {
-                      console.log('focus')
-                      setFocusVarFieldNum(`variables.${index}.VarId`)
-                    }}
-                    onBlur={() => {
-                      console.log('blur')
-                      setFocusVarFieldNum(null)
-                    }}
+                    onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
+                    onBlur={() => setFocusVarFieldNum(null)}
                   >
-                    <EditablePreview />
+                    <EditablePreview
+                      {...(!!errors.variables?.[index]?.variableName && {
+                        boxShadow: '0 0 0 2px red',
+                        px: 3,
+                      })}
+                      w='100%'
+                    />
                     <EditableInput {...controlProps.field} />
                   </Editable>
                 )}
               />
               <Box>{': '}</Box>
               <Controller
-                name={`variables.${index}.type`}
+                name={`variables.${index}.varType`}
                 control={control}
                 render={(controlProps) => (
                   <Editable
                     value={controlProps.field.value}
-                    onFocus={() => {
-                      console.log('focus')
-                      setFocusVarFieldNum(`variables.${index}.VarId`)
-                    }}
-                    onBlur={() => {
-                      console.log('blur')
-                      setFocusVarFieldNum(null)
-                    }}
+                    onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
+                    onBlur={() => setFocusVarFieldNum(null)}
                   >
                     <EditablePreview />
                     <EditableInput {...controlProps.field} />

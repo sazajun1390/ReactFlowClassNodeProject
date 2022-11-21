@@ -30,7 +30,7 @@ interface VariableObj {
    * @minimum 1
    *
    */
-  type: string
+  varType: string
 }
 
 /*interface VarCard extends VariableObj {
@@ -61,7 +61,7 @@ interface FunctionObj {
    * @minimum 1
    *
    */
-  type: string
+  funcType: string
 }
 
 /*interface FuncCard extends FunctionObj {
