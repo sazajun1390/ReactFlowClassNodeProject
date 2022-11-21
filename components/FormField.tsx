@@ -93,15 +93,16 @@ const FunctionsFormField = memo((props) => {
                 <FormControl isRequired isInvalid={!!errors.functions?.[index]?.funcType}>
                   <Editable
                     value={controlProps.field.value}
-                    onFocus={() =>  setFocusFuncFieldNum(`functions.${index}.FunId`)}
+                    onFocus={() => setFocusFuncFieldNum(`functions.${index}.FunId`)}
                     onBlur={() => setFocusFuncFieldNum(null)}
                   >
-                    <EditablePreview 
-                    {...(!!errors.functions?.[index]?.funcType && {
+                    <EditablePreview
+                      {...(!!errors.functions?.[index]?.funcType && {
                         boxShadow: '0 0 0 2px red',
                         px: 3,
                       })}
-                      w='100%'/>
+                      w='100%'
+                    />
                     <EditableInput {...controlProps.field} />
                     <FormErrorMessage>
                       {errors.functions?.[index]?.funcType &&
@@ -149,20 +150,26 @@ const VarsFormField = memo((props) => {
                 name={`variables.${index}.variableName`}
                 control={control}
                 render={(controlProps) => (
-                  <Editable
-                    value={controlProps.field.value}
-                    onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
-                    onBlur={() => setFocusVarFieldNum(null)}
-                  >
-                    <EditablePreview
-                      {...(!!errors.variables?.[index]?.variableName && {
-                        boxShadow: '0 0 0 2px red',
-                        px: 3,
-                      })}
-                      w='100%'
-                    />
-                    <EditableInput {...controlProps.field} />
-                  </Editable>
+                  <FormControl isRequired isInvalid={!!errors.variables?.[index]?.variableName}>
+                    <Editable
+                      value={controlProps.field.value}
+                      onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
+                      onBlur={() => setFocusVarFieldNum(null)}
+                    >
+                      <EditablePreview
+                        {...(!!errors.variables?.[index]?.variableName && {
+                          boxShadow: '0 0 0 2px red',
+                          px: 3,
+                        })}
+                        w='100%'
+                      />
+                      <EditableInput {...controlProps.field} />
+                    </Editable>
+                    <FormErrorMessage>
+                      {errors.variables?.[index]?.variableName &&
+                        errors.variables?.[index]?.variableName?.message}
+                    </FormErrorMessage>
+                  </FormControl>
                 )}
               />
               <Box>{': '}</Box>
@@ -170,14 +177,26 @@ const VarsFormField = memo((props) => {
                 name={`variables.${index}.varType`}
                 control={control}
                 render={(controlProps) => (
-                  <Editable
-                    value={controlProps.field.value}
-                    onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
-                    onBlur={() => setFocusVarFieldNum(null)}
-                  >
-                    <EditablePreview />
-                    <EditableInput {...controlProps.field} />
-                  </Editable>
+                  <FormControl isRequired isInvalid={!!errors.variables?.[index]?.varType}>
+                    <Editable
+                      value={controlProps.field.value}
+                      onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
+                      onBlur={() => setFocusVarFieldNum(null)}
+                    >
+                      <EditablePreview
+                        {...(!!errors.variables?.[index]?.varType && {
+                          boxShadow: '0 0 0 2px red',
+                          px: 3,
+                        })}
+                        w='100%'
+                      />
+                      <EditableInput {...controlProps.field} />
+                    </Editable>
+                    <FormErrorMessage>
+                      {errors.variables?.[index]?.varType &&
+                        errors.variables?.[index]?.varType?.message}
+                    </FormErrorMessage>
+                  </FormControl>
                 )}
               />
             </FramerLayoutGroup>
