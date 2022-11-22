@@ -30,7 +30,7 @@ import type { Edge, Connection } from 'reactflow'
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import shallow from 'zustand/shallow'
-import { TestNode } from '../store/TestNode'
+import { testEdge, TestNode } from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodeComp'
 import { useForm } from 'react-hook-form'
 import EditorDrawer from '../components/EditorDrawer'
@@ -43,7 +43,7 @@ const FLowEditPage: NextPage = () => {
   const { height, width } = useToGetWindowSize()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(TestNode)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [edges, setEdges, onEdgesChange] = useEdgesState([])
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
 
   const { EditorIsOpen, EditorOnClose } = useDisclojureStore(
@@ -60,11 +60,7 @@ const FLowEditPage: NextPage = () => {
   const allowEdit = () => useEditData((state) => state.allowEdit())
   const denyEdit = () => useEditData((state) => state.denyEdit())
 
-  const { getNode } = useReactFlow()
-  const onConnect = useCallback(
-    (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
-  )
+  const onConnect = useCallback((params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   console.log('EditPageRendering')
   const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
@@ -81,7 +77,8 @@ const FLowEditPage: NextPage = () => {
       <Box w={width} h={height - 16} top='16px'>
         <>
           <ReactFlow
-            nodes={nodes}
+            defaultNodes ={nodes}
+            defaultEdges = {edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}

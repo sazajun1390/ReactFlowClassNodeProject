@@ -1,5 +1,5 @@
 import { useCallback, useRef, memo, FC, useState, Key, useEffect } from 'react'
-import { Handle, NodeProps, Position, useReactFlow, useStoreApi } from 'reactflow'
+import { Connection, Edge, Handle, NodeProps, Position, useReactFlow, useStoreApi, addEdge } from 'reactflow'
 import {
   Divider,
   Box,
@@ -25,6 +25,7 @@ import { useAnimationControls } from 'framer-motion'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { classNodeDataSchema } from '../type/zod/zodClassNodeComp.zod'
 import { FunctionsFormField, VarsFormField } from './FormField'
+import { css } from '@emotion/react'
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   const { data } = props
@@ -76,6 +77,25 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
 
   const onSubmit = useCallback(() => {}, [nodeClass])
 
+  const handleStyle = {
+    width: '15px',
+    height: '10px',
+    background: '#818181',
+    borderRadius: '1px'
+  }
+  const sourceHandle = {
+    top:'10px'
+  }
+
+  const rightOutputHandle = {
+
+  }
+  const { setEdges, } = useReactFlow()
+  const onConnect = useCallback(
+    (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  )
+
   return (
     <Box>
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
@@ -116,10 +136,10 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
             }}
           ></Button>
         </Box>
-        <Handle type='target' position={Position.Left} />
-        <Handle type='source' position={Position.Left} />
-        <Handle type='target' position={Position.Right} />
-        <Handle type='source' position={Position.Right} />
+        <Handle type='target' position={Position.Left} style={handleStyle}  />
+        
+        
+        <Handle type='source' position={Position.Right} style={handleStyle}/>
       </Stack>
     </Box>
   )
@@ -128,6 +148,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
 export default memo(ClassNodeComp)
 
 /*
+  <Handle type='source' position={Position.Left}  onConnect={onConnect} isConnectable={true} style={handleStyle}/>
+  <Handle type='target' position={Position.Right}  onConnect={onConnect} isConnectable={true} style={handleStyle}/>
   <Controller
               name='className'
               control={control}

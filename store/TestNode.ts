@@ -1,5 +1,5 @@
 import React from 'react'
-import { NodeProps } from 'reactflow'
+import { Edge, NodeProps } from 'reactflow'
 import ClassNodeComp from '../components/ClassNodeComp'
 import type { FunctionObj, VariableObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
 
@@ -53,7 +53,7 @@ const testClass: ClassNode = {
 const testClass2: ClassNode = {
   id: '1',
   type: 'custom',
-  position: { x: 30, y: 30 },
+  position: { x: 1000, y: 30 },
   data: {
     className: 'calcNum',
     variables: [Variable1, Variable1, Variable1],
@@ -75,4 +75,10 @@ const storyTestClass: NodeProps<ClassNodeData> = {
 
 const TestNode: Array<any> = [testClass, testClass2]
 
-export { TestNode, testClass, testClass2, storyTestClass }
+const testEdge: Edge[] = [{
+  id:'te1',
+  source: '0',
+  target: '1',
+},]
+
+export { TestNode, testClass, testClass2, storyTestClass,testEdge }
