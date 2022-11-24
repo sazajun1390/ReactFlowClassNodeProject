@@ -1,5 +1,14 @@
 import { useCallback, useRef, memo, FC, useState, Key, useEffect } from 'react'
-import { Connection, Edge, Handle, NodeProps, Position, useReactFlow, useStoreApi, addEdge } from 'reactflow'
+import {
+  Connection,
+  Edge,
+  Handle,
+  NodeProps,
+  Position,
+  useReactFlow,
+  useStoreApi,
+  addEdge,
+} from 'reactflow'
 import {
   Divider,
   Box,
@@ -81,16 +90,14 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     width: '15px',
     height: '10px',
     background: '#818181',
-    borderRadius: '1px'
+    borderRadius: '1px',
   }
   const sourceHandle = {
-    top:'10px'
+    top: '10px',
   }
 
-  const rightOutputHandle = {
-
-  }
-  const { setEdges, } = useReactFlow()
+  const rightOutputHandle = {}
+  const { setEdges } = useReactFlow()
   const onConnect = useCallback(
     (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
@@ -136,10 +143,9 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
             }}
           ></Button>
         </Box>
-        <Handle type='target' position={Position.Left} style={handleStyle}  />
-        
-        
-        <Handle type='source' position={Position.Right} style={handleStyle}/>
+        <Handle type='target' position={Position.Left} style={handleStyle} />
+
+        <Handle type='source' position={Position.Right} style={handleStyle} />
       </Stack>
     </Box>
   )

@@ -20,6 +20,7 @@ import {
   IconButton,
   CloseButton,
   FormErrorMessage,
+  ResponsiveValue,
 } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
 import type { VariableObj, FunctionObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
@@ -50,12 +51,20 @@ const FunctionsFormField = memo((props) => {
   return (
     <>
       {functions.fields.map((item, index) => {
+        const [visibility, setVisibility] = useState<ResponsiveValue<Property.Visibility>>('hidden')
+        const [display, setDisplay] = useState<ResponsiveValue<Property.Display>>('none')
+
+        useEffect(() => {
+          setDisplay(focusFuncFieldNum == `functions.${index}.FunId`?'block':'none')
+          setVisibility(focusFuncFieldNum == `functions.${index}.FunId`?'visible':'hidden')
+        }, [focusFuncFieldNum])
+
+        const focusFunc = useCallback(() => setFocusFuncFieldNum(`functions.${index}.FunId`),[])
+        const blurFunc = useCallback(() => setFocusFuncFieldNum(null),[])
+
         return (
           <HStack spacing={6} justify='center' key={index}>
-            <FramerBox
-              visibility={focusFuncFieldNum == `functions.${index}.FunId` ? 'visible' : 'hidden'}
-              display={focusFuncFieldNum == `functions.${index}.FunId` ? 'block' : 'none'}
-            >
+            <FramerBox visibility={visibility} display={display}>
               <IconButton aria-label='deleteFunction' key={index} icon={<CloseButton />} />
             </FramerBox>
             <Box>-</Box>
@@ -66,8 +75,8 @@ const FunctionsFormField = memo((props) => {
                 <FormControl isRequired isInvalid={!!errors.functions?.[index]?.functionName}>
                   <Editable
                     defaultValue={controlProps.field.value}
-                    onFocus={() => setFocusFuncFieldNum(`functions.${index}.FunId`)}
-                    onBlur={() => setFocusFuncFieldNum(null)}
+                    onFocus={focusFunc}
+                    onBlur={blurFunc}
                   >
                     <EditablePreview
                       {...(!!errors.functions?.[index]?.functionName && {
@@ -78,8 +87,7 @@ const FunctionsFormField = memo((props) => {
                     />
                     <EditableInput {...controlProps.field} />
                     <FormErrorMessage>
-                      {errors.functions?.[index]?.functionName &&
-                        errors.functions?.[index]?.functionName?.message}
+                      {errors.functions?.[index]?.functionName?.message}
                     </FormErrorMessage>
                   </Editable>
                 </FormControl>
@@ -93,8 +101,8 @@ const FunctionsFormField = memo((props) => {
                 <FormControl isRequired isInvalid={!!errors.functions?.[index]?.funcType}>
                   <Editable
                     value={controlProps.field.value}
-                    onFocus={() => setFocusFuncFieldNum(`functions.${index}.FunId`)}
-                    onBlur={() => setFocusFuncFieldNum(null)}
+                    onFocus={focusFunc}
+                    onBlur={blurFunc}
                   >
                     <EditablePreview
                       {...(!!errors.functions?.[index]?.funcType && {
@@ -105,8 +113,7 @@ const FunctionsFormField = memo((props) => {
                     />
                     <EditableInput {...controlProps.field} />
                     <FormErrorMessage>
-                      {errors.functions?.[index]?.funcType &&
-                        errors.functions?.[index]?.funcType?.message}
+                      {errors.functions?.[index]?.funcType?.message}
                     </FormErrorMessage>
                   </Editable>
                 </FormControl>
@@ -136,15 +143,23 @@ const VarsFormField = memo((props) => {
   return (
     <>
       {vars.fields.map((item, index) => {
+        const [visibility, setVisibility] = useState<ResponsiveValue<Property.Visibility>>('hidden')
+        const [display, setDisplay] = useState<ResponsiveValue<Property.Display>>('none')
+
+        const focusFunc = useCallback(() => setFocusVarFieldNum(`variables.${index}.VarId`),[])
+        const blurFunc = useCallback(() => setFocusVarFieldNum(null),[])
+
+        useEffect(() => {
+          setDisplay(focusVarFieldNum == `variables.${index}.VarId`?'block':'none')
+          setVisibility(focusVarFieldNum == `variables.${index}.VarId`?'visible':'hidden')
+        }, [focusVarFieldNum])
+
         return (
           <HStack spacing={6} justify='center' key={index}>
             <FramerLayoutGroup>
-              <FramerBox
-                visibility={focusVarFieldNum == `variables.${index}.VarId` ? 'visible' : 'hidden'}
-                display={focusVarFieldNum == `variables.${index}.VarId` ? 'block' : 'none'}
-              >
+              <Box visibility={visibility} display={display}>
                 <IconButton aria-label='deleteVars' key={index} icon={<CloseButton />} />
-              </FramerBox>
+              </Box>
               <Box>{'+ '}</Box>
               <Controller
                 name={`variables.${index}.variableName`}
@@ -153,8 +168,8 @@ const VarsFormField = memo((props) => {
                   <FormControl isRequired isInvalid={!!errors.variables?.[index]?.variableName}>
                     <Editable
                       value={controlProps.field.value}
-                      onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
-                      onBlur={() => setFocusVarFieldNum(null)}
+                      onFocus={focusFunc}
+                      onBlur={blurFunc}
                     >
                       <EditablePreview
                         {...(!!errors.variables?.[index]?.variableName && {
@@ -166,8 +181,7 @@ const VarsFormField = memo((props) => {
                       <EditableInput {...controlProps.field} />
                     </Editable>
                     <FormErrorMessage>
-                      {errors.variables?.[index]?.variableName &&
-                        errors.variables?.[index]?.variableName?.message}
+                      {errors.variables?.[index]?.variableName?.message}
                     </FormErrorMessage>
                   </FormControl>
                 )}
@@ -180,8 +194,8 @@ const VarsFormField = memo((props) => {
                   <FormControl isRequired isInvalid={!!errors.variables?.[index]?.varType}>
                     <Editable
                       value={controlProps.field.value}
-                      onFocus={() => setFocusVarFieldNum(`variables.${index}.VarId`)}
-                      onBlur={() => setFocusVarFieldNum(null)}
+                      onFocus={focusFunc}
+                      onBlur={blurFunc}
                     >
                       <EditablePreview
                         {...(!!errors.variables?.[index]?.varType && {
@@ -193,8 +207,7 @@ const VarsFormField = memo((props) => {
                       <EditableInput {...controlProps.field} />
                     </Editable>
                     <FormErrorMessage>
-                      {errors.variables?.[index]?.varType &&
-                        errors.variables?.[index]?.varType?.message}
+                      {errors.variables?.[index]?.varType?.message}
                     </FormErrorMessage>
                   </FormControl>
                 )}
@@ -208,3 +221,22 @@ const VarsFormField = memo((props) => {
 })
 
 export { FunctionsFormField, VarsFormField }
+
+/**
+ * <FramerBox
+                visibility={focusVarFieldNum == `variables.${index}.VarId` ? 'visible' : 'hidden'}
+                display={focusVarFieldNum == `variables.${index}.VarId` ? 'block' : 'none'}
+              >
+
+              
+        useEffect(()=>{
+          setVisibility((prevArr)=> 
+            prevArr.map((value,visIndex)=> (visIndex  == focusVarFieldNum as unknown ? 'visible': 'hidden'))
+          )
+          setDisplay((prev)=>
+            prev.map((v,disIndex) => (disIndex == focusVarFieldNum as unknown ? 'block': 'hidden'))
+          )
+        },[focusVarFieldNum])
+        visibility={focusVarFieldNum == `variables.${index}.VarId` ? 'visible' : 'hidden'}
+                display={focusVarFieldNum == `variables.${index}.VarId` ? 'block' : 'none'}
+ */

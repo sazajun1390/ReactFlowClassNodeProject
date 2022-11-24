@@ -60,7 +60,10 @@ const FLowEditPage: NextPage = () => {
   const allowEdit = () => useEditData((state) => state.allowEdit())
   const denyEdit = () => useEditData((state) => state.denyEdit())
 
-  const onConnect = useCallback((params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback(
+    (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges],
+  )
 
   console.log('EditPageRendering')
   const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
@@ -74,11 +77,11 @@ const FLowEditPage: NextPage = () => {
       <Header />
       <EditorDrawer setNodes={setNodes} />
 
-      <Box w={width} h={height - 16} top='16px'>
+      <Box w={width} h={height} top='16px'>
         <>
           <ReactFlow
-            defaultNodes ={nodes}
-            defaultEdges = {edges}
+            defaultNodes={nodes}
+            defaultEdges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}

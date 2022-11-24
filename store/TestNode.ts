@@ -75,10 +75,12 @@ const storyTestClass: NodeProps<ClassNodeData> = {
 
 const TestNode: Array<any> = [testClass, testClass2]
 
-const testEdge: Edge[] = [{
-  id:'te1',
-  source: '0',
-  target: '1',
-},]
+const testEdge: Edge[] = [
+  {
+    id: 'te1',
+    source: '0',
+    target: '1',
+  },
+]
 
-export { TestNode, testClass, testClass2, storyTestClass,testEdge }
+export { TestNode, testClass, testClass2, storyTestClass, testEdge }
