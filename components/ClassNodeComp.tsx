@@ -93,11 +93,11 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
 
   const onSubmit: SubmitHandler<ClassNode> = (data) => {
     const nodes = getNodes()
-    nodes.find((elm: ClassNode, index) => {
-      if(elm.id===data.id){
-        
-      }
-    })
+    setNodes(
+      nodes.map((elm: ClassNode) => {
+        return (elm.id===data.id) ? data : elm
+      })
+    )
   }
 
   const handleStyle = {
