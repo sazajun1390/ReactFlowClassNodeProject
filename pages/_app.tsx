@@ -18,13 +18,11 @@ const theme = extendTheme({ colors })
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ReactFlowProvider>
-      <ChakraProvider theme={theme}>
-        <AnimatePresence>
-          <Component {...pageProps} />
-        </AnimatePresence>
-      </ChakraProvider>
-    </ReactFlowProvider>
+    <ChakraProvider theme={theme}>
+      <AnimatePresence>
+        <Component {...pageProps} />
+      </AnimatePresence>
+    </ChakraProvider>
   )
 }
 

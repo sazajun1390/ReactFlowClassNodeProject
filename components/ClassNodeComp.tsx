@@ -21,9 +21,16 @@ import {
   FormErrorMessage,
   Input,
   useEditableControls,
+  BorderProps,
 } from '@chakra-ui/react'
 import { EditIcon } from '@chakra-ui/icons'
-import type { VariableObj, FunctionObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
+import type {
+  VariableObj,
+  FunctionObj,
+  ClassNode,
+  ClassNodeData,
+  fieldPreviewProps,
+} from '../type/ClassNodeComp'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import { useEditData } from '../zustand/EditData'
 import shallow from 'zustand/shallow'
@@ -32,14 +39,16 @@ import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-for
 import { useAnimationControls } from 'framer-motion'
 //import * as yup from 'yup';
 import { zodResolver } from '@hookform/resolvers/zod'
-import { classNodeDataSchema } from '../type/zod/zodClassNodeComp.zod'
+import { classNodeSchema } from '../type/zod/zodClassNodeComp.zod'
 import { FunctionsFormField, VarsFormField } from './FormField'
 import { css } from '@emotion/react'
+import type { FieldError } from 'react-hook-form'
+import { SubmitHandler } from 'react-hook-form'
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
-  const { data } = props
+  const data = props
   const EditorOnOpen = useDisclojureStore.getState().onOpen
-  const { getNode, setNodes } = useReactFlow()
+  const { getNodes, setNodes, setEdges } = useReactFlow()
 
   const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData(
     (state) => ({
@@ -59,13 +68,11 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   const [isOpen, setOpen] = useState(false)
 
   const [nodeClass, setNodeClass] = useState(data)
-  const methods = useForm<ClassNodeData>({
+  const methods = useForm<ClassNode>({
     defaultValues: {
-      className: nodeClass.className,
-      functions: nodeClass.functions,
-      variables: nodeClass.variables,
+      ...nodeClass
     },
-    resolver: zodResolver(classNodeDataSchema),
+    resolver: zodResolver(classNodeSchema),
     mode: 'all',
   })
 
@@ -84,7 +91,12 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     isOpen ? allowEdit : denyEdit
   }, [isOpen])
 
-  const onSubmit = useCallback(() => {}, [nodeClass])
+  const onSubmit: SubmitHandler<ClassNode> = (data) => {
+    const nodes = getNodes()
+    nodes.find((elm: ClassNode) => {
+      
+    })
+  }
 
   const handleStyle = {
     width: '15px',
@@ -97,34 +109,33 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   }
 
   const rightOutputHandle = {}
-  const { setEdges } = useReactFlow()
   const onConnect = useCallback(
     (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   )
+  const [classNameFieldError, setClassNameFieldError] = useState<fieldPreviewProps | null>(null)
+  useEffect(() => {
+    //setclassNameFieldError(typeof errors.className === 'undefined' ? false : true )
+    setClassNameFieldError(
+      typeof errors.data?.className === 'undefined'
+        ? null
+        : {
+            border: '2px',
+            borderColor: 'red.400',
+          },
+    )
+  }, [errors.data?.className])
 
   return (
     <Box>
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormProvider {...methods}>
-            <FormControl isRequired isInvalid={!!errors.className}>
-              <Editable defaultValue={getValues('className')}>
-                <EditablePreview
-                  {...(!!errors.className && {
-                    boxShadow: '0 0 0 2px red',
-                    px: 3,
-                  })}
-                  w='100%'
-                />
-
-                <EditableInput
-                  {...(!!errors.className && {
-                    color: '0 0 0 2px red',
-                  })}
-                  {...register('className')}
-                />
-                <FormErrorMessage>{errors.className?.message}</FormErrorMessage>
+            <FormControl isRequired isInvalid={!!errors.data?.className}>
+              <Editable defaultValue={getValues('data.className')}>
+                <EditablePreview w='100%' {...classNameFieldError} />
+                <EditableInput {...classNameFieldError} {...register('data.className')} />
+                <FormErrorMessage>{errors.data?.className?.message}</FormErrorMessage>
               </Editable>
             </FormControl>
             <Divider />
@@ -136,12 +147,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
           </FormProvider>
         </form>
         <Box>
-          <Button
-            leftIcon={<EditIcon />}
-            onClick={() => {
-              //EditorOnOpen()
-            }}
-          ></Button>
+          <Button leftIcon={<EditIcon />} type='submit'></Button>
         </Box>
         <Handle type='target' position={Position.Left} style={handleStyle} />
 
@@ -154,6 +160,14 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
 export default memo(ClassNodeComp)
 
 /*
+  
+            onClick={() => {
+              //EditorOnOpen()
+            }}
+  {...(!!errors.className && {
+                    boxShadow: '0 0 0 2px red',
+                    px: 3,
+                  })}
   <Handle type='source' position={Position.Left}  onConnect={onConnect} isConnectable={true} style={handleStyle}/>
   <Handle type='target' position={Position.Right}  onConnect={onConnect} isConnectable={true} style={handleStyle}/>
   <Controller

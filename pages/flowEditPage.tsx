@@ -8,10 +8,11 @@ import ReactFlow, {
   NodeProps,
   ReactFlowInstance,
   ReactFlowProvider,
+  Node,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { initialEdges, initialNodes } from '../store/ReactFlowStarterDeck'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, MouseEvent as ReactMouseEvent } from 'react'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -38,6 +39,7 @@ import { useEditData } from '../zustand/EditData'
 import { useReactFlow } from 'reactflow'
 import { implementsClassNode } from '../type/ClassNodeCompTypeGuard'
 import { ClassNodeData } from '../type/ClassNodeComp'
+import type { NodeMouseHandler } from 'reactflow'
 
 const FLowEditPage: NextPage = () => {
   const { height, width } = useToGetWindowSize()
@@ -65,43 +67,45 @@ const FLowEditPage: NextPage = () => {
     [setEdges],
   )
 
-  console.log('EditPageRendering')
   const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
+  const mouseEnter = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
+    if (implementsClassNode(node) && useEditData.getState().dnotEdit) {
+      useEditData.getState().setData(node.id, node.data)
+      useEditData.getState().allowEdit()
+    }
+  }, [])
+
+  const mouseLeave = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
+    useEditData.getState().denyEdit()
+  }, [])
 
   return (
     <div>
-      <Head>
-        <title>fLowEditPage</title>
-      </Head>
+      <ReactFlowProvider>
+        <Head>
+          <title>fLowEditPage</title>
+        </Head>
 
-      <Header />
-      <EditorDrawer setNodes={setNodes} />
+        <Header />
+        <EditorDrawer setNodes={setNodes} />
 
-      <Box w={width} h={height} top='16px'>
-        <>
+        <Box w={width} h={height} top='16px'>
           <ReactFlow
-            defaultNodes={nodes}
-            defaultEdges={edges}
+            nodes={nodes}
+            edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeTypes}
-            onNodeMouseEnter={(e, node) => {
-              if (implementsClassNode(node) && useEditData.getState().dnotEdit) {
-                useEditData.getState().setData(node.id, node.data)
-                useEditData.getState().allowEdit()
-              }
-            }}
-            onNodeMouseLeave={() => {
-              useEditData.getState().denyEdit()
-            }}
+            onNodeMouseEnter={mouseEnter}
+            onNodeMouseLeave={mouseLeave}
           >
             <MiniMap />
             <Controls />
             <Background />
           </ReactFlow>
-        </>
-      </Box>
+        </Box>
+      </ReactFlowProvider>
     </div>
   )
 }

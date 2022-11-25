@@ -31,5 +31,7 @@ const classNodeDataSchema = z.object({
   variables: z.array(variableObjSchema),
   functions: z.array(functionObjSchema),
 })
-
-export { classNodeDataSchema }
+const classNodeSchema = z.object({
+  data: classNodeDataSchema
+})
+export { classNodeSchema }

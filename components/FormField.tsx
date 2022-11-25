@@ -21,9 +21,16 @@ import {
   CloseButton,
   FormErrorMessage,
   ResponsiveValue,
+  BorderProps,
 } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
-import type { VariableObj, FunctionObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
+import { AddIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'
+import type {
+  VariableObj,
+  FunctionObj,
+  ClassNode,
+  ClassNodeData,
+  fieldPreviewProps,
+} from '../type/ClassNodeComp'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import { useEditData } from '../zustand/EditData'
 import shallow from 'zustand/shallow'
@@ -33,16 +40,21 @@ import { useAnimationControls } from 'framer-motion'
 //import * as yup from 'yup';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { classNodeDataSchema } from '../type/zodClassNodeComp'
+import type { Property } from 'csstype'
+const errorCss: fieldPreviewProps = {
+  border: '2px',
+  borderColor: 'red.400',
+}
 
 const FunctionsFormField = memo((props) => {
   const {
     control,
     getFieldState,
     formState: { errors, isSubmitted },
-  } = useFormContext<ClassNodeData>()
+  } = useFormContext<ClassNode>()
 
-  const functions = useFieldArray({
-    name: 'functions',
+  const {fields,remove,append} = useFieldArray({
+    name: 'data.functions',
     control,
   })
 
@@ -50,71 +62,67 @@ const FunctionsFormField = memo((props) => {
 
   return (
     <>
-      {functions.fields.map((item, index) => {
+      {fields.map((item, index) => {
+        const funcErrorState = errors.data?.functions?.[index]
         const [visibility, setVisibility] = useState<ResponsiveValue<Property.Visibility>>('hidden')
         const [display, setDisplay] = useState<ResponsiveValue<Property.Display>>('none')
+        const [funcNameFieldError, setFuncNameFieldError] = useState<fieldPreviewProps | null>(null)
+        const [funcTypeFieldError, setFuncTypeFieldError] = useState<fieldPreviewProps | null>(null)
 
         useEffect(() => {
-          setDisplay(focusFuncFieldNum == `functions.${index}.FunId`?'block':'none')
-          setVisibility(focusFuncFieldNum == `functions.${index}.FunId`?'visible':'hidden')
+          setFuncNameFieldError(
+            typeof funcErrorState?.functionName === 'undefined' ? null : errorCss,
+          )
+        }, [funcErrorState?.functionName])
+        useEffect(() => {
+          setFuncTypeFieldError(typeof funcErrorState?.funcType === 'undefined' ? null : errorCss)
+        }, [funcErrorState?.funcType])
+        useEffect(() => {
+          setDisplay(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'block' : 'none')
+          setVisibility(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'visible' : 'hidden')
         }, [focusFuncFieldNum])
 
-        const focusFunc = useCallback(() => setFocusFuncFieldNum(`functions.${index}.FunId`),[])
-        const blurFunc = useCallback(() => setFocusFuncFieldNum(null),[])
-
+        const focusFunc = useCallback(() => setFocusFuncFieldNum(`functions.${index}.FunId`), [])
+        const blurFunc = useCallback(() => setFocusFuncFieldNum(null), [])
+        
         return (
-          <HStack spacing={6} justify='center' key={index}>
-            <FramerBox visibility={visibility} display={display}>
-              <IconButton aria-label='deleteFunction' key={index} icon={<CloseButton />} />
-            </FramerBox>
+          <HStack spacing={6} justify='center' key={item.id}>
+            <IconButton 
+              aria-label='deleteFunction' 
+              visibility={visibility} 
+              display={display} 
+              key={index} 
+              icon={<CloseIcon />} 
+              onClick={()=>{remove(index)}} 
+            />
             <Box>-</Box>
             <Controller
-              name={`functions.${index}.functionName`}
+              name={`data.functions.${index}.functionName`}
               control={control}
               render={(controlProps) => (
-                <FormControl isRequired isInvalid={!!errors.functions?.[index]?.functionName}>
+                <FormControl isRequired isInvalid={!!funcErrorState?.functionName}>
                   <Editable
                     defaultValue={controlProps.field.value}
                     onFocus={focusFunc}
                     onBlur={blurFunc}
                   >
-                    <EditablePreview
-                      {...(!!errors.functions?.[index]?.functionName && {
-                        boxShadow: '0 0 0 2px red',
-                        px: 3,
-                      })}
-                      w='100%'
-                    />
+                    <EditablePreview {...funcNameFieldError} w='100%' />
                     <EditableInput {...controlProps.field} />
-                    <FormErrorMessage>
-                      {errors.functions?.[index]?.functionName?.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{funcErrorState?.functionName?.message}</FormErrorMessage>
                   </Editable>
                 </FormControl>
               )}
             />
             <Box>{': '}</Box>
             <Controller
-              name={`functions.${index}.funcType`}
+              name={`data.functions.${index}.funcType`}
               control={control}
               render={(controlProps) => (
-                <FormControl isRequired isInvalid={!!errors.functions?.[index]?.funcType}>
-                  <Editable
-                    value={controlProps.field.value}
-                    onFocus={focusFunc}
-                    onBlur={blurFunc}
-                  >
-                    <EditablePreview
-                      {...(!!errors.functions?.[index]?.funcType && {
-                        boxShadow: '0 0 0 2px red',
-                        px: 3,
-                      })}
-                      w='100%'
-                    />
+                <FormControl isRequired isInvalid={!!funcErrorState?.funcType}>
+                  <Editable value={controlProps.field.value} onFocus={focusFunc} onBlur={blurFunc}>
+                    <EditablePreview {...funcTypeFieldError} w='100%' />
                     <EditableInput {...controlProps.field} />
-                    <FormErrorMessage>
-                      {errors.functions?.[index]?.funcType?.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{funcErrorState?.funcType?.message}</FormErrorMessage>
                   </Editable>
                 </FormControl>
               )}
@@ -126,15 +134,24 @@ const FunctionsFormField = memo((props) => {
   )
 })
 
+
+
+
+
+
+
+
+
+
 const VarsFormField = memo((props) => {
   const {
     control,
     getFieldState,
     formState: { errors, isSubmitted },
-  } = useFormContext<ClassNodeData>()
+  } = useFormContext<ClassNode>()
 
   const vars = useFieldArray({
-    name: 'variables',
+    name: 'data.variables',
     control,
   })
 
@@ -145,70 +162,64 @@ const VarsFormField = memo((props) => {
       {vars.fields.map((item, index) => {
         const [visibility, setVisibility] = useState<ResponsiveValue<Property.Visibility>>('hidden')
         const [display, setDisplay] = useState<ResponsiveValue<Property.Display>>('none')
+        const varErrorState = errors.data?.variables?.[index]
 
-        const focusFunc = useCallback(() => setFocusVarFieldNum(`variables.${index}.VarId`),[])
-        const blurFunc = useCallback(() => setFocusVarFieldNum(null),[])
+        const focusFunc = useCallback(() => setFocusVarFieldNum(`data.variables.${index}.VarId`), [])
+        const blurFunc = useCallback(() => setFocusVarFieldNum(null), [])
+        const [varNameFieldError, setVarNameFieldError] = useState<fieldPreviewProps | null>(null)
+        const [varTypeFieldError, setVarTypeFieldError] = useState<fieldPreviewProps | null>(null)
 
         useEffect(() => {
-          setDisplay(focusVarFieldNum == `variables.${index}.VarId`?'block':'none')
-          setVisibility(focusVarFieldNum == `variables.${index}.VarId`?'visible':'hidden')
+          setVarNameFieldError(typeof varErrorState?.variableName === 'undefined' ? null : errorCss)
+        }, [varErrorState?.variableName])
+        useEffect(() => {
+          setVarTypeFieldError(typeof varErrorState?.varType === 'undefined' ? null : errorCss)
+        }, [varErrorState?.varType])
+        useEffect(() => {
+          setDisplay(focusVarFieldNum == `data.variables.${index}.VarId` ? 'block' : 'none')
+          setVisibility(focusVarFieldNum == `data.variables.${index}.VarId` ? 'visible' : 'hidden')
         }, [focusVarFieldNum])
 
         return (
-          <HStack spacing={6} justify='center' key={index}>
+          <HStack spacing={6} justify='center' key={item.id}>
             <FramerLayoutGroup>
-              <Box visibility={visibility} display={display}>
-                <IconButton aria-label='deleteVars' key={index} icon={<CloseButton />} />
-              </Box>
+              <IconButton visibility={visibility} display={display} aria-label='deleteVars' key={index} icon={<CloseIcon />} onClick={()=>{ 
+                console.log(item.id) 
+                vars.remove(index)}}
+              />
               <Box>{'+ '}</Box>
               <Controller
-                name={`variables.${index}.variableName`}
+                name={`data.variables.${index}.variableName`}
                 control={control}
                 render={(controlProps) => (
-                  <FormControl isRequired isInvalid={!!errors.variables?.[index]?.variableName}>
+                  <FormControl isRequired isInvalid={!!varErrorState?.variableName}>
                     <Editable
                       value={controlProps.field.value}
                       onFocus={focusFunc}
                       onBlur={blurFunc}
                     >
-                      <EditablePreview
-                        {...(!!errors.variables?.[index]?.variableName && {
-                          boxShadow: '0 0 0 2px red',
-                          px: 3,
-                        })}
-                        w='100%'
-                      />
+                      <EditablePreview {...varNameFieldError} w='100%' />
                       <EditableInput {...controlProps.field} />
                     </Editable>
-                    <FormErrorMessage>
-                      {errors.variables?.[index]?.variableName?.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{varErrorState?.variableName?.message}</FormErrorMessage>
                   </FormControl>
                 )}
               />
               <Box>{': '}</Box>
               <Controller
-                name={`variables.${index}.varType`}
+                name={`data.variables.${index}.varType`}
                 control={control}
                 render={(controlProps) => (
-                  <FormControl isRequired isInvalid={!!errors.variables?.[index]?.varType}>
+                  <FormControl isRequired isInvalid={!!varErrorState?.varType}>
                     <Editable
                       value={controlProps.field.value}
                       onFocus={focusFunc}
                       onBlur={blurFunc}
                     >
-                      <EditablePreview
-                        {...(!!errors.variables?.[index]?.varType && {
-                          boxShadow: '0 0 0 2px red',
-                          px: 3,
-                        })}
-                        w='100%'
-                      />
+                      <EditablePreview {...varTypeFieldError} w='100%' />
                       <EditableInput {...controlProps.field} />
                     </Editable>
-                    <FormErrorMessage>
-                      {errors.variables?.[index]?.varType?.message}
-                    </FormErrorMessage>
+                    <FormErrorMessage>{varErrorState?.varType?.message}</FormErrorMessage>
                   </FormControl>
                 )}
               />

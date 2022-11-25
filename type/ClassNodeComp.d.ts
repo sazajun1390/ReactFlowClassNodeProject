@@ -87,6 +87,11 @@ interface formObjectReducerState {
   type: string
 }
 
+interface fieldPreviewProps {
+  border: BorderProps['border']
+  borderColor: BorderProps['borderColor']
+}
+
 export type {
   ClassNodeData,
   VariableObj,
@@ -96,4 +101,5 @@ export type {
   ClassNode,
   formObjectReducerState,
   formObjectType,
+  fieldPreviewProps,
 }
