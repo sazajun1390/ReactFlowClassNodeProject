@@ -82,7 +82,7 @@ const FunctionsFormField = memo((props) => {
           setVisibility(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'visible' : 'hidden')
         }, [focusFuncFieldNum])
 
-        const focusFunc = useCallback(() => setFocusFuncFieldNum(`functions.${index}.FunId`), [])
+        const focusFunc = useCallback(() => setFocusFuncFieldNum(`data.functions.${index}.FunId`), [])
         const blurFunc = useCallback(() => setFocusFuncFieldNum(null), [])
         
         return (
