@@ -40,7 +40,7 @@ import { useAnimationControls } from 'framer-motion'
 //import * as yup from 'yup';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { classNodeSchema } from '../type/zod/zodClassNodeComp.zod'
-import { FunctionsFormField, VarsFormField } from './FormField'
+import { FunctionsFormFields, VarsFormFields } from './FormField'
 import { css } from '@emotion/react'
 import type { FieldError } from 'react-hook-form'
 import { SubmitHandler } from 'react-hook-form'
@@ -70,7 +70,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   const [nodeClass, setNodeClass] = useState(data)
   const methods = useForm<ClassNode>({
     defaultValues: {
-      ...nodeClass
+      ...nodeClass,
     },
     resolver: zodResolver(classNodeSchema),
     mode: 'all',
@@ -95,8 +95,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     const nodes = getNodes()
     setNodes(
       nodes.map((elm: ClassNode) => {
-        return (elm.id===data.id) ? data : elm
-      })
+        return elm.id === data.id ? data : elm
+      }),
     )
   }
 
@@ -136,15 +136,19 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
             <FormControl isRequired isInvalid={!!errors.data?.className}>
               <Editable defaultValue={getValues('data.className')}>
                 <EditablePreview w='100%' {...classNameFieldError} />
-                <EditableInput {...classNameFieldError} {...register('data.className')} />
+                <EditableInput
+                  id='data.className'
+                  {...classNameFieldError}
+                  {...register('data.className')}
+                />
                 <FormErrorMessage>{errors.data?.className?.message}</FormErrorMessage>
               </Editable>
             </FormControl>
             <Divider />
             <Box>
-              <FunctionsFormField />
+              <FunctionsFormFields />
               <Divider />
-              <VarsFormField />
+              <VarsFormFields />
             </Box>
           </FormProvider>
         </form>
