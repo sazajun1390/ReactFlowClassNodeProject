@@ -42,6 +42,15 @@ interface VarCard extends VariableObj {
   setter: Dispatch<formObjectReducerState>
 }
 
+type FuncArg = {
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  arg:string
+}
+
 interface FunctionObj {
   /**
    *
@@ -56,6 +65,8 @@ interface FunctionObj {
    *
    */
   functionName: string
+
+  funcArgs:Array<FuncArg>
 
   /**
    *
@@ -136,3 +147,7 @@ const classNodeDataSchema = z.object({
 
 export { classNodeDataSchema }
  */
+
+/*
+* 
+*/

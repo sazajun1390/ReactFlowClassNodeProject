@@ -41,6 +41,15 @@ interface VarCard extends VariableObj {
   setter: Dispatch<formObjectReducerState>
 }
 
+type FuncArg = {
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  arg:string
+}
+
 interface FunctionObj {
   /**
    *
@@ -56,14 +65,16 @@ interface FunctionObj {
    */
   functionName: string
 
+  funcArgs:Array<FuncArg>
+
   /**
    *
    * @minimum 1
    *
    */
   funcType: string
-}
 
+}
 /*interface FuncCard extends FunctionObj {
   setter: Dispatch<SetStateAction<VariableObj | FunctionObj | null>>
 }*/

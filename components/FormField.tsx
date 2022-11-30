@@ -10,6 +10,11 @@ import {
   IconButton,
   FormErrorMessage,
   ResponsiveValue,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  AccordionItem,
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon, EditIcon } from '@chakra-ui/icons'
 import type { ClassNode, fieldPreviewProps } from '../type/ClassNodeComp'
@@ -48,11 +53,11 @@ const FunctionsFormFields = memo((props) => {
   })
 
   return (
-    <>
+    <Accordion>
       {fields.map((item, index) => {
         return <FuncFormField item={item} index={index} remove={remove} />
       })}
-    </>
+    </Accordion>
     // onBlur={blurFunc}
   )
 })
@@ -77,6 +82,7 @@ const VarsFormFields = memo(() => {
 const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
   const { item, index, remove } = props
   const {
+    watch,
     register,
     formState: { errors },
   } = useFormContext<ClassNode>()
@@ -104,7 +110,8 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
   const blurFunc = useCallback(() => setFocusFuncFieldNum(null), [])
 
   return (
-    <HStack spacing={6} justify='center' key={item.id}>
+    <AccordionItem>
+      <HStack spacing={6} justify='center' key={item.id}>
       <Box>-</Box>
       <FormControl isRequired isInvalid={!!funcErrorState?.functionName}>
         <Editable defaultValue={item.functionName} onFocus={focusFunc} onBlur={blurFunc}>
@@ -116,6 +123,9 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
           <FormErrorMessage>{funcErrorState?.functionName?.message}</FormErrorMessage>
         </Editable>
       </FormControl>
+      <Box>{'('}</Box>
+      
+      <Box>{')'}</Box>
       <Box>{': '}</Box>
       <FormControl isRequired isInvalid={!!funcErrorState?.funcType}>
         <Editable defaultValue={item.funcType} onFocus={focusFunc} onBlur={blurFunc}>
@@ -133,6 +143,7 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
         onClick={() => remove(index)}
       />
     </HStack>
+    </AccordionItem>
   )
 }
 

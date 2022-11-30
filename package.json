@@ -28,6 +28,7 @@
     "react-dom": "18.2.0",
     "react-flow-renderer": "^10.3.17",
     "react-hook-form": "^7.37.0",
+    "react-icons": "^4.7.1",
     "react-slick": "^0.29.0",
     "reactflow": "^11.1.0",
     "recoil": "^0.7.5",
