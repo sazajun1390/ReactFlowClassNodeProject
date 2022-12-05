@@ -21,3 +21,5 @@ const analytics = getAnalytics(app)
 if (!apps.length) {
   initializeApp(firebaseConfig)
 }
+
+export {analytics}

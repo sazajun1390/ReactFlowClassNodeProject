@@ -34,15 +34,10 @@ import type {
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import { useEditData } from '../zustand/EditData'
 import shallow from 'zustand/shallow'
-import { FramerBox, FramerLayoutGroup } from '../chakraFactory/Framer'
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { useAnimationControls } from 'framer-motion'
-//import * as yup from 'yup';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { classNodeSchema } from '../type/zod/zodClassNodeComp.zod'
 import { FunctionsFormFields, VarsFormFields } from './FormField'
-import { css } from '@emotion/react'
-import type { FieldError } from 'react-hook-form'
 import { SubmitHandler } from 'react-hook-form'
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
