@@ -1,6 +1,6 @@
 import React from 'react'
 import { Edge, NodeProps } from 'reactflow'
-import ClassNodeComp from '../components/ClassNodeComp'
+import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import type { FunctionObj, VariableObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
 
 const Variable1: VariableObj = {

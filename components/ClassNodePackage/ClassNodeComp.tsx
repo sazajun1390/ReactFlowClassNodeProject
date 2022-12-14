@@ -30,13 +30,13 @@ import type {
   ClassNode,
   ClassNodeData,
   fieldPreviewProps,
-} from '../type/ClassNodeComp'
-import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
-import { useEditData } from '../zustand/EditData'
+} from './type/ClassNodeComp'
+import { useDisclojureStore } from '../../zustand/EditorsDIscrojure'
+import { useEditData } from '../../zustand/EditData'
 import shallow from 'zustand/shallow'
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { classNodeSchema } from '../type/zod/zodClassNodeComp.zod'
+import { classNodeSchema } from './type/zod/zodClassNodeComp.zod'
 import { FunctionsFormFields, VarsFormFields } from './FormField'
 import { SubmitHandler } from 'react-hook-form'
 

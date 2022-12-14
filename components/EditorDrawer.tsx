@@ -84,10 +84,10 @@ import {
   formObjectType,
   FunctionObj,
   VariableObj,
-} from '../type/ClassNodeComp'
+} from './ClassNodePackage/type/ClassNodeComp'
 import Slider from 'react-slick'
 import type { Settings } from 'react-slick'
-import ParamCard from './ParamCard'
+import ParamCard from './ClassNodePackage/ParamCard'
 import { memoryUsage } from 'process'
 import type { Node } from 'reactflow'
 import 'slick-carousel/slick/slick.css'
@@ -101,6 +101,7 @@ export interface EditDrawerProps {
 
 const EditDrawer: FC<EditDrawerProps> = (props) => {
   const { setNodes } = useReactFlow()
+  //setClassNodeData
   const {
     handleSubmit,
     register,
@@ -169,6 +170,7 @@ const EditDrawer: FC<EditDrawerProps> = (props) => {
   const { isOpen, onToggle } = useDisclosure()
   //const [ formData, setFormData ] = useState<formObjectType>(null);
 
+  //setClassNodeData
   const editReducer = (state: formObjectType, act: formObjectReducerState) => {
     switch (act.type) {
       case 'variables':
@@ -198,6 +200,7 @@ const EditDrawer: FC<EditDrawerProps> = (props) => {
           <Box mt={10} mb={25}>
             <Slider {...funcCardState}>
               {editFuncs.map((items: FunctionObj, index: Key) => {
+                //setClassNodeData
                 console.log(items)
                 return <ParamCard setter={setFormData} {...items} key={index} />
               })}
@@ -212,6 +215,7 @@ const EditDrawer: FC<EditDrawerProps> = (props) => {
           <Box mb={10} mt={25}>
             <Slider {...varCardState}>
               {editVars.map((items: VariableObj, index: Key) => {
+                //setClassNodeData
                 return <ParamCard setter={setFormData} {...items} key={index} />
               })}
               <Box>

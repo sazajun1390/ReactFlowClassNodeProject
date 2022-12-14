@@ -42,4 +42,4 @@ const classNodeDataSchema = z.object({
 const classNodeSchema = z.object({
   data: classNodeDataSchema,
 })
-export { classNodeSchema }
+export { classNodeSchema, classNodeDataSchema }

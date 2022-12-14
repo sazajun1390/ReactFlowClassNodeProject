@@ -1,7 +1,7 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import type { ComponentStory, ComponentMeta } from '@storybook/react'
 import { ReactFlowProvider } from 'reactflow'
-import ClassNodeComp from '../components/ClassNodeComp'
+import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import { storyTestClass } from '../store/TestNode'
 import { useEditData } from '../zustand/EditData'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'

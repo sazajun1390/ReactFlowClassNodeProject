@@ -5,6 +5,7 @@ import { extendTheme } from '@chakra-ui/react'
 import { ReactFlowProvider, useReactFlow } from 'reactflow'
 import { AnimatePresence } from 'framer-motion'
 import 'reactflow/dist/style.css'
+import '@reactflow/node-resizer/dist/style.css'
 
 const colors = {
   brand: {

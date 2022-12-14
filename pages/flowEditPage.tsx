@@ -11,6 +11,7 @@ import ReactFlow, {
   Node,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
+import '@reactflow/node-resizer/dist/style.css'
 import { initialEdges, initialNodes } from '../store/ReactFlowStarterDeck'
 import { useCallback, useMemo, MouseEvent as ReactMouseEvent } from 'react'
 
@@ -32,13 +33,13 @@ import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import shallow from 'zustand/shallow'
 import { testEdge, TestNode } from '../store/TestNode'
-import ClassNodeComp from '../components/ClassNodeComp'
+import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import { useForm } from 'react-hook-form'
 import EditorDrawer from '../components/EditorDrawer'
 import { useEditData } from '../zustand/EditData'
 import { useReactFlow } from 'reactflow'
-import { implementsClassNode } from '../type/ClassNodeCompTypeGuard'
-import { ClassNodeData } from '../type/ClassNodeComp'
+import { implementsClassNode } from '../components/ClassNodePackage/type/ClassNodeCompTypeGuard'
+import { ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 import type { NodeMouseHandler } from 'reactflow'
 
 const FLowEditPage: NextPage = () => {
@@ -57,6 +58,7 @@ const FLowEditPage: NextPage = () => {
   )
 
   const EditorOnOpen = useDisclojureStore.getState().onOpen
+  //setClassNodeData
   const setClassNodeData = (id: string, data: ClassNodeData) =>
     useEditData((state) => state.setData(id, data))
   const allowEdit = () => useEditData((state) => state.allowEdit())
@@ -69,6 +71,7 @@ const FLowEditPage: NextPage = () => {
 
   const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
   const mouseEnter = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
+  //setClassNodeData
     if (implementsClassNode(node) && useEditData.getState().dnotEdit) {
       useEditData.getState().setData(node.id, node.data)
       useEditData.getState().allowEdit()

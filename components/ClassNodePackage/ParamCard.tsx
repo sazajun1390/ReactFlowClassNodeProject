@@ -13,7 +13,7 @@ import {
   HStack,
   IconButton,
 } from '@chakra-ui/react'
-import { FuncCard, VarCard } from '../type/ClassNodeComp'
+import { FuncCard, VarCard } from './type/ClassNodeComp'
 import { CloseIcon, EditIcon } from '@chakra-ui/icons'
 
 interface cardProps {
@@ -33,14 +33,14 @@ const ParamCard: FC<FuncCard | VarCard> = (props) => {
       ? {
           Name: 'VarName: ' + props.variableName,
           id: props.VarId,
-          type: 'type: ' + props.type,
+          type: 'type: ' + props.varType,
           closeAriaLabel: 'delete varCard',
           editAriaLabel: '',
         }
       : {
           Name: 'FuncName: ' + props.functionName,
           id: props.FuncId,
-          type: 'type: ' + props.type,
+          type: 'type: ' + props.funcType,
           closeAriaLabel: 'delete funcCard',
           editAriaLabel: '',
         },
