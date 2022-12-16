@@ -71,7 +71,7 @@ const FLowEditPage: NextPage = () => {
 
   const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
   const mouseEnter = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
-  //setClassNodeData
+    //setClassNodeData
     if (implementsClassNode(node) && useEditData.getState().dnotEdit) {
       useEditData.getState().setData(node.id, node.data)
       useEditData.getState().allowEdit()

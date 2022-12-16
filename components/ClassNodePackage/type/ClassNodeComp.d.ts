@@ -47,7 +47,7 @@ type FuncArg = {
    * @minimum 1
    *
    */
-  arg:string
+  arg: string
 }
 
 interface FunctionObj {
@@ -65,7 +65,7 @@ interface FunctionObj {
    */
   functionName: string
 
-  funcArgs:Array<FuncArg>
+  funcArgs: Array<FuncArg>
 
   /**
    *
@@ -73,7 +73,6 @@ interface FunctionObj {
    *
    */
   funcType: string
-
 }
 /*interface FuncCard extends FunctionObj {
   setter: Dispatch<SetStateAction<VariableObj | FunctionObj | null>>

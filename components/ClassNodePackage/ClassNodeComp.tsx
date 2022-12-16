@@ -22,8 +22,9 @@ import {
   Input,
   useEditableControls,
   BorderProps,
+  IconButton,
 } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
+import { EditIcon, AddIcon } from '@chakra-ui/icons'
 import type {
   VariableObj,
   FunctionObj,
@@ -39,6 +40,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { classNodeSchema } from './type/zod/zodClassNodeComp.zod'
 import { FunctionsFormFields, VarsFormFields } from './FormField'
 import { SubmitHandler } from 'react-hook-form'
+import { ColorPicker } from 'chakra-color-picker'
+import { BlockPicker } from 'react-color'
+import Popover from 'react-popover'
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   const data = props
@@ -56,12 +60,15 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     shallow,
   )
 
+  const handleColorChange = (value: string) => {
+    console.log(value)
+  }
+
   const { allowEdit, denyEdit } = useEditData((state) => ({
     allowEdit: state.allowEdit,
     denyEdit: state.denyEdit,
   }))
   const [isOpen, setOpen] = useState(false)
-
   const [nodeClass, setNodeClass] = useState(data)
   const methods = useForm<ClassNode>({
     defaultValues: {
@@ -70,7 +77,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     resolver: zodResolver(classNodeSchema),
     mode: 'all',
   })
-
+  const [colorPop, setColorPop] = useState(false)
   const {
     watch,
     getValues,
@@ -150,6 +157,15 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
         <Box>
           <Button leftIcon={<EditIcon />} type='submit'></Button>
         </Box>
+        <Popover body={<BlockPicker />} isOpen={colorPop} preferPlace='below'>
+          <IconButton
+            aria-label='setColor'
+            icon={<AddIcon />}
+            onClick={() => {
+              setColorPop(!colorPop)
+            }}
+          />
+        </Popover>
         <Handle type='target' position={Position.Left} style={handleStyle} />
 
         <Handle type='source' position={Position.Right} style={handleStyle} />

@@ -48,7 +48,7 @@ type FuncArg = {
    * @minimum 1
    *
    */
-  arg:string
+  arg: string
 }
 
 interface FunctionObj {
@@ -66,7 +66,7 @@ interface FunctionObj {
    */
   functionName: string
 
-  funcArgs:Array<FuncArg>
+  funcArgs: Array<FuncArg>
 
   /**
    *
@@ -149,5 +149,5 @@ export { classNodeDataSchema }
  */
 
 /*
-* 
-*/
+ *
+ */

@@ -111,37 +111,37 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
   return (
     <AccordionItem>
       <HStack spacing={6} justify='center' key={item.id}>
-      <Box>-</Box>
-      <FormControl isRequired isInvalid={!!funcErrorState?.functionName}>
-        <Editable defaultValue={item.functionName} onFocus={focusFunc} onBlur={blurFunc}>
-          <EditablePreview {...funcNameFieldError} w='100%' />
-          <EditableInput
-            id={`data.functions.${index}.functionName`}
-            {...register(`data.functions.${index}.functionName`)}
-          />
-          <FormErrorMessage>{funcErrorState?.functionName?.message}</FormErrorMessage>
-        </Editable>
-      </FormControl>
-      <Box>{'('}</Box>
-      
-      <Box>{')'}</Box>
-      <Box>{': '}</Box>
-      <FormControl isRequired isInvalid={!!funcErrorState?.funcType}>
-        <Editable defaultValue={item.funcType} onFocus={focusFunc} onBlur={blurFunc}>
-          <EditablePreview {...funcTypeFieldError} w='100%' />
-          <EditableInput {...register(`data.functions.${index}.funcType`)} />
-          <FormErrorMessage>{funcErrorState?.funcType?.message}</FormErrorMessage>
-        </Editable>
-      </FormControl>
-      <IconButton
-        aria-label='deleteFunction'
-        visibility={visibility}
-        display={display}
-        key={index}
-        icon={<CloseIcon />}
-        onClick={() => remove(index)}
-      />
-    </HStack>
+        <Box>-</Box>
+        <FormControl isRequired isInvalid={!!funcErrorState?.functionName}>
+          <Editable defaultValue={item.functionName} onFocus={focusFunc} onBlur={blurFunc}>
+            <EditablePreview {...funcNameFieldError} w='100%' />
+            <EditableInput
+              id={`data.functions.${index}.functionName`}
+              {...register(`data.functions.${index}.functionName`)}
+            />
+            <FormErrorMessage>{funcErrorState?.functionName?.message}</FormErrorMessage>
+          </Editable>
+        </FormControl>
+        <Box>{'('}</Box>
+
+        <Box>{')'}</Box>
+        <Box>{': '}</Box>
+        <FormControl isRequired isInvalid={!!funcErrorState?.funcType}>
+          <Editable defaultValue={item.funcType} onFocus={focusFunc} onBlur={blurFunc}>
+            <EditablePreview {...funcTypeFieldError} w='100%' />
+            <EditableInput {...register(`data.functions.${index}.funcType`)} />
+            <FormErrorMessage>{funcErrorState?.funcType?.message}</FormErrorMessage>
+          </Editable>
+        </FormControl>
+        <IconButton
+          aria-label='deleteFunction'
+          visibility={visibility}
+          display={display}
+          key={index}
+          icon={<CloseIcon />}
+          onClick={() => remove(index)}
+        />
+      </HStack>
     </AccordionItem>
   )
 }

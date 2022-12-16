@@ -22,4 +22,4 @@ if (!apps.length) {
   initializeApp(firebaseConfig)
 }
 
-export {analytics}
+export { analytics }
