@@ -1,7 +1,7 @@
 import React from 'react'
 import { Edge, NodeProps } from 'reactflow'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
-import type { FunctionObj, VariableObj, ClassNode, ClassNodeData } from '../type/ClassNodeComp'
+import type { FunctionObj, VariableObj, ClassNode, ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 
 const Variable1: VariableObj = {
   VarId: 1,
@@ -13,18 +13,21 @@ const FunctionData1: FunctionObj = {
   FuncId: 1,
   functionName: 'Calc',
   funcType: 'Integer',
+  funcArgs: []
 }
 
 const FunctionData2: FunctionObj = {
   FuncId: 2,
   functionName: 'Calc2',
   funcType: 'Integer',
+  funcArgs: []
 }
 
 const FunctionData3: FunctionObj = {
   FuncId: 3,
   functionName: 'Calc3',
   funcType: 'Integer',
+  funcArgs: []
 }
 
 const Variable2: VariableObj = {
@@ -83,4 +86,18 @@ const testEdge: Edge[] = [
   },
 ]
 
-export { TestNode, testClass, testClass2, storyTestClass, testEdge }
+const StroyUserMapTag:NodeProps = {
+  id:testClass.id,
+  type: 'UserMapTag',
+  selected: true,
+  isConnectable: true,
+  xPos: testClass.position.x,
+  yPos: testClass.position.y,
+  zIndex: 2,
+  dragging: false,
+  data:{
+    label:''
+  }
+}
+
+export { TestNode, testClass, testClass2, storyTestClass, testEdge, StroyUserMapTag }
