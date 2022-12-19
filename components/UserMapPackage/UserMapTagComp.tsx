@@ -8,6 +8,7 @@ import {
   useReactFlow,
   useStoreApi,
   addEdge,
+  Node,
 } from 'reactflow'
 import { NodeResizer } from '@reactflow/node-resizer'
 import '@reactflow/node-resizer/dist/style.css'
@@ -51,6 +52,7 @@ import { BlockPicker } from 'react-color'
 type tagForm = {
   tag: string;
 }
+class CannotGetNodeError extends Error {}
 
 const UserMapTagComp: FC<NodeProps> = (props) => {
 
@@ -58,6 +60,8 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
 
   const colors = [
     'gray.500',
+    'pink.500',
+    'pink.500',
     'red.500',
     'gray.700',
     'green.500',
@@ -71,8 +75,16 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
 
   const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
   
+  
+
   const { register, handleSubmit } = useForm<tagForm>();
-  const onSubmit: SubmitHandler<tagForm> = (data) => {}
+  const onSubmit: SubmitHandler<tagForm> = (data) => {
+    try{
+      const setNodeData = getNode(props.id)
+    }catch(e){
+      throw e
+    }
+  }
 
   return (
     <Box bg={color}>
@@ -84,17 +96,16 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
             <EditablePreview />
             <EditableTextarea {...register("tag")}/>
           </Editable>
+          <IconButton aria-label='tag' type="submit" icon={<EditIcon />} />
           </form>
         </Box>
-        <Box>
-          <IconButton aria-label='tag' icon={<EditIcon />} />
-        </Box>
+        
         <Popover>
           <PopoverTrigger>
             <IconButton
               aria-label='setColor'
               icon={<AddIcon />}
-              bg={color}
+              bg='whiteAlpha.100'
             />
           </PopoverTrigger>
           <PopoverContent width='170px'>
@@ -145,3 +156,5 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
     </Box>
   )
 }
+
+export default memo(UserMapTagComp); 
