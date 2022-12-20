@@ -32,7 +32,7 @@ import type { Edge, Connection } from 'reactflow'
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import shallow from 'zustand/shallow'
-import { testEdge, TestNode } from '../store/TestNode'
+import { testEdge, TestNode, userMapTestNode} from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import { useForm } from 'react-hook-form'
 import EditorDrawer from '../components/EditorDrawer'
@@ -41,11 +41,12 @@ import { useReactFlow } from 'reactflow'
 import { implementsClassNode } from '../components/ClassNodePackage/type/ClassNodeCompTypeGuard'
 import { ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 import type { NodeMouseHandler } from 'reactflow'
+import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 
 const FLowEditPage: NextPage = () => {
   const { height, width } = useToGetWindowSize()
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(TestNode)
+  const [nodes, setNodes, onNodesChange] = useNodesState(userMapTestNode)
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
 
@@ -69,7 +70,12 @@ const FLowEditPage: NextPage = () => {
     [setEdges],
   )
 
-  const nodeTypes = useMemo(() => ({ custom: ClassNodeComp }), [])
+  const nodeTypes = useMemo(() => (
+    { 
+      custom: ClassNodeComp,
+      UserMapTag: UserMapTagComp 
+    }
+  ), [])
   const mouseEnter = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
     //setClassNodeData
     if (implementsClassNode(node) && useEditData.getState().dnotEdit) {

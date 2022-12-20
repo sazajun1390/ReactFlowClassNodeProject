@@ -1,5 +1,5 @@
 import React from 'react'
-import { Edge, NodeProps } from 'reactflow'
+import { Edge, NodeProps, Node } from 'reactflow'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import type { FunctionObj, VariableObj, ClassNode, ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 
@@ -63,6 +63,14 @@ const testClass2: ClassNode = {
     functions: [FunctionData3, FunctionData3, FunctionData3],
   },
 }
+const userMapTag: Node = {
+  id: '0',
+  type: 'UserMapTag',
+  position: { x: 100, y:30},
+  data:{
+    label:'data test'
+  }
+}
 
 const storyTestClass: NodeProps<ClassNodeData> = {
   id: testClass.id,
@@ -78,6 +86,7 @@ const storyTestClass: NodeProps<ClassNodeData> = {
 
 const TestNode: Array<any> = [testClass, testClass2]
 
+const userMapTestNode: Array<Node<any>> = [userMapTag]
 const testEdge: Edge[] = [
   {
     id: 'te1',
@@ -100,4 +109,4 @@ const StroyUserMapTag:NodeProps = {
   }
 }
 
-export { TestNode, testClass, testClass2, storyTestClass, testEdge, StroyUserMapTag }
+export { TestNode, testClass, testClass2, storyTestClass, testEdge, StroyUserMapTag, userMapTestNode }

@@ -77,12 +77,14 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
     }catch(e){
       throw e
     }
-  }*/
+  }
+  <NodeResizer />
+  */
 
   return (
-    <Box bg={color}>
-      <NodeResizer />
-      <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
+    <Box bg={color} rounded='md' shadow='md' border='1px' borderColor='gray.500'>
+        <NodeResizer />
+      <Stack p={3}>
         <Box>
           <form>
           <Editable>
