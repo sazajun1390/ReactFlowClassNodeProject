@@ -87,7 +87,7 @@ const testEdge: Edge[] = [
 ]
 
 const StroyUserMapTag:NodeProps = {
-  id:testClass.id,
+  id: testClass.id,
   type: 'UserMapTag',
   selected: true,
   isConnectable: true,
@@ -96,7 +96,7 @@ const StroyUserMapTag:NodeProps = {
   zIndex: 2,
   dragging: false,
   data:{
-    label:''
+    label:'data'
   }
 }
 

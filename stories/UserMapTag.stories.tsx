@@ -1,11 +1,14 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import type { ComponentStory, ComponentMeta } from '@storybook/react'
-import { ReactFlowProvider } from 'reactflow'
+import ReactFlow, { ReactFlowProps, ReactFlowProvider, useReactFlow } from 'reactflow'
 import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 import { StroyUserMapTag } from '../store/TestNode'
 import { useEditData } from '../zustand/EditData'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
+import { FC, useMemo } from 'react'
+//import UserMapGroup from '../components/UserMapPackage/UserMapGroupComp'
 
+//userMapGroup: UserMapGroupComp
 export default {
   title: 'UseMapTag',
   component: UserMapTagComp,
@@ -24,10 +27,22 @@ const theme = extendTheme({ colors })
 const Template: ComponentStory<typeof UserMapTagComp> = (args) => (
   <ChakraProvider theme={theme}>
     <ReactFlowProvider>
-        <UserMapTagComp {...args}/>
+      <UserMapTagComp {...args}/>
     </ReactFlowProvider>
   </ChakraProvider>
 )
+
+const Flow: FC<ReactFlowProps>=(props)=>{
+  // you can access the internal state here
+  const reactFlowInstance = useReactFlow();
+  const nodeTypes = useMemo(()=> ({
+    userMapTag: UserMapTagComp,
+    
+  }),[])
+  return(
+    <ReactFlow {...props} />
+  )    
+}
 
 export const Default: ComponentStory<typeof UserMapTagComp> = Template.bind({})
 

@@ -39,15 +39,8 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
 
-import { useDisclojureStore } from '../../zustand/EditorsDIscrojure'
-import { useEditData } from '../../zustand/EditData'
-import shallow from 'zustand/shallow'
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler } from 'react-hook-form'
-import { SketchPicker } from 'react-color'
-import { ColorPicker } from 'chakra-color-picker'
-import { BlockPicker } from 'react-color'
 
 type tagForm = {
   tag: string;
@@ -78,20 +71,20 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
   
 
   const { register, handleSubmit } = useForm<tagForm>();
-  const onSubmit: SubmitHandler<tagForm> = (data) => {
+  /*const onSubmit: SubmitHandler<tagForm> = (data) => {
     try{
       const setNodeData = getNode(props.id)
     }catch(e){
       throw e
     }
-  }
+  }*/
 
   return (
     <Box bg={color}>
       <NodeResizer />
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
         <Box>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form>
           <Editable>
             <EditablePreview />
             <EditableTextarea {...register("tag")}/>
@@ -158,3 +151,5 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
 }
 
 export default memo(UserMapTagComp); 
+
+// onSubmit={handleSubmit(onSubmit)}

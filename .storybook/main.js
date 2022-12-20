@@ -9,4 +9,8 @@ module.exports = {
   core: {
     builder: '@storybook/builder-webpack5',
   },
+  watchOptions: {
+    poll: 800,
+    aggregateTimeout: 300,
+  }
 }
