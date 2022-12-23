@@ -89,7 +89,7 @@ type ClassNode = Node<ClassNodeData>
 type formObjectType = null | FunctionObj | VariableObj
 
 interface formObjectReducerState {
-  /* eslint no-unused-vars: 0 */
+  // @ts-ignore
   state: formObjectState
 
   /**

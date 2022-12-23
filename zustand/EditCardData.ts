@@ -1,5 +1,9 @@
 import create from 'zustand'
-import { ClassNodeData, FunctionObj, VariableObj } from '../type/ClassNodeComp'
+import {
+  ClassNodeData,
+  FunctionObj,
+  VariableObj,
+} from '../components/ClassNodePackage/type/ClassNodeComp'
 import { devtools } from 'zustand/middleware'
 import { UseBoundStore, StoreApi } from 'zustand'
 
@@ -19,9 +23,11 @@ interface sendData {
 }
 
 interface dataObj {
+  //@ts-ignore
   [prop: string]: UseBoundStore<WithDevtools<StoreApi<sendData>>>
 }
 
+//@ts-ignore
 const createStoreOfEditData: UseBoundStore<WithDevtools<StoreApi<sendData>>> = () => {
   return create(
     devtools<sendData>((set) => ({

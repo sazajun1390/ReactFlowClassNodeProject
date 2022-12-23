@@ -1,7 +1,12 @@
 import React from 'react'
 import { Edge, NodeProps, Node } from 'reactflow'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
-import type { FunctionObj, VariableObj, ClassNode, ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
+import type {
+  FunctionObj,
+  VariableObj,
+  ClassNode,
+  ClassNodeData,
+} from '../components/ClassNodePackage/type/ClassNodeComp'
 
 const Variable1: VariableObj = {
   VarId: 1,
@@ -13,21 +18,21 @@ const FunctionData1: FunctionObj = {
   FuncId: 1,
   functionName: 'Calc',
   funcType: 'Integer',
-  funcArgs: []
+  funcArgs: [],
 }
 
 const FunctionData2: FunctionObj = {
   FuncId: 2,
   functionName: 'Calc2',
   funcType: 'Integer',
-  funcArgs: []
+  funcArgs: [],
 }
 
 const FunctionData3: FunctionObj = {
   FuncId: 3,
   functionName: 'Calc3',
   funcType: 'Integer',
-  funcArgs: []
+  funcArgs: [],
 }
 
 const Variable2: VariableObj = {
@@ -66,10 +71,19 @@ const testClass2: ClassNode = {
 const userMapTag: Node = {
   id: '0',
   type: 'UserMapTag',
-  position: { x: 100, y:30},
-  data:{
-    label:'data test'
-  }
+  position: { x: 100, y: 30 },
+  data: {
+    label: 'data test',
+  },
+}
+
+const userMapGroup: Node = {
+  id: '0',
+  type: 'UserMapGroup',
+  position: { x: 100, y: 30 },
+  data: {
+    label: 'data test',
+  },
 }
 
 const storyTestClass: NodeProps<ClassNodeData> = {
@@ -86,7 +100,7 @@ const storyTestClass: NodeProps<ClassNodeData> = {
 
 const TestNode: Array<any> = [testClass, testClass2]
 
-const userMapTestNode: Array<Node<any>> = [userMapTag]
+const userMapTestNode: Array<Node<any>> = [userMapGroup]
 const testEdge: Edge[] = [
   {
     id: 'te1',
@@ -95,7 +109,7 @@ const testEdge: Edge[] = [
   },
 ]
 
-const StroyUserMapTag:NodeProps = {
+const StroyUserMapTag: NodeProps = {
   id: testClass.id,
   type: 'UserMapTag',
   selected: true,
@@ -104,9 +118,17 @@ const StroyUserMapTag:NodeProps = {
   yPos: testClass.position.y,
   zIndex: 2,
   dragging: false,
-  data:{
-    label:'data'
-  }
+  data: {
+    label: 'data',
+  },
 }
 
-export { TestNode, testClass, testClass2, storyTestClass, testEdge, StroyUserMapTag, userMapTestNode }
+export {
+  TestNode,
+  testClass,
+  testClass2,
+  storyTestClass,
+  testEdge,
+  StroyUserMapTag,
+  userMapTestNode,
+}

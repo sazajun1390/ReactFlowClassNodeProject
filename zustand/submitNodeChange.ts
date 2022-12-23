@@ -1,4 +1,4 @@
 import create from 'zustand'
-import { ClassNode, ClassNodeData } from '../type/ClassNodeComp'
+import { ClassNode, ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 
 type editCard = {}

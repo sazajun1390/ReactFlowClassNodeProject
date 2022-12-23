@@ -13,7 +13,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css'
 import '@reactflow/node-resizer/dist/style.css'
 import { initialEdges, initialNodes } from '../store/ReactFlowStarterDeck'
-import { useCallback, useMemo, MouseEvent as ReactMouseEvent } from 'react'
+import { useCallback, useMemo, MouseEvent as ReactMouseEvent, FC } from 'react'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -32,7 +32,7 @@ import type { Edge, Connection } from 'reactflow'
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import shallow from 'zustand/shallow'
-import { testEdge, TestNode, userMapTestNode} from '../store/TestNode'
+import { testEdge, TestNode, userMapTestNode } from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import { useForm } from 'react-hook-form'
 import EditorDrawer from '../components/EditorDrawer'
@@ -42,8 +42,18 @@ import { implementsClassNode } from '../components/ClassNodePackage/type/ClassNo
 import { ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 import type { NodeMouseHandler } from 'reactflow'
 import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
+import UserMapGroupComp from '../components/UserMapPackage/UserMapGroupComp'
+
 
 const FLowEditPage: NextPage = () => {
+  return (
+    <ReactFlowProvider>
+      <FlowPageLayout />
+    </ReactFlowProvider>
+  )
+}
+
+const FlowPageLayout: FC = () => {
   const { height, width } = useToGetWindowSize()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(userMapTestNode)
@@ -70,12 +80,14 @@ const FLowEditPage: NextPage = () => {
     [setEdges],
   )
 
-  const nodeTypes = useMemo(() => (
-    { 
+  const nodeTypes = useMemo(
+    () => ({
       custom: ClassNodeComp,
-      UserMapTag: UserMapTagComp 
-    }
-  ), [])
+      UserMapTag: UserMapTagComp,
+      UserMapGroup: UserMapGroupComp
+    }),
+    [],
+  )
   const mouseEnter = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
     //setClassNodeData
     if (implementsClassNode(node) && useEditData.getState().dnotEdit) {
@@ -90,38 +102,37 @@ const FLowEditPage: NextPage = () => {
 
   return (
     <div>
-      <ReactFlowProvider>
-        <Head>
-          <title>fLowEditPage</title>
-        </Head>
+      <Head>
+        <title>fLowEditPage</title>
+      </Head>
 
-        <Header />
-        <EditorDrawer setNodes={setNodes} />
+      <Header />
+      <EditorDrawer setNodes={setNodes} />
 
-        <Box w={width} h={height} top='16px'>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            nodeTypes={nodeTypes}
-            onNodeMouseEnter={mouseEnter}
-            onNodeMouseLeave={mouseLeave}
-          >
-            <MiniMap />
-            <Controls />
-            <Background />
-          </ReactFlow>
-        </Box>
-      </ReactFlowProvider>
+      <Box w={width} h={height} top='16px'>
+        <ReactFlow
+          defaultNodes={nodes}
+          defaultEdges={edges}
+          nodeTypes={nodeTypes}
+        >
+          <MiniMap />
+          <Controls />
+          <Background />
+        </ReactFlow>
+      </Box>
     </div>
   )
 }
-
 export default FLowEditPage
 
 /*
+
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
   const reactFlowInstance = useReactFlow();
   onNodeMouseEnter={(e,node)=>{
             if(implementsClassNode(node)) {

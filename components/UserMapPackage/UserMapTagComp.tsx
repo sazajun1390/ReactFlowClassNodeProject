@@ -10,7 +10,7 @@ import {
   addEdge,
   Node,
 } from 'reactflow'
-import { NodeResizer } from '@reactflow/node-resizer'
+import { NodeResizer, NodeResizeControl } from '@reactflow/node-resizer'
 import '@reactflow/node-resizer/dist/style.css'
 import {
   Divider,
@@ -36,20 +36,20 @@ import {
   PopoverBody,
   SimpleGrid,
   EditableTextarea,
+  Textarea,
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
-
+import ResizeTextarea from "react-textarea-autosize"
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { SubmitHandler } from 'react-hook-form'
 
 type tagForm = {
-  tag: string;
+  tag: string
 }
 class CannotGetNodeError extends Error {}
 
 const UserMapTagComp: FC<NodeProps> = (props) => {
-
-  const { getNode, getNodes, setNodes} = useReactFlow();
+  const { getNode, getNodes, setNodes, getIntersectingNodes } = useReactFlow()
 
   const colors = [
     'gray.500',
@@ -67,10 +67,10 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
   ]
 
   const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
-  
-  
 
-  const { register, handleSubmit } = useForm<tagForm>();
+  const { register, handleSubmit } = useForm<tagForm>({
+    defaultValues:{tag:'start UserMap'}
+  })
   /*const onSubmit: SubmitHandler<tagForm> = (data) => {
     try{
       const setNodeData = getNode(props.id)
@@ -83,25 +83,16 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
 
   return (
     <Box bg={color} rounded='md' shadow='md' border='1px' borderColor='gray.500'>
-        <NodeResizer />
       <Stack p={3}>
         <Box>
           <form>
-          <Editable>
-            <EditablePreview />
-            <EditableTextarea {...register("tag")}/>
-          </Editable>
-          <IconButton aria-label='tag' type="submit" icon={<EditIcon />} />
+            <Textarea {...register('tag')} overflow="hidden" resize="none" minRows={1} as={ResizeTextarea} />
           </form>
         </Box>
-        
+
         <Popover>
           <PopoverTrigger>
-            <IconButton
-              aria-label='setColor'
-              icon={<AddIcon />}
-              bg='whiteAlpha.100'
-            />
+            <IconButton aria-label='setColor' icon={<AddIcon />} bg='whiteAlpha.100' />
           </PopoverTrigger>
           <PopoverContent width='170px'>
             <PopoverArrow bg={color} />
@@ -152,6 +143,6 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
   )
 }
 
-export default memo(UserMapTagComp); 
+export default memo(UserMapTagComp)
 
 // onSubmit={handleSubmit(onSubmit)}

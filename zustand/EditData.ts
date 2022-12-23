@@ -1,5 +1,9 @@
 import create, { StoreApi, UseBoundStore } from 'zustand'
-import { ClassNodeData, FunctionObj, VariableObj } from '../type/ClassNodeComp'
+import {
+  ClassNodeData,
+  FunctionObj,
+  VariableObj,
+} from '../components/ClassNodePackage/type/ClassNodeComp'
 import { devtools } from 'zustand/middleware'
 import { ClassNames } from '@emotion/react'
 import { type } from 'os'

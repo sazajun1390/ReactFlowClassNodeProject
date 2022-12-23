@@ -1,6 +1,6 @@
 import { NodeProps } from 'reactflow'
 import create from 'zustand'
-import { ClassNode, ClassNodeData } from '../type/ClassNodeComp'
+import { ClassNode, ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp'
 import { devtools } from 'zustand/middleware'
 
 type disclosure = {

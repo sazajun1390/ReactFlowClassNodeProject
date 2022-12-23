@@ -12,5 +12,5 @@ module.exports = {
   watchOptions: {
     poll: 800,
     aggregateTimeout: 300,
-  }
+  },
 }
