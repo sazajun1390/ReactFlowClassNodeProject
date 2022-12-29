@@ -43,17 +43,20 @@ import { ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp
 import type { NodeMouseHandler } from 'reactflow'
 import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 import UserMapGroupComp from '../components/UserMapPackage/UserMapGroupComp'
+import { collection, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
+import { db, analytics } from '../firebase/firebaseCallFunctions'
+import type {Node as FlowNode } from 'reactflow'
 
 
-const FLowEditPage: NextPage = () => {
+const FLowEditPage: NextPage<{props?: FlowNode[]}> = ({props}) => {
   return (
     <ReactFlowProvider>
-      <FlowPageLayout />
+      <FlowPageLayout props={props} />
     </ReactFlowProvider>
   )
 }
 
-const FlowPageLayout: FC = () => {
+const FlowPageLayout: FC<{props?: FlowNode[]}> = ({props}) => {
   const { height, width } = useToGetWindowSize()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(userMapTestNode)

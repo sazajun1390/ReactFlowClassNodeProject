@@ -37,6 +37,7 @@ import {
   SimpleGrid,
   EditableTextarea,
   Textarea,
+  Flex,
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
 import ResizeTextarea from "react-textarea-autosize"
@@ -90,7 +91,9 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
           </form>
         </Box>
 
-        <Popover>
+        <Flex>
+          <></>
+          <Popover>
           <PopoverTrigger>
             <IconButton aria-label='setColor' icon={<AddIcon />} bg='whiteAlpha.100' />
           </PopoverTrigger>
@@ -137,7 +140,8 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
               />
             </PopoverBody>
           </PopoverContent>
-        </Popover>
+          </Popover>
+        </Flex>
       </Stack>
     </Box>
   )

@@ -100,7 +100,7 @@ const storyTestClass: NodeProps<ClassNodeData> = {
 
 const TestNode: Array<any> = [testClass, testClass2]
 
-const userMapTestNode: Array<Node<any>> = [userMapGroup]
+const userMapTestNode: Array<Node<any>> = [userMapTag]
 const testEdge: Edge[] = [
   {
     id: 'te1',
