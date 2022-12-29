@@ -1,9 +1,9 @@
 import firebase,{ initializeApp, getApp, getApps } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from "next/router";
-import nookies from "nookies";
+import { setCookie, } from "nookies";
 
 import firebaseApp from './firebaseApp'
 
@@ -20,12 +20,21 @@ const googleOnSubmit = async () => {
     const docSnap = await getDoc(docRef);
     
     if(!docSnap.exists()) {
-      await setDoc(doc(db,"userd",user.uid),{
+      await setDoc(doc(db,"users",user.uid),{
         name: user.displayName,
         email: user.email
       })
     }
+    useRouter()
+  }catch(e){
+    console.log(e)
+  }
+}
 
+const passSignUpOnSubmit =async (email:string, pass:string) => {
+  try {
+    createUserWithEmailAndPassword(auth,email,pass)
+    
   }catch(e){
     console.log(e)
   }

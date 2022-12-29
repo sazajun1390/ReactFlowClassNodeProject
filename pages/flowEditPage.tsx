@@ -48,15 +48,15 @@ import { db, analytics } from '../firebase/firebaseCallFunctions'
 import type {Node as FlowNode } from 'reactflow'
 
 
-const FLowEditPage: NextPage<{props?: FlowNode[]}> = ({props}) => {
+const FLowEditPage: NextPage<{NodeData?: FlowNode[]}> = ({NodeData}) => {
   return (
     <ReactFlowProvider>
-      <FlowPageLayout props={props} />
+      <FlowPageLayout NodeData={NodeData} />
     </ReactFlowProvider>
   )
 }
 
-const FlowPageLayout: FC<{props?: FlowNode[]}> = ({props}) => {
+const FlowPageLayout: FC<{NodeData?: FlowNode[]}> = ({NodeData}) => {
   const { height, width } = useToGetWindowSize()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(userMapTestNode)
