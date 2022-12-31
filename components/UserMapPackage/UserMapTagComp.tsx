@@ -40,7 +40,7 @@ import {
   Flex,
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
-import ResizeTextarea from "react-textarea-autosize"
+import ResizeTextarea from 'react-textarea-autosize'
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { SubmitHandler } from 'react-hook-form'
 
@@ -70,7 +70,7 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
   const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
   const { register, handleSubmit } = useForm<tagForm>({
-    defaultValues:{tag:'start UserMap'}
+    defaultValues: { tag: 'start UserMap' },
   })
   /*const onSubmit: SubmitHandler<tagForm> = (data) => {
     try{
@@ -87,59 +87,65 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
       <Stack p={3}>
         <Box>
           <form>
-            <Textarea {...register('tag')} overflow="hidden" resize="none" minRows={1} as={ResizeTextarea} />
+            <Textarea
+              {...register('tag')}
+              overflow='hidden'
+              resize='none'
+              minRows={1}
+              as={ResizeTextarea}
+            />
           </form>
         </Box>
 
         <Flex>
           <></>
           <Popover>
-          <PopoverTrigger>
-            <IconButton aria-label='setColor' icon={<AddIcon />} bg='whiteAlpha.100' />
-          </PopoverTrigger>
-          <PopoverContent width='170px'>
-            <PopoverArrow bg={color} />
-            <PopoverCloseButton color='white' />
-            <PopoverHeader
-              height='100px'
-              backgroundColor={color}
-              borderTopLeftRadius={5}
-              borderTopRightRadius={5}
-              color='white'
-            >
-              <Center height='100%'>{color}</Center>
-            </PopoverHeader>
-            <PopoverBody height='120px'>
-              <SimpleGrid columns={5} spacing={2}>
-                {colors.map((c) => (
-                  <Button
-                    key={c}
-                    aria-label={c}
-                    background={c}
-                    height='22px'
-                    width='22px'
-                    padding={0}
-                    minWidth='unset'
-                    borderRadius={3}
-                    _hover={{ background: c }}
-                    onClick={() => {
-                      setColor(c)
-                    }}
-                  ></Button>
-                ))}
-              </SimpleGrid>
-              <Input
-                borderRadius={3}
-                marginTop={3}
-                placeholder='red.100'
-                size='sm'
-                value={color}
-                onChange={(e) => {
-                  setColor(e.target.value)
-                }}
-              />
-            </PopoverBody>
-          </PopoverContent>
+            <PopoverTrigger>
+              <IconButton aria-label='setColor' icon={<AddIcon />} bg='whiteAlpha.100' />
+            </PopoverTrigger>
+            <PopoverContent width='170px'>
+              <PopoverArrow bg={color} />
+              <PopoverCloseButton color='white' />
+              <PopoverHeader
+                height='100px'
+                backgroundColor={color}
+                borderTopLeftRadius={5}
+                borderTopRightRadius={5}
+                color='white'
+              >
+                <Center height='100%'>{color}</Center>
+              </PopoverHeader>
+              <PopoverBody height='120px'>
+                <SimpleGrid columns={5} spacing={2}>
+                  {colors.map((c) => (
+                    <Button
+                      key={c}
+                      aria-label={c}
+                      background={c}
+                      height='22px'
+                      width='22px'
+                      padding={0}
+                      minWidth='unset'
+                      borderRadius={3}
+                      _hover={{ background: c }}
+                      onClick={() => {
+                        setColor(c)
+                      }}
+                    ></Button>
+                  ))}
+                </SimpleGrid>
+                <Input
+                  borderRadius={3}
+                  marginTop={3}
+                  placeholder='red.100'
+                  size='sm'
+                  value={color}
+                  onChange={(e) => {
+                    setColor(e.target.value)
+                  }}
+                />
+              </PopoverBody>
+            </PopoverContent>
           </Popover>
         </Flex>
       </Stack>

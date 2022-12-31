@@ -5,27 +5,45 @@ import { devtools } from 'zustand/middleware'
 import session from 'next-session'
 import type { User } from 'firebase/auth'
 import { sign } from 'crypto'
+import { persist } from 'zustand/middleware'
 
 type user = {
-  User: User | null | undefined,
-  signInCheck: boolean,
-  setUserData: (id: User|null|undefined, signIn: boolean) => void,
+  User: User | null | undefined
+  signInCheck: boolean
+  setUserData: (id: User | null | undefined, signIn: boolean) => void
   setSignIn: (sign: boolean) => void
 }
 
 export const useFirebaseAuthState = create(
-  devtools<user>((set) => ({
-    User: undefined,
-    signInCheck: false,
+  devtools(
+    persist<user>(
+      (set) => ({
+        User: undefined,
+        signInCheck: false,
 
-    setUserData: (user,signIn) => set(()=>{return {
-      User: user,
-      signInCheck: signIn
-    }}),
+        setUserData: (user, signIn) =>
+          set(() => {
+            return {
+              User: user,
+              signInCheck: signIn,
+            }
+          }),
 
-    setSignIn: (sign) => set(()=>{return {
-      signInCheck: sign
-    }}) 
-  })),
-
+        setSignIn: (sign) =>
+          set(() => {
+            return {
+              signInCheck: sign,
+            }
+          }),
+      }),
+      {
+        name: 'idTokenSessionStorage',
+        getStorage: () => sessionStorage,
+      },
+    ),
+  ),
 )
+
+/**
+ *
+ */

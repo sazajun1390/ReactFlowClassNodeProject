@@ -15,7 +15,7 @@ import '@reactflow/node-resizer/dist/style.css'
 import { initialEdges, initialNodes } from '../store/ReactFlowStarterDeck'
 import { useCallback, useMemo, MouseEvent as ReactMouseEvent, FC } from 'react'
 
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import Header from '../components/Header'
 import {
@@ -43,12 +43,13 @@ import { ClassNodeData } from '../components/ClassNodePackage/type/ClassNodeComp
 import type { NodeMouseHandler } from 'reactflow'
 import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 import UserMapGroupComp from '../components/UserMapPackage/UserMapGroupComp'
-import { collection, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
+import { collection, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { db, analytics } from '../firebase/firebaseCallFunctions'
-import type {Node as FlowNode } from 'reactflow'
+import type { Node as FlowNode } from 'reactflow'
+import { firebaseAdmin } from '../firebase/firebaseAdmin'
+import nookies from 'nookies'
 
-
-const FLowEditPage: NextPage<{NodeData?: FlowNode[]}> = ({NodeData}) => {
+const FLowEditPage: NextPage<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
   return (
     <ReactFlowProvider>
       <FlowPageLayout NodeData={NodeData} />
@@ -56,7 +57,7 @@ const FLowEditPage: NextPage<{NodeData?: FlowNode[]}> = ({NodeData}) => {
   )
 }
 
-const FlowPageLayout: FC<{NodeData?: FlowNode[]}> = ({NodeData}) => {
+const FlowPageLayout: FC<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
   const { height, width } = useToGetWindowSize()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(userMapTestNode)
@@ -87,7 +88,7 @@ const FlowPageLayout: FC<{NodeData?: FlowNode[]}> = ({NodeData}) => {
     () => ({
       custom: ClassNodeComp,
       UserMapTag: UserMapTagComp,
-      UserMapGroup: UserMapGroupComp
+      UserMapGroup: UserMapGroupComp,
     }),
     [],
   )
@@ -113,11 +114,7 @@ const FlowPageLayout: FC<{NodeData?: FlowNode[]}> = ({NodeData}) => {
       <EditorDrawer setNodes={setNodes} />
 
       <Box w={width} h={height} top='16px'>
-        <ReactFlow
-          defaultNodes={nodes}
-          defaultEdges={edges}
-          nodeTypes={nodeTypes}
-        >
+        <ReactFlow defaultNodes={nodes} defaultEdges={edges} nodeTypes={nodeTypes}>
           <MiniMap />
           <Controls />
           <Background />
@@ -128,6 +125,28 @@ const FlowPageLayout: FC<{NodeData?: FlowNode[]}> = ({NodeData}) => {
 }
 export default FLowEditPage
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = nookies.get(ctx).session || ""
+  const user = await firebaseAdmin
+  .auth()
+  .verifySessionCookie(session, true)
+  .catch(()=>null);
+
+  if (!user) {
+    return {
+      redirect: {
+        destination: "/signInPage",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      NodeData:
+    }
+  }
+}
 /*
 
           onNodesChange={onNodesChange}

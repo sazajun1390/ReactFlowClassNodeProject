@@ -37,7 +37,6 @@ import { NodeResizeControl } from '@reactflow/node-resizer'
 import UserMapTagComp from './UserMapTagComp'
 
 const UserMapGroupComp: FC = () => {
-  
   const colors = [
     'gray.500',
     'pink.500',
@@ -54,11 +53,11 @@ const UserMapGroupComp: FC = () => {
   ]
   const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
-  const { getIntersectingNodes } = useReactFlow();
+  const { getIntersectingNodes } = useReactFlow()
   return (
     <Box bg={color}>
       <NodeResizeControl minWidth={100} minHeight={50}>
-        <IconButton bg='red-200' aria-label='setColor' icon={<EditIcon /> }/>
+        <IconButton bg='red-200' aria-label='setColor' icon={<EditIcon />} />
       </NodeResizeControl>
     </Box>
   )

@@ -73,12 +73,12 @@ const Header = memo(function Header() {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <NextLink href={'/flowEditPage'} passHref>
+          <NextLink href={'/'} passHref>
             <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'}>
               Sign In
             </Button>
           </NextLink>
-          <NextLink href={'/'} passHref>
+          <NextLink href={'/signUp'} passHref>
             <Button
               display={{ base: 'none', md: 'inline-flex' }}
               fontSize={'sm'}

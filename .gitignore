@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.env.local
+/firebase/firebase.ts
+reactumleditor-firebase-adminsdk-i2p96-ab054c59b1.json

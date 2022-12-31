@@ -1,13 +1,24 @@
 import type { NextPage } from 'next'
-import useSWR from "swr";
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { Button, Card, CardBody, CardFooter, CardHeader, Center, Flex, FormControl, Text } from '@chakra-ui/react';
-import { FcGoogle } from 'react-icons/fc';
-import { auth, db } from '../firebase/firebaseCallFunctions'
+import useSWR from 'swr'
+import { useRouter } from 'next/router'
+import { useForm } from 'react-hook-form'
+import {
+  Box,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Center,
+  Flex,
+  FormControl,
+  Text,
+} from '@chakra-ui/react'
+import { FcGoogle } from 'react-icons/fc'
+import { auth, db, googleOnSubmit } from '../firebase/firebaseCallFunctions'
 
 const SignUpPage: NextPage = () => {
-  const router = useRouter(); 
+  const router = useRouter()
 
   const {
     handleSubmit,
@@ -15,33 +26,31 @@ const SignUpPage: NextPage = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
-  const onSubmit = async () => {
-    
-  }
-  return(
-    <Flex alignItems='center' justifyContent='center' bg='cool-gray-500'>
-      <Card bg='light-700'>
-        <CardHeader textAlign='center' fontSize='lg' textColor='blackAlpha.300'>
-          SingIn
-        </CardHeader>
-        <CardBody>
-          <Center>
-            <form>
-              <FormControl>
-
-              </FormControl>
-            </form>
-          </Center>
-        </CardBody>
-        <CardFooter>
-          <Button w={'full'} variant={'outline'} leftIcon={<FcGoogle />}>
+  const onSubmit = async () => {}
+  return (
+    <Box w='100vw' h='100vh'>
+      <Flex alignItems='center' justifyContent='center' w='100%' h='100%'>
+        <Card>
+          <CardHeader textAlign='center' fontSize='lg' textColor='white'>
+            SingIn
+          </CardHeader>
+          <CardBody>
             <Center>
-              <Text>Sign up with Google</Text>
+              <form>
+                <FormControl></FormControl>
+              </form>
             </Center>
-          </Button>
-        </CardFooter>
-      </Card>
-    </Flex>
+          </CardBody>
+          <CardFooter>
+            <Button w={'full'} variant={'outline'} leftIcon={<FcGoogle />} onClick={googleOnSubmit}>
+              <Center>
+                <Text>Sign up with Google</Text>
+              </Center>
+            </Button>
+          </CardFooter>
+        </Card>
+      </Flex>
+    </Box>
   )
 }
 

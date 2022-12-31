@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import firebase,{ initializeApp, getApp, getApps } from 'firebase/app'
+import firebase, { initializeApp, getApp, getApps } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
@@ -11,18 +11,16 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAE1L2MvT0KZRxNhDdeaMGBG4wLVIdUFgc',
-  authDomain: 'reactumleditor.firebaseapp.com',
-  projectId: 'reactumleditor',
-  storageBucket: 'reactumleditor.appspot.com',
-  messagingSenderId: '422500231282',
-  appId: '1:422500231282:web:4cc756b1513d8f17193aeb',
-  measurementId: 'G-36JPC6XE6V',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 }
 
 // Initialize Firebase
-const fbConfig = initializeApp(firebaseConfig);
+const fbConfig = initializeApp(firebaseConfig)
 const firebaseApp = !getApps().length ? fbConfig : getApp()
 export default firebaseApp
-
-
