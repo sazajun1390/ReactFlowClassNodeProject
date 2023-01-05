@@ -33,33 +33,47 @@ import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-for
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler } from 'react-hook-form'
 import { SketchPicker } from 'react-color'
-import { NodeResizeControl } from '@reactflow/node-resizer'
+import { NodeResizeControl, NodeResizer } from '@reactflow/node-resizer'
 import UserMapTagComp from './UserMapTagComp'
+import { BlockPicker, ColorChangeHandler } from 'react-color'
+import Popover, { PopoverPlace } from "react-popover";
+import '@reactflow/node-resizer/dist/style.css';
 
-const UserMapGroupComp: FC = () => {
+const UserMapGroupComp: FC<NodeProps> = (Props) => {
   const colors = [
-    'gray.500',
-    'pink.500',
-    'pink.500',
-    'red.500',
-    'gray.700',
-    'green.500',
-    'blue.500',
-    'blue.800',
-    'yellow.500',
-    'orange.500',
-    'purple.500',
-    'pink.500',
+    '#D9E3F0',
+    '#697689',
+    '#f47373',
+    '#37d67a',
+    '#2ccce4',
+    '#555555',
+    '#dce775',
+    '#ff8a65',
+    '#ba68c8',
+    '#417505',
+    '#5300eb',
+    '#fccb00',
   ]
   const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
+  const [popOverIsOpen, setPopoverIsOpen] = useState(false)
 
+  const handleOnChange: ColorChangeHandler = (color, event) => {
+    
+  }
+  
   const { getIntersectingNodes } = useReactFlow()
   return (
-    <Box bg={color}>
-      <NodeResizeControl minWidth={100} minHeight={50}>
-        <IconButton bg='red-200' aria-label='setColor' icon={<EditIcon />} />
-      </NodeResizeControl>
-    </Box>
+    <>
+      <NodeResizer />
+      <Box>
+      <Popover
+        isOpen={popOverIsOpen}
+        body={<BlockPicker onChange={handleOnChange}/>}
+      >
+        <IconButton aria-label='picker' icon={<EditIcon />} bg='whiteAlpha.100' onClick={()=>setPopoverIsOpen(!popOverIsOpen)} />
+      </Popover>
+      </Box>
+    </>
   )
 }
 

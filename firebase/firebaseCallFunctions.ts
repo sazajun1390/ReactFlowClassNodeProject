@@ -14,7 +14,14 @@ import useSWR from 'swr'
 
 import firebaseApp from './firebaseApp'
 
-const analytics = getAnalytics(firebaseApp)
+const analytics = () => {
+  if (typeof window !== 'undefined') {
+    return getAnalytics(firebaseApp)
+  } else {
+    return null
+  }
+}
+
 const db = getFirestore(firebaseApp)
 const auth = getAuth(firebaseApp)
 
@@ -27,15 +34,15 @@ const googleOnSubmit = async () => {
     await fetch('/api/session', { method: 'POST', body: JSON.stringify({ id }) })
     const docRef = doc(db, 'users', user.uid)
     const docSnap = await getDoc(docRef)
-    const colRef = collection(db, `users.${user.uid}`)
+    const colRef = collection(db, `users`, user.uid, 'rooms')
     const ReactFlowRoom = {}
 
     if (!docSnap.exists()) {
       await setDoc(doc(db, 'users', user.uid), {
         name: user.displayName,
         email: user.email,
-        ReactFlowData: {},
       })
+
       await addDoc(colRef, ReactFlowRoom)
     }
     Router.push('/flowEditPage')

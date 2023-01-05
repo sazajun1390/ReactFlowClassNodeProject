@@ -26,7 +26,6 @@ import {
   useEditableControls,
   BorderProps,
   IconButton,
-  Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
@@ -38,11 +37,13 @@ import {
   EditableTextarea,
   Textarea,
   Flex,
+  Popover
 } from '@chakra-ui/react'
 import { AddIcon, EditIcon } from '@chakra-ui/icons'
 import ResizeTextarea from 'react-textarea-autosize'
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { SubmitHandler } from 'react-hook-form'
+
 
 type tagForm = {
   tag: string
@@ -91,7 +92,7 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
               {...register('tag')}
               overflow='hidden'
               resize='none'
-              minRows={1}
+              minRows={2}
               as={ResizeTextarea}
             />
           </form>
@@ -101,7 +102,7 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
           <></>
           <Popover>
             <PopoverTrigger>
-              <IconButton aria-label='setColor' icon={<AddIcon />} bg='whiteAlpha.100' />
+              <IconButton aria-label='setColor' icon={<EditIcon />} bg='whiteAlpha.100' />
             </PopoverTrigger>
             <PopoverContent width='170px'>
               <PopoverArrow bg={color} />

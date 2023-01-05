@@ -8,36 +8,37 @@ import 'reactflow/dist/style.css'
 import '@reactflow/node-resizer/dist/style.css'
 import 'firebaseui/dist/firebaseui.css'
 
-const { definePartsStyle, defineMultiStyleConfig } =
-  createMultiStyleConfigHelpers(cardAnatomy.keys)
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(cardAnatomy.keys)
 const cardBgColor = definePartsStyle({
-  container:{
-    backgroundColor: 'white'
-  }
+  container: {
+    backgroundColor: 'white',
+  },
 })
-const colors:ThemeConfig = {
-  initialColorMode:'dark',
+const colors: ThemeConfig = {
+  initialColorMode: 'dark',
 }
 
 const theme = {
-  ...extendTheme({ colors },
-),
-styles: {
-  global: {
-    'body': {
-      bg: 'gray.500'
+  ...extendTheme({ colors }),
+  styles: {
+    global: {
+      body: {
+        bg: 'white-100',
+      },
+    },
+    fonts: {
+      body: `'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'`,
     },
   },
-  fonts:{
-    body: `'-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'`
-  }
-},}
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <AnimatePresence>
-        <Component {...pageProps} />
+        <ReactFlowProvider>
+          <Component {...pageProps} />
+        </ReactFlowProvider>
       </AnimatePresence>
     </ChakraProvider>
   )
