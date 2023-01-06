@@ -1,6 +1,7 @@
 import firebase, { initializeApp, getApp, getApps } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from 'firebase/firestore'
+import { getDatabase } from "firebase/database";
 import {
   getAuth,
   GoogleAuthProvider,
@@ -24,13 +25,14 @@ const analytics = () => {
 
 const db = getFirestore(firebaseApp)
 const auth = getAuth(firebaseApp)
+const realDB = getDatabase(firebaseApp)
 
 const googleOnSubmit = async () => {
   try {
     const provider = new GoogleAuthProvider()
     const result = await signInWithPopup(auth, provider)
     const user = result.user
-    const id = await user.getIdToken()
+    const id = await result.user.getIdToken()
     await fetch('/api/session', { method: 'POST', body: JSON.stringify({ id }) })
     const docRef = doc(db, 'users', user.uid)
     const docSnap = await getDoc(docRef)
@@ -73,4 +75,4 @@ const logout = async () => {
   // セッションを削除するため、Firebase SDKでなくREST APIでログアウトさせる
   await fetch('/api/sessionLogout', { method: 'POST' })
 }
-export { analytics, db, auth, signInWithPass, logout, googleOnSubmit }
+export { analytics, db, realDB, auth, signInWithPass, logout, googleOnSubmit }

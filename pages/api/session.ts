@@ -1,6 +1,7 @@
 import type { NextApiRequest as Req, NextApiResponse as Res } from 'next'
 import { firebaseAdmin } from '../../firebase/firebaseAdmin'
-import { setCookie } from 'nookies'
+import nookies from 'nookies'
+import { setCookie } from 'cookies-next';
 
 export default async function sessionApi(req: Req, res: Res) {
   // "POST"以外は、"404 Not Found"を返す
@@ -14,7 +15,7 @@ export default async function sessionApi(req: Req, res: Res) {
 
     // セッションCookieを作成するためのIDを取得
     const id = (JSON.parse(req.body).id || '').toString()
-
+    
     // Cookieに保存するセッションIDを作成する
     const sessionCookie = await auth.createSessionCookie(id, { expiresIn })
 
@@ -26,9 +27,11 @@ export default async function sessionApi(req: Req, res: Res) {
       path: '/',
     }
 
-    // セッションIDをCookieに設定する
-    setCookie({ res }, 'session', sessionCookie, options)
+    console.log(typeof sessionCookie)
 
+    // セッションIDをCookieに設定する
+    //nookies.set({ res }, 'session', sessionCookie, options)
+    setCookie('session',sessionCookie,{req,res,...options})
     res.send(JSON.stringify({ status: 'success' }))
   } catch (e) {
     console.log(e)

@@ -14,12 +14,21 @@ import ReactFlow, {
 import 'reactflow/dist/style.css'
 import '@reactflow/node-resizer/dist/style.css'
 import { initialEdges, initialNodes } from '../store/ReactFlowStarterDeck'
-import { useCallback, useMemo, MouseEvent as ReactMouseEvent, FC, DragEvent, useRef, useState } from 'react'
-import Draggable, { DraggableCore, DraggableEvent, DraggableData } from 'react-draggable';
+import {
+  useCallback,
+  useMemo,
+  MouseEvent as ReactMouseEvent,
+  FC,
+  DragEvent,
+  useRef,
+  useState,
+  useEffect,
+} from 'react'
+import Draggable, { DraggableCore, DraggableEvent, DraggableData } from 'react-draggable'
 
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import Header from '../components/Header'
+import Navbar from '../components/Navbar'
 import {
   Box,
   useColorModeValue,
@@ -47,27 +56,30 @@ import type { NodeMouseHandler } from 'reactflow'
 import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 import UserMapGroupComp from '../components/UserMapPackage/UserMapGroupComp'
 import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore'
-import { db, analytics } from '../firebase/firebaseCallFunctions'
+import { db, analytics, realDB, auth, logout } from '../firebase/firebaseCallFunctions'
+import { ref, onValue, get, child, set} from "firebase/database";
 import firebaseApp from '../firebase/firebaseApp'
 import type { Node as FlowNode } from 'reactflow'
 import { firebaseAdmin } from '../firebase/firebaseAdmin'
-import nookies from 'nookies'
+import nookies, {parseCookies} from 'nookies'
 import { getAuth } from 'firebase/auth'
+import { getCookie, hasCookie } from 'cookies-next';
 
-const FLowEditPage: NextPage<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
+const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
   type NodeDragPosition = {
     position: {
-      x:number,
-      y:number
+      x: number
+      y: number
     }
   }
   const { height, width } = useToGetWindowSize()
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(userMapTestNode)
+  const [nodes, setNodes, onNodesChange] = useNodesState(NodeData)
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
   const { getIntersectingNodes, getNodes } = useReactFlow()
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>()
+
   /**
    * const { EditorIsOpen, EditorOnClose } = useDisclojureStore(
     (state) => ({
@@ -112,43 +124,65 @@ const FLowEditPage: NextPage<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
   }, [])
    */
 
+  const onInit = (rfi: ReactFlowInstance) => setReactFlowInstance(rfi)
 
-  const onInit = (rfi: ReactFlowInstance) => setReactFlowInstance(rfi);
-
-  const onNodeDragStart = (e:DragEvent, nodeType:string) => {
-    e.dataTransfer.setData('application/reactflow',nodeType);
+  const onNodeDragStart = (e: DragEvent, nodeType: string) => {
+    e.dataTransfer.setData('application/reactflow', nodeType)
     e.dataTransfer.effectAllowed = 'move'
   }
 
-  const onDragOver = useCallback((event:DragEvent) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+  const onDragOver = useCallback((event: DragEvent) => {
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'move'
+  }, [])
+
+  const onNodeDrop = useCallback(
+    (event: DragEvent) => {
+      event.preventDefault()
+
+      const type = event.dataTransfer.getData('application/reactflow')
+
+      if (typeof type === 'undefined' || !type) {
+        return
+      }
+
+      const newNode: Node<any> = {
+        id: String(getNodes().length),
+        position: {
+          x: event.clientX,
+          y: event.clientY,
+        },
+        type,
+        data: { label: 'data' },
+      }
+
+      setNodes((nds) => {
+        console.log(nds)
+        type=='UserMapGroup' ? nds.unshift(newNode) : nds.push(newNode)
+        return nds
+      })
+    },
+    [reactFlowInstance],
+  )
+
+  const onNodeDrag = useCallback((M: MouseEvent, node: Node) => {
+    const intersections = getIntersectingNodes(node).map((n) => n.id);
+    const getData = getNodes()
+
+    intersections.map((id)=>{
+      
+    })
+    
   }, []);
 
-  const onNodeDrop = useCallback((event: DragEvent)=>{
-    event.preventDefault();
 
-    const type = event.dataTransfer.getData('application/reactflow');
-
-    if (typeof type === 'undefined' || !type) {
-      return;
-    }
-    
-    const newNode: Node<any> = {
-      id: String(getNodes().length),
-      position:{
-        x: event.clientX,
-        y: event.clientY - 40,
-      },
-      type,
-      data:{label: 'data'}
-    }
-    setNodes( (nds)=>{
-      console.log(nds)
-      return nds.concat(newNode)
+  const currentUserUid = auth.currentUser?.uid
+  useEffect(() => {
+    set(ref(realDB,'users/'+currentUserUid+'room1'), {
+      Nodes:nodes
     })
-
-  },[reactFlowInstance])
+  }, [nodes])
+  
 
   return (
     <div>
@@ -156,7 +190,7 @@ const FLowEditPage: NextPage<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
         <title>fLowEditPage</title>
       </Head>
 
-      <Header />
+      <Navbar />
       <Box w={width} h={height} top='16px'>
         <ReactFlow
           nodes={nodes}
@@ -175,14 +209,26 @@ const FLowEditPage: NextPage<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
           <MiniMap />
           <Controls />
           <Background />
-          
 
           <Panel position='bottom-center'>
             <Box>
-              <Box onDragStart={(e)=>{onNodeDragStart(e,'UserMapTag')}} w='40' h='50' bg='azure'>
+              <Box
+                onDragStart={(e) => {
+                  onNodeDragStart(e, 'UserMapTag')
+                }}
+                w='40'
+                h='50'
+                bg='azure'
+                draggable
+              >
                 <ChakraText>付箋</ChakraText>
               </Box>
-              <Box onDragStart={(e)=>{onNodeDragStart(e,'UserMapGroup')}}>
+              <Box
+                onDragStart={(e) => {
+                  onNodeDragStart(e, 'UserMapGroup')
+                }}
+                draggable
+              >
                 <ChakraText>グループ</ChakraText>
               </Box>
             </Box>
@@ -194,15 +240,22 @@ const FLowEditPage: NextPage<{ NodeData?: FlowNode[] }> = ({ NodeData }) => {
 }
 export default FLowEditPage
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = nookies.get(ctx).session || ''
+export const getStaticProps: GetServerSideProps = async (ctx) => {
+  console.log(ctx)
+  const cookie = getCookie('session',ctx) as string;
+  const cookies = nookies.get(ctx)
+  console.log(hasCookie('session',ctx))
+
   const user = await firebaseAdmin
     .auth()
-    .verifySessionCookie(session, true)
-    .catch(() => null)
+    .verifySessionCookie(cookie, true)
+    .catch((e) => {
+      console.log(e)
+      return null
+    })
 
-  const currentUser = getAuth(firebaseApp).currentUser
 
+  console.log(user)
   if (!user) {
     return {
       redirect: {
@@ -211,13 +264,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     }
   }
-  
 
-  return {
-    props: {
-      NodeData: '',
-    },
-  }
+  const currentUser = auth.currentUser
+
+  const reactNodeRef = ref(realDB, 'users/' + currentUser?.uid)
+  const snapShot = await get(child(reactNodeRef, 'room1/Nodes'))
+    if(snapShot.exists()){
+      return {
+        props: {
+          NodeData: snapShot.val(),
+        },
+      }
+    }else{
+
+      return {
+        props: {
+          NodeData: userMapTestNode,
+        },
+      }
+    }
 }
 /*
 

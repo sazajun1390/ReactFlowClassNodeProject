@@ -17,5 +17,6 @@ const serviceAccount: admin.ServiceAccount = {
 export const firebaseAdmin =
   admin.apps[0] ||
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string)),
+    databaseURL: "https://reactumleditor-default-rtdb.asia-southeast1.firebasedatabase.app"
   })

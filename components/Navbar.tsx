@@ -25,7 +25,7 @@ import type { ResponsiveValue } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 
-const Header = memo(function Header() {
+const Navbar = memo(function Header() {
   console.log('create header')
   const { isOpen, onToggle } = useDisclosure()
   const bg = useColorModeValue('white', 'grey.600')
@@ -73,7 +73,7 @@ const Header = memo(function Header() {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <NextLink href={'/'} passHref>
+          <NextLink href={'/SignInPage'} passHref>
             <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'}>
               Sign In
             </Button>
@@ -248,4 +248,4 @@ const MobileNavItem = memo(function MobeileNavItem({ label, children, href }: Na
   )
 })
 
-export default Header
+export default Navbar
