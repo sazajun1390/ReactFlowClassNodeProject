@@ -8,12 +8,15 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged
 } from 'firebase/auth'
 import Router from 'next/router'
 import { setCookie } from 'nookies'
 import useSWR from 'swr'
+import Cookies from 'js-cookie'
 
 import firebaseApp from './firebaseApp'
+import { queries } from '@storybook/testing-library';
 
 const analytics = () => {
   if (typeof window !== 'undefined') {
@@ -33,7 +36,8 @@ const googleOnSubmit = async () => {
     const result = await signInWithPopup(auth, provider)
     const user = result.user
     const id = await result.user.getIdToken()
-    await fetch('/api/session', { method: 'POST', body: JSON.stringify({ id }) })
+    const uid = await user.uid
+    await fetch('/api/session', { method: 'POST', body: JSON.stringify({ id, uid }) })
     const docRef = doc(db, 'users', user.uid)
     const docSnap = await getDoc(docRef)
     const colRef = collection(db, `users`, user.uid, 'rooms')
@@ -50,6 +54,7 @@ const googleOnSubmit = async () => {
     Router.push('/flowEditPage')
   } catch (e) {
     console.log(e)
+    Cookies.set("token", "");
   }
 }
 
@@ -75,4 +80,4 @@ const logout = async () => {
   // セッションを削除するため、Firebase SDKでなくREST APIでログアウトさせる
   await fetch('/api/sessionLogout', { method: 'POST' })
 }
-export { analytics, db, realDB, auth, signInWithPass, logout, googleOnSubmit }
+export { analytics, db, realDB, auth, signInWithPass, logout, googleOnSubmit, passSignUpOnSubmit }

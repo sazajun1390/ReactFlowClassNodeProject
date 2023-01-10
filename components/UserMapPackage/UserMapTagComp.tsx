@@ -81,11 +81,12 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
   <NodeResizer />
   */
   const [height, setHeight] = useState(60)
-  const [width, setWidth] =useState()
+  const [width, setWidth] =useState(60)
   const fieldValue = watch('tag')
   
   const calcHeight = useCallback(( event: ResizeDragEvent, params: ResizeEventParams ) => {
     setHeight(params.height)
+    setWidth(params.width)
   }, [height])
   
   useEffect(()=>{
@@ -93,16 +94,17 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
       (node)=>{
         if(node.id == id){
           node.data = {
-            ...node.data,
             label:fieldValue
           }
+          node.width=width 
+          node.height=height
         }
         return node
     }))
-  },[fieldValue])
+  },[fieldValue,width,height])
 
   return (
-    <Box bg={color} rounded='md' shadow='md' border='1px' borderColor='gray.500' h={height} minW={40} >
+    <Box bg={color} rounded='md' shadow='md' border='1px' borderColor='gray.500' h={height} w={width} minW={40} >
       <NodeResizer
         onResize={calcHeight}
         minWidth={40}

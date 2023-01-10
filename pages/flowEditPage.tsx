@@ -57,15 +57,18 @@ import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 import UserMapGroupComp from '../components/UserMapPackage/UserMapGroupComp'
 import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { db, analytics, realDB, auth, logout } from '../firebase/firebaseCallFunctions'
-import { ref, onValue, get, child, set} from "firebase/database";
+import { ref, onValue, get, child, set, update} from "firebase/database";
 import firebaseApp from '../firebase/firebaseApp'
 import type { Node as FlowNode } from 'reactflow'
 import { firebaseAdmin } from '../firebase/firebaseAdmin'
 import nookies, {parseCookies} from 'nookies'
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getCookie, hasCookie } from 'cookies-next';
+import { useSWRConfig } from 'swr'
+import Router from 'next/router'
+import { json } from 'stream/consumers'
 
-const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
+const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData })  => {
   type NodeDragPosition = {
     position: {
       x: number
@@ -175,13 +178,22 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
     
   }, []);
 
-
+  
   const currentUserUid = auth.currentUser?.uid
-  useEffect(() => {
-    set(ref(realDB,'users/'+currentUserUid+'room1'), {
+  const dbRef = ref(realDB,'users/'+currentUserUid+'/room1')
+  const updateData = async () => {
+    update(dbRef, {
       Nodes:nodes
     })
-  }, [nodes])
+  }
+
+  const interval = setInterval(()=>{
+    updateData()
+  }, 40000)
+
+  useEffect(() => {
+    () => clearInterval(interval);  
+  }, [])
   
 
   return (
@@ -240,15 +252,76 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
 }
 export default FLowEditPage
 
+interface flowEdtJson {
+  user?:{
+    email:string,
+    Nodes:Node<any>[]
+  }
+}
+
+
+FLowEditPage.getInitialProps = async ({ req, res }) => {
+  const isServerSide = typeof window === "undefined";
+  let arr: Node<any>[] | undefined = []
+
+  if (isServerSide && req && res) {
+    const root = "http://localhost:3000";
+    const options = { headers: { cookie: req.headers.cookie || "" } };
+    const result = await fetch(`${root}/api/iniPropAPI`, options);
+    const json = (await result.json()) as flowEdtJson;
+    
+    onAuthStateChanged(auth,(user)=>{
+      if(!user){
+        res.writeHead(302, { Location: "/signInPage" });
+        res.end();
+      }
+    })
+
+    // 認証情報が無ければログイン画面へリダイレクトさせる
+    if (!json.user) {
+      res.writeHead(302, { Location: "/signInPage" });
+      res.end();
+    }
+    arr = json.user!.Nodes
+  }  
+
+  // フロントエンドのみで動かす
+  if (!isServerSide) {
+    const result = await fetch("/api/iniPropAPI"); // 認証情報を取得する
+    const json = (await result.json()) as flowEdtJson;
+
+    // 認証情報が無ければログイン画面へリダイレクトさせる
+    if (!json.user) Router.push('/signInPage')
+
+    onAuthStateChanged(auth,(user)=>{
+      if(!user) Router.push('/signInPage')
+    })
+
+    arr = json.user!.Nodes
+  }
+  
+  //const FlowData = snapshot.exists() ? snapshot.val() as Node<any>[] :  
+  return { NodeData: arr };
+  
+};
+
+/*
+  const currentUserUid = auth.currentUser?.uid
+  const dbRef = ref(realDB)
+  const snapshot = await get(child(dbRef,'users/'+currentUserUid+'/room1'))
+  console.log(snapshot.val())
+
 export const getStaticProps: GetServerSideProps = async (ctx) => {
   console.log(ctx)
-  const cookie = getCookie('session',ctx) as string;
+  //const cookie = getCookie('session',ctx) as string;
+  //const cookies = context.req.headers.cookie
   const cookies = nookies.get(ctx)
-  console.log(hasCookie('session',ctx))
-
+  console.log(cookies.session)
+  console.log(typeof cookies.session)
+  //const cookie = (typeof cookies !== 'string') ? '' : cookie.parse(cookies)
   const user = await firebaseAdmin
     .auth()
-    .verifySessionCookie(cookie, true)
+    .verifySessionCookie(cookies.session, true)
     .catch((e) => {
       console.log(e)
       return null
@@ -283,7 +356,7 @@ export const getStaticProps: GetServerSideProps = async (ctx) => {
         },
       }
     }
-}
+}*/
 /*
 
           onNodesChange={onNodesChange}

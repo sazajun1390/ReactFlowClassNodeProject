@@ -23,5 +23,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const fbConfig = initializeApp(firebaseConfig)
-const firebaseApp = !getApps().length ? fbConfig : getApp()
-export default firebaseApp
+//const firebaseApp = !getApps().length ? fbConfig : getApp()
+const firebaseApp = () => {
+  return !getApps().length ? fbConfig : getApp()
+}
+export default firebaseApp()

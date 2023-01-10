@@ -67,15 +67,16 @@ const UserMapGroupComp: FC<NodeProps> = (Props) => {
   ]
   const [color, setColor] = useState(colors[Math.floor(Math.random() * colors.length)])
   const [height, setHeight] = useState(60)
-  const [width, setWidth] =useState()
+  const [width, setWidth] =useState(60)
   const calcHeight = useCallback(( event: ResizeDragEvent, params: ResizeEventParams ) => {
     setHeight(params.height)
+    setWidth(params.width)
   }, [height])
   const handleOnChange: ColorChangeHandler = (color, event) => {}
 
   const { getIntersectingNodes } = useReactFlow()
   return (
-    <Box bg={color} h={height} minW={40}>
+    <Box bg={color} h={height} w={width} minW={40}>
       <NodeResizer
         onResize={calcHeight}
         minWidth={40}
