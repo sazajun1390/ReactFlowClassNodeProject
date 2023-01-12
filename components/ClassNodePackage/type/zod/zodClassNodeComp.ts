@@ -4,13 +4,28 @@ import { ReactNode, Dispatch, SetStateAction } from 'react'
 interface ClassNodeData {
   /**
    *
-   * @miniLength 2
-   * @maxLength 8
+   * @minimum 1
    *
    */
-  className: string
+  class: classObj
   variables: Array<VariableObj>
   functions: Array<FunctionObj>
+}
+
+interface classObj {
+  className: string
+  classArgs: Array<classArg>
+}
+
+type classArg = {
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  argId: string
+  argName: string
+  argType: string
 }
 
 interface VariableObj {
@@ -48,7 +63,9 @@ type FuncArg = {
    * @minimum 1
    *
    */
-  arg: string
+  argId: string
+  argName: string
+  argType: string
 }
 
 interface FunctionObj {

@@ -52,10 +52,22 @@ const testClass: ClassNode = {
   type: 'custom',
   position: { x: 0, y: 0 },
   data: {
-    className: 'calcNum',
+    class: {
+      className: 'calcNum',
+      classArgs: [],
+    },
     variables: [Variable1, Variable2, Variable3],
     functions: [FunctionData1, FunctionData2, FunctionData3],
   },
+}
+
+const defaultClassData: ClassNodeData ={
+  class: {
+    className: 'calcNum',
+    classArgs: [],
+  },
+  variables: [Variable1, Variable2, Variable3],
+  functions: [FunctionData1, FunctionData2, FunctionData3],
 }
 
 const testClass2: ClassNode = {
@@ -63,7 +75,10 @@ const testClass2: ClassNode = {
   type: 'custom',
   position: { x: 1000, y: 30 },
   data: {
-    className: 'calcNum',
+    class: {
+      className: 'calcNum',
+      classArgs: [],
+    },
     variables: [Variable1, Variable1, Variable1],
     functions: [FunctionData3, FunctionData3, FunctionData3],
   },
@@ -131,4 +146,5 @@ export {
   testEdge,
   StroyUserMapTag,
   userMapTestNode,
+  defaultClassData
 }

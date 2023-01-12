@@ -10,7 +10,12 @@ import {
   addEdge,
   Node,
 } from 'reactflow'
-import { NodeResizer, NodeResizeControl, ResizeDragEvent, ResizeEventParams } from '@reactflow/node-resizer'
+import {
+  NodeResizer,
+  NodeResizeControl,
+  ResizeDragEvent,
+  ResizeEventParams,
+} from '@reactflow/node-resizer'
 import '@reactflow/node-resizer/dist/style.css'
 import {
   Divider,
@@ -81,36 +86,46 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
   <NodeResizer />
   */
   const [height, setHeight] = useState(60)
-  const [width, setWidth] =useState(60)
+  const [width, setWidth] = useState(60)
   const fieldValue = watch('tag')
-  
-  const calcHeight = useCallback(( event: ResizeDragEvent, params: ResizeEventParams ) => {
-    setHeight(params.height)
-    setWidth(params.width)
-  }, [height])
-  
-  useEffect(()=>{
-    setNodes((nodes) => nodes.map(
-      (node)=>{
-        if(node.id == id){
+
+  const calcHeight = useCallback(
+    (event: ResizeDragEvent, params: ResizeEventParams) => {
+      setHeight(params.height)
+      setWidth(params.width)
+    },
+    [height],
+  )
+
+  useEffect(() => {
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id == id) {
           node.data = {
-            label:fieldValue
+            label: fieldValue,
           }
-          node.width=width 
-          node.height=height
+          node.width = width
+          node.height = height
         }
         return node
-    }))
-  },[fieldValue,width,height])
+      }),
+    )
+  }, [fieldValue, width, height])
 
   return (
-    <Box bg={color} rounded='md' shadow='md' border='1px' borderColor='gray.500' h={height} w={width} minW={40} >
-      <NodeResizer
-        onResize={calcHeight}
-        minWidth={40}
-      />
+    <Box
+      bg={color}
+      rounded='md'
+      shadow='md'
+      border='1px'
+      borderColor='gray.500'
+      h={height}
+      w={width}
+      minW={40}
+    >
+      <NodeResizer onResize={calcHeight} minWidth={40} />
       <Box m={2}>
-        <form >
+        <form>
           <Textarea
             {...register('tag')}
             overflow='hidden'
@@ -121,7 +136,7 @@ const UserMapTagComp: FC<NodeProps> = (props) => {
         </form>
       </Box>
 
-      <Flex pos='fixed' bottom={2} my='2' >
+      <Flex pos='fixed' bottom={2} my='2'>
         <></>
         <Popover>
           <PopoverTrigger>

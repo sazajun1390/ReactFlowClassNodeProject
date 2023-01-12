@@ -44,7 +44,7 @@ import type { Edge, Connection } from 'reactflow'
 import { useToGetWindowSize } from '../hooks/useToGetWindowSize'
 import { useDisclojureStore } from '../zustand/EditorsDIscrojure'
 import shallow from 'zustand/shallow'
-import { testEdge, TestNode, userMapTestNode } from '../store/TestNode'
+import { defaultClassData, testEdge, TestNode, userMapTestNode } from '../store/TestNode'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import { useForm } from 'react-hook-form'
 import EditorDrawer from '../components/EditorDrawer'
@@ -57,18 +57,18 @@ import UserMapTagComp from '../components/UserMapPackage/UserMapTagComp'
 import UserMapGroupComp from '../components/UserMapPackage/UserMapGroupComp'
 import { getFirestore, collection, addDoc, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { db, analytics, realDB, auth, logout } from '../firebase/firebaseCallFunctions'
-import { ref, onValue, get, child, set, update} from "firebase/database";
+import { ref, onValue, get, child, set, update } from 'firebase/database'
 import firebaseApp from '../firebase/firebaseApp'
 import type { Node as FlowNode } from 'reactflow'
 import { firebaseAdmin } from '../firebase/firebaseAdmin'
-import nookies, {parseCookies} from 'nookies'
+import nookies, { parseCookies } from 'nookies'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { getCookie, hasCookie } from 'cookies-next';
+import { getCookie, hasCookie } from 'cookies-next'
 import { useSWRConfig } from 'swr'
 import Router from 'next/router'
 import { json } from 'stream/consumers'
 
-const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData })  => {
+const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
   type NodeDragPosition = {
     position: {
       x: number
@@ -158,10 +158,24 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData })  => {
         type,
         data: { label: 'data' },
       }
+      
+      const NewClassNode: Node<ClassNodeData> = {
+        id: String(getNodes().length),
+        position: {
+          x: event.clientX,
+          y: event.clientY,
+        },
+        type: 'custom',
+        data: defaultClassData
+      }
 
       setNodes((nds) => {
         console.log(nds)
-        type=='UserMapGroup' ? nds.unshift(newNode) : nds.push(newNode)
+        if(type === 'custom'){
+          nds.push(NewClassNode)
+        }else{
+          type == 'UserMapGroup' ? nds.unshift(newNode) : nds.push(newNode)
+        }
         return nds
       })
     },
@@ -169,32 +183,27 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData })  => {
   )
 
   const onNodeDrag = useCallback((M: MouseEvent, node: Node) => {
-    const intersections = getIntersectingNodes(node).map((n) => n.id);
+    const intersections = getIntersectingNodes(node).map((n) => n.id)
     const getData = getNodes()
 
-    intersections.map((id)=>{
-      
-    })
-    
-  }, []);
+    intersections.map((id) => {})
+  }, [])
 
-  
   const currentUserUid = auth.currentUser?.uid
-  const dbRef = ref(realDB,'users/'+currentUserUid+'/room1')
+  const dbRef = ref(realDB, 'users/' + currentUserUid + '/room1')
   const updateData = async () => {
     update(dbRef, {
-      Nodes:nodes
+      Nodes: nodes,
     })
   }
 
-  const interval = setInterval(()=>{
+  const interval = setInterval(() => {
     updateData()
   }, 40000)
 
   useEffect(() => {
-    () => clearInterval(interval);  
+    ;() => clearInterval(interval)
   }, [])
-  
 
   return (
     <div>
@@ -243,6 +252,17 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData })  => {
               >
                 <ChakraText>グループ</ChakraText>
               </Box>
+              <Box
+                onDragStart={(e) => {
+                  onNodeDragStart(e, 'custom')
+                }}
+                w='40'
+                h='50'
+                bg='azure'
+                draggable
+              >
+                <ChakraText>Class</ChakraText>
+              </Box>
             </Box>
           </Panel>
         </ReactFlow>
@@ -253,57 +273,55 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData })  => {
 export default FLowEditPage
 
 interface flowEdtJson {
-  user?:{
-    email:string,
-    Nodes:Node<any>[]
+  user?: {
+    email: string
+    Nodes: Node<any>[]
   }
 }
 
-
 FLowEditPage.getInitialProps = async ({ req, res }) => {
-  const isServerSide = typeof window === "undefined";
+  const isServerSide = typeof window === 'undefined'
   let arr: Node<any>[] | undefined = []
 
   if (isServerSide && req && res) {
-    const root = "http://localhost:3000";
-    const options = { headers: { cookie: req.headers.cookie || "" } };
-    const result = await fetch(`${root}/api/iniPropAPI`, options);
-    const json = (await result.json()) as flowEdtJson;
-    
-    onAuthStateChanged(auth,(user)=>{
-      if(!user){
-        res.writeHead(302, { Location: "/signInPage" });
-        res.end();
+    const root = 'http://localhost:3000'
+    const options = { headers: { cookie: req.headers.cookie || '' } }
+    const result = await fetch(`${root}/api/iniPropAPI`, options)
+    const json = (await result.json()) as flowEdtJson
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        res.writeHead(302, { Location: '/signInPage' })
+        res.end()
       }
     })
 
     // 認証情報が無ければログイン画面へリダイレクトさせる
     if (!json.user) {
-      res.writeHead(302, { Location: "/signInPage" });
-      res.end();
+      res.writeHead(302, { Location: '/signInPage' })
+      res.end()
     }
     arr = json.user!.Nodes
-  }  
+  }
 
   // フロントエンドのみで動かす
   if (!isServerSide) {
-    const result = await fetch("/api/iniPropAPI"); // 認証情報を取得する
-    const json = (await result.json()) as flowEdtJson;
+    const result = await fetch('/api/iniPropAPI') // 認証情報を取得する
+    const json = (await result.json()) as flowEdtJson
 
     // 認証情報が無ければログイン画面へリダイレクトさせる
     if (!json.user) Router.push('/signInPage')
 
-    onAuthStateChanged(auth,(user)=>{
-      if(!user) Router.push('/signInPage')
+    onAuthStateChanged(auth, (user) => {
+      if (!user) Router.push('/signInPage')
     })
 
     arr = json.user!.Nodes
   }
-  
-  //const FlowData = snapshot.exists() ? snapshot.val() as Node<any>[] :  
-  return { NodeData: arr };
-  
-};
+
+  //const FlowData = snapshot.exists() ? snapshot.val() as Node<any>[] :
+  return { NodeData: arr }
+}
 
 /*
   const currentUserUid = auth.currentUser?.uid

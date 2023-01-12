@@ -23,6 +23,11 @@ import {
   useEditableControls,
   BorderProps,
   IconButton,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
 } from '@chakra-ui/react'
 import { EditIcon, AddIcon } from '@chakra-ui/icons'
 import type {
@@ -38,15 +43,25 @@ import shallow from 'zustand/shallow'
 import { Controller, FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { classNodeSchema } from './type/zod/zodClassNodeComp.zod'
-import { FunctionsFormFields, VarsFormFields } from './FormField'
-import { SubmitHandler } from 'react-hook-form'
+import { ClassArgFields, FunctionsFormFields, VarsFormFields } from './FormField'
+import { SubmitHandler, useFormContext } from 'react-hook-form'
 import { ColorPicker } from 'chakra-color-picker'
 import { BlockPicker } from 'react-color'
 import Popover from 'react-popover'
+import type { classObj } from './type/ClassNodeComp'
+import { FieldArrayWithId } from 'react-hook-form'
+import { UseFieldArrayRemove, UseFieldArrayAppend } from 'react-hook-form'
+
+
+type classArgsProps = {
+  item: FieldArrayWithId<classObj, 'classArgs', 'id'>
+  argIndex: number
+  remove: UseFieldArrayRemove
+}
 
 const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   const data = props
-  const EditorOnOpen = useDisclojureStore.getState().onOpen
+  //const EditorOnOpen = useDisclojureStore.getState().onOpen
   const { getNodes, setNodes, setEdges } = useReactFlow()
 
   const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData(
@@ -94,12 +109,22 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   }, [isOpen])
 
   const onSubmit: SubmitHandler<ClassNode> = (data) => {
-    const nodes = getNodes()
+    //const nodes = getNodes()
+    setNodes((nodes) => {
+      return nodes.map((node) => {
+        if (node.id) {
+          return node.id === data.id ? data : node
+        }
+        return node
+      })
+    })
+    /*
     setNodes(
       nodes.map((elm: ClassNode) => {
         return elm.id === data.id ? data : elm
       }),
     )
+    */
   }
 
   const handleStyle = {
@@ -121,31 +146,41 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   useEffect(() => {
     //setclassNameFieldError(typeof errors.className === 'undefined' ? false : true )
     setClassNameFieldError(
-      typeof errors.data?.className === 'undefined'
+      typeof errors.data?.class?.className === 'undefined'
         ? null
         : {
             border: '2px',
             borderColor: 'red.400',
           },
     )
-  }, [errors.data?.className])
+  }, [errors.data?.class?.className])
 
   return (
     <Box>
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} id='classNodeForm'>
           <FormProvider {...methods}>
-            <FormControl isRequired isInvalid={!!errors.data?.className}>
-              <Editable defaultValue={getValues('data.className')}>
-                <EditablePreview w='100%' {...classNameFieldError} />
-                <EditableInput
-                  id='data.className'
-                  {...classNameFieldError}
-                  {...register('data.className')}
-                />
-                <FormErrorMessage>{errors.data?.className?.message}</FormErrorMessage>
-              </Editable>
-            </FormControl>
+            <Accordion allowToggle>
+              <AccordionItem>
+                <AccordionButton>
+                  <FormControl isRequired isInvalid={!!errors.data?.class?.className}>
+                    <Editable defaultValue={getValues('data.class.className')}>
+                      <EditablePreview w='100%' {...classNameFieldError} />
+                      <EditableInput
+                        id='data.class.className'
+                        {...classNameFieldError}
+                        {...register('data.class.className')}
+                      />
+                      <FormErrorMessage>{errors.data?.class?.className?.message}</FormErrorMessage>
+                    </Editable>
+                  </FormControl>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel>
+                  <ClassArgFields />
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
             <Divider />
             <Box>
               <FunctionsFormFields />
@@ -155,17 +190,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
           </FormProvider>
         </form>
         <Box>
-          <Button leftIcon={<EditIcon />} type='submit'></Button>
+          <Button leftIcon={<EditIcon />} type='submit' form='classNodeForm'></Button>
         </Box>
-        <Popover body={<BlockPicker />} isOpen={colorPop} preferPlace='below'>
-          <IconButton
-            aria-label='setColor'
-            icon={<AddIcon />}
-            onClick={() => {
-              setColorPop(!colorPop)
-            }}
-          />
-        </Popover>
         <Handle type='target' position={Position.Left} style={handleStyle} />
 
         <Handle type='source' position={Position.Right} style={handleStyle} />

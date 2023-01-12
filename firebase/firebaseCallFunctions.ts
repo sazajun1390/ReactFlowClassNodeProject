@@ -1,14 +1,14 @@
 import firebase, { initializeApp, getApp, getApps } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from 'firebase/firestore'
-import { getDatabase } from "firebase/database";
+import { getDatabase } from 'firebase/database'
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from 'firebase/auth'
 import Router from 'next/router'
 import { setCookie } from 'nookies'
@@ -16,7 +16,8 @@ import useSWR from 'swr'
 import Cookies from 'js-cookie'
 
 import firebaseApp from './firebaseApp'
-import { queries } from '@storybook/testing-library';
+import { queries } from '@storybook/testing-library'
+import firebaseAuth from './firebaseAuth'
 
 const analytics = () => {
   if (typeof window !== 'undefined') {
@@ -54,7 +55,7 @@ const googleOnSubmit = async () => {
     Router.push('/flowEditPage')
   } catch (e) {
     console.log(e)
-    Cookies.set("token", "");
+    Cookies.set('token', '')
   }
 }
 
@@ -80,4 +81,5 @@ const logout = async () => {
   // セッションを削除するため、Firebase SDKでなくREST APIでログアウトさせる
   await fetch('/api/sessionLogout', { method: 'POST' })
 }
+
 export { analytics, db, realDB, auth, signInWithPass, logout, googleOnSubmit, passSignUpOnSubmit }

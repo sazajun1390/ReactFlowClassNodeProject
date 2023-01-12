@@ -2,7 +2,21 @@
 import { z } from 'zod'
 
 const funcArgSchema = z.object({
-  arg: z
+  argId: z.number({ required_error: 'argId is required' }).min(1),
+  argName: z
+    .string({ required_error: 'className is required' })
+    .min(1, { message: 'Must be 1 or more characters long' }),
+  argType: z
+    .string({ required_error: 'className is required' })
+    .min(1, { message: 'Must be 1 or more characters long' }),
+})
+
+const classArgSchema = z.object({
+  argId: z.number({ required_error: 'argId is required' }).min(1),
+  argName: z
+    .string({ required_error: 'className is required' })
+    .min(1, { message: 'Must be 1 or more characters long' }),
+  argType: z
     .string({ required_error: 'className is required' })
     .min(1, { message: 'Must be 1 or more characters long' }),
 })
@@ -30,11 +44,16 @@ const functionObjSchema = z.object({
 
 const formObjectTypeSchema = z.union([functionObjSchema, variableObjSchema]).nullable()
 
-const classNodeDataSchema = z.object({
+const classObjSchema = z.object({
   className: z
     .string({ required_error: 'className is required' })
     .min(1, { message: 'Must be 1 or more characters long' })
     .max(8),
+  classArgSchema: z.array(classArgSchema),
+})
+
+const classNodeDataSchema = z.object({
+  class: classObjSchema,
   variables: z.array(variableObjSchema),
   functions: z.array(functionObjSchema),
 })

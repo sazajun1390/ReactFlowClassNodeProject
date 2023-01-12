@@ -7,9 +7,14 @@ interface ClassNodeData {
    * @minimum 1
    *
    */
-  className: string
+  class: classObj
   variables: Array<VariableObj>
   functions: Array<FunctionObj>
+}
+
+interface classObj {
+  className: string
+  classArgs: Array<classArg>
 }
 
 interface VariableObj {
@@ -47,7 +52,20 @@ type FuncArg = {
    * @minimum 1
    *
    */
-  arg: string
+  argId: string
+  argName: string
+  argType: string
+}
+
+type classArg = {
+  /**
+   *
+   * @minimum 1
+   *
+   */
+  argId: string
+  argName: string
+  argType: string
 }
 
 interface FunctionObj {
@@ -112,4 +130,5 @@ export type {
   formObjectReducerState,
   formObjectType,
   fieldPreviewProps,
+  classObj
 }
