@@ -67,8 +67,11 @@ import { getCookie, hasCookie } from 'cookies-next'
 import { useSWRConfig } from 'swr'
 import Router from 'next/router'
 import { json } from 'stream/consumers'
+import FloatingConnectionLine from '../components/ClassNodePackage/ConnectionLin'
+import FloatingEdge from '../components/ClassNodePackage/FloatingEdge'
+import { getEdgeParams } from '../components/ClassNodePackage/utils'
 
-const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
+const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ NodeData, EdgeData }) => {
   type NodeDragPosition = {
     position: {
       x: number
@@ -78,10 +81,19 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
   const { height, width } = useToGetWindowSize()
 
   const [nodes, setNodes, onNodesChange] = useNodesState(NodeData)
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [edges, setEdges, onEdgesChange] = useEdgesState(EdgeData)
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
-  const { getIntersectingNodes, getNodes } = useReactFlow()
+  const { getIntersectingNodes, getNodes, getEdges } = useReactFlow()
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>()
+
+
+  const onConnect = useCallback((connection: Connection) => {
+    setEdges((eds) => {console.log(eds) 
+    return addEdge(connection,eds)
+    });
+    console.log(connection)
+    
+  },[setEdges]);
 
   /**
    * const { EditorIsOpen, EditorOnClose } = useDisclojureStore(
@@ -99,11 +111,11 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
     useEditData((state) => state.setData(id, data))
   const allowEdit = () => useEditData((state) => state.allowEdit())
   const denyEdit = () => useEditData((state) => state.denyEdit())
-  */
+  
   const onConnect = useCallback(
     (params: Edge<any> | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
-  )
+  )*/
 
   const nodeTypes = useMemo(
     () => ({
@@ -113,6 +125,9 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
     }),
     [],
   )
+  const edgeTypes = useMemo(()=>({
+    floating: FloatingEdge,
+  }),[]);
   /**
    * const mouseEnter = useCallback<NodeMouseHandler>((e: ReactMouseEvent, node: Node) => {
     //setClassNodeData
@@ -150,7 +165,7 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
       }
 
       const newNode: Node<any> = {
-        id: String(getNodes().length),
+        id: String(getNodes().length+1),
         position: {
           x: event.clientX,
           y: event.clientY,
@@ -160,7 +175,7 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
       }
       
       const NewClassNode: Node<ClassNodeData> = {
-        id: String(getNodes().length),
+        id: String(getNodes().length+1),
         position: {
           x: event.clientX,
           y: event.clientY,
@@ -193,13 +208,13 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
   const dbRef = ref(realDB, 'users/' + currentUserUid + '/room1')
   const updateData = async () => {
     update(dbRef, {
-      Nodes: nodes,
+      Nodes: nodes
     })
   }
 
   const interval = setInterval(() => {
     updateData()
-  }, 40000)
+  }, 4000)
 
   useEffect(() => {
     ;() => clearInterval(interval)
@@ -214,9 +229,10 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[] }> = ({ NodeData }) => {
       <Navbar />
       <Box w={width} h={height} top='16px'>
         <ReactFlow
-          nodes={nodes}
-          edges={edges}
+          defaultNodes={nodes}
+          defaultEdges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onConnect={onConnect}
           onEdgesChange={onEdgesChange}
           onNodesChange={onNodesChange}
@@ -276,12 +292,14 @@ interface flowEdtJson {
   user?: {
     email: string
     Nodes: Node<any>[]
+    Edges?: Edge<any>[]
   }
 }
 
 FLowEditPage.getInitialProps = async ({ req, res }) => {
   const isServerSide = typeof window === 'undefined'
   let arr: Node<any>[] | undefined = []
+  let edgeArr: Edge<any>[] | undefined = []
 
   if (isServerSide && req && res) {
     const root = 'http://localhost:3000'
@@ -302,6 +320,7 @@ FLowEditPage.getInitialProps = async ({ req, res }) => {
       res.end()
     }
     arr = json.user!.Nodes
+    edgeArr = []
   }
 
   // フロントエンドのみで動かす
@@ -317,10 +336,11 @@ FLowEditPage.getInitialProps = async ({ req, res }) => {
     })
 
     arr = json.user!.Nodes
+    edgeArr = []
   }
 
   //const FlowData = snapshot.exists() ? snapshot.val() as Node<any>[] :
-  return { NodeData: arr }
+  return { NodeData: arr, EdgeData: edgeArr }
 }
 
 /*

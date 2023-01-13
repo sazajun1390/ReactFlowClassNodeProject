@@ -35,6 +35,10 @@ export default async function meApi(req: Req, res: Res) {
   //const snapshot = await get(child(dbRef,'users/'+currentUserUid+'/room1/Nodes'))
   console.log(snapshot.exists())
   const nodes = snapshot.exists() ? (snapshot.val().Nodes as FlowNodes[]) : userMapTestNode
+  const edges = snapshot.exists() ? (snapshot.val().Edges as Edge[]) : ()=>{
+    dbRef.set({Edges : testEdge})
+    return testEdge
+  }
 
-  res.json(user ? { user: { email: user.email, Nodes: nodes } } : {})
+  res.json(user ? { user: { email: user.email, Nodes: nodes, Edges: edges} } : {})
 }

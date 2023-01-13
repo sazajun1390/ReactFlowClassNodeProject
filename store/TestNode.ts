@@ -1,5 +1,5 @@
 import React from 'react'
-import { Edge, NodeProps, Node } from 'reactflow'
+import { Edge, NodeProps, Node, EdgeProps } from 'reactflow'
 import ClassNodeComp from '../components/ClassNodePackage/ClassNodeComp'
 import type {
   FunctionObj,
@@ -54,7 +54,11 @@ const testClass: ClassNode = {
   data: {
     class: {
       className: 'calcNum',
-      classArgs: [],
+      classArgs: [{
+        argId: 0,
+        argName: "beat",
+        argType: "test"
+      }],
     },
     variables: [Variable1, Variable2, Variable3],
     functions: [FunctionData1, FunctionData2, FunctionData3],
@@ -77,7 +81,11 @@ const testClass2: ClassNode = {
   data: {
     class: {
       className: 'calcNum',
-      classArgs: [],
+      classArgs: [{
+        argId: 0,
+        argName: "beat",
+        argType: "test"
+      }],
     },
     variables: [Variable1, Variable1, Variable1],
     functions: [FunctionData3, FunctionData3, FunctionData3],
@@ -146,5 +154,5 @@ export {
   testEdge,
   StroyUserMapTag,
   userMapTestNode,
-  defaultClassData
+  defaultClassData,
 }

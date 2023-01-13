@@ -64,7 +64,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   //const EditorOnOpen = useDisclojureStore.getState().onOpen
   const { getNodes, setNodes, setEdges } = useReactFlow()
 
-  const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData(
+  /*const { editId, editClassName, editFuncs, editVars, diseditable } = useEditData(
     (state) => ({
       editId: state.id,
       editClassName: state.className,
@@ -73,7 +73,7 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
       diseditable: state.dnotEdit,
     }),
     shallow,
-  )
+  )*/
 
   const handleColorChange = (value: string) => {
     console.log(value)
@@ -100,15 +100,28 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     control,
     getFieldState,
     register,
-    formState: { errors, isSubmitted, defaultValues },
+    formState: { errors, isSubmitted, defaultValues, isValid, isSubmitting, isValidating },
   } = methods
 
   useCallback(() => {
     setOpen(isOpen ? false : true)
     isOpen ? allowEdit : denyEdit
   }, [isOpen])
+  
+  useEffect(()=>{
+    setInterval(()=>{
+      setNodes((nodes) => {
+        return nodes.map((node) => {
+          if (node.id === watch('id')){
+            node.data=watch('data')
+          }
+          return node
+        })
+      })
+    },3000)
+  },[watch('data')])
 
-  const onSubmit: SubmitHandler<ClassNode> = (data) => {
+  const onSubmit: SubmitHandler<ClassNode> = async (data) => {
     //const nodes = getNodes()
     setNodes((nodes) => {
       return nodes.map((node) => {
@@ -133,6 +146,8 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     background: '#818181',
     borderRadius: '1px',
   }
+  
+
   const sourceHandle = {
     top: '10px',
   }
@@ -153,12 +168,20 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
             borderColor: 'red.400',
           },
     )
+
+    
   }, [errors.data?.class?.className])
+
+  useEffect(()=>{
+    console.log(errors)
+    console.log(isSubmitting)
+  },[isValidating])
+  const onInvalid = () => console.error(errors)
 
   return (
     <Box>
       <Stack p={3} bg='white' rounded='md' shadow='md' border='1px' borderColor='gray.500'>
-        <form onSubmit={handleSubmit(onSubmit)} id='classNodeForm'>
+        <form onSubmit={handleSubmit(onSubmit ,onInvalid)} id='classNodeForm'>
           <FormProvider {...methods}>
             <Accordion allowToggle>
               <AccordionItem>
@@ -190,11 +213,11 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
           </FormProvider>
         </form>
         <Box>
-          <Button leftIcon={<EditIcon />} type='submit' form='classNodeForm'></Button>
+          <Button leftIcon={<EditIcon />} type='submit' form='classNodeForm' isLoading={isSubmitting}></Button>
         </Box>
-        <Handle type='target' position={Position.Left} style={handleStyle} />
+        <Handle id={'a'+props.id} type='target' position={Position.Left} style={handleStyle} />
 
-        <Handle type='source' position={Position.Right} style={handleStyle} />
+        <Handle id={'b'+props.id}type='source' position={Position.Right} style={handleStyle} />
       </Stack>
     </Box>
   )

@@ -28,10 +28,11 @@ const apiadmin = {
   client_x509_cert_url:
     'https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-i2p96%40reactumleditor.iam.gserviceaccount.com',
 }
+//JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_SERVICE_ACCOUNT_KEY as string)
 export const firebaseAdmin =
   admin.apps[0] ||
   admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_SERVICE_ACCOUNT_KEY as string)),
+    credential: admin.credential.cert(apiadmin),
     databaseURL: "https://reactumleditor-default-rtdb.asia-southeast1.firebasedatabase.app"
   })
 

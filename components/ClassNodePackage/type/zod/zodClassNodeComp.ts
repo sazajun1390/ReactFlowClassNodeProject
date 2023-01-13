@@ -23,7 +23,7 @@ type classArg = {
    * @minimum 1
    *
    */
-  argId: string
+  argId: number
   argName: string
   argType: string
 }
@@ -63,7 +63,7 @@ type FuncArg = {
    * @minimum 1
    *
    */
-  argId: string
+  argId: number
   argName: string
   argType: string
 }

@@ -139,8 +139,10 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
     setFuncTypeFieldError(typeof funcErrorState?.funcType === 'undefined' ? null : errorCss)
   }, [funcErrorState?.funcType])
   useEffect(() => {
-    setDisplay(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'block' : 'none')
-    setVisibility(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'visible' : 'hidden')
+    setTimeout(()=>{
+      setDisplay(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'block' : 'none')
+      setVisibility(focusFuncFieldNum == `data.functions.${index}.FunId` ? 'visible' : 'hidden')
+    },500)
   }, [focusFuncFieldNum])
 
   const focusFunc = useCallback(() => setFocusFuncFieldNum(`data.functions.${index}.FunId`), [])
@@ -148,9 +150,18 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
 
   return (
     <AccordionItem>
-      <AccordionButton>
-        <HStack spacing={6} justify='center' key={item.id}>
-          <Box>-</Box>
+      
+        <HStack spacing={4} justify='center' key={item.id}>
+          <IconButton
+            aria-label='deleteFunction'
+            visibility={visibility}
+            display={display}
+            key={index}
+            icon={<CloseIcon />}
+            onClick={() => remove(index)}
+          />
+          <Box mx='2'>-</Box>
+          <Box mx='2'>
           <FormControl isRequired isInvalid={!!funcErrorState?.functionName}>
             <Editable defaultValue={item.functionName} onFocus={focusFunc} onBlur={blurFunc}>
               <EditablePreview {...funcNameFieldError} w='100%' />
@@ -161,8 +172,12 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
               <FormErrorMessage>{funcErrorState?.functionName?.message}</FormErrorMessage>
             </Editable>
           </FormControl>
-          <Box>{'('}</Box>
-
+          </Box>
+          <Box ml='1'>{'('}</Box>
+          <AccordionButton w='10' p='0'>
+            <Box>...</Box>
+            <AccordionIcon />
+          </AccordionButton>
           <Box>{')'}</Box>
           <Box>{': '}</Box>
           <FormControl isRequired isInvalid={!!funcErrorState?.funcType}>
@@ -172,18 +187,9 @@ const funcFormField: FC<fieldProps<'data.functions'>> = (props) => {
               <FormErrorMessage>{funcErrorState?.funcType?.message}</FormErrorMessage>
             </Editable>
           </FormControl>
-          <IconButton
-            aria-label='deleteFunction'
-            visibility={visibility}
-            display={display}
-            key={index}
-            icon={<CloseIcon />}
-            onClick={() => remove(index)}
-          />
+          
         </HStack>
-        <Box>args</Box>
-        <AccordionIcon />
-      </AccordionButton>
+      
       <AccordionPanel>
         <FuncArgFormFields funcIndex={index} />
       </AccordionPanel>
@@ -267,7 +273,7 @@ const funcArgFormFields: FC<{ funcIndex: number }> = (props) => {
   const appendFuncArg = useCallback(() => {
     const id = fields.length + 1
     const name = 'Num' + id.toString()
-    append({ argId: id.toString(), argName: name, argType: 'Integer' })
+    append({ argId: id, argName: name, argType: 'Integer' })
   }, [fields])
   return (
     <>
@@ -308,16 +314,18 @@ const Arg: FC<argsProps> = (props) => {
     setArgTypeFieldError(typeof argErrorState?.argType === 'undefined' ? null : errorCss)
   }, [argErrorState?.argType])
   useEffect(() => {
-    setDisplay(
-      focusArgFieldNum == `data.functions.${funcIndex}.funcArg.${argIndex}.argId`
-        ? 'block'
-        : 'none',
-    )
-    setVisibility(focusArgFieldNum == `data.functions.${argIndex}.argId` ? 'visible' : 'hidden')
+    setTimeout(()=>{
+      setDisplay(
+        focusArgFieldNum == `data.functions.${funcIndex}.funcArg.${argIndex}.argId`
+          ? 'block'
+          : 'none',
+      )
+      setVisibility(focusArgFieldNum == `data.functions.${argIndex}.argId` ? 'visible' : 'hidden')
+    },1000)
   }, [focusArgFieldNum])
 
   return (
-    <HStack spacing={6} justify='center' key={item.id}>
+    <HStack spacing={6} justify='center' key={argIndex}>
       <Box>-</Box>
       <FormControl isRequired isInvalid={!!argErrorState?.argName}>
         <Editable defaultValue={item.argName} onFocus={focusFunc} onBlur={blurFunc}>
@@ -329,9 +337,6 @@ const Arg: FC<argsProps> = (props) => {
           <FormErrorMessage>{argErrorState?.argName?.message}</FormErrorMessage>
         </Editable>
       </FormControl>
-      <Box>{'('}</Box>
-
-      <Box>{')'}</Box>
       <Box>{': '}</Box>
       <FormControl isRequired isInvalid={!!argErrorState?.argType}>
         <Editable defaultValue={item.argType} onFocus={focusFunc} onBlur={blurFunc}>
@@ -364,7 +369,7 @@ const ClassArgFields: FC = memo((props) =>{
   const appendClassArg = useCallback(() => {
     const id = fields.length + 1
     const name = 'Num' + id.toString()
-    append({ argId: id.toString(), argName: name, argType: 'Integer' })
+    append({ argId: id, argName: name, argType: 'Integer' })
   }, [fields])
 
   return (
@@ -408,16 +413,18 @@ const ClassArgField: FC<classArgsProps> = memo((props)=>{
     setClassArgTypeFieldError(typeof classArgErrorState?.argType === 'undefined' ? null : errorCss)
   }, [classArgErrorState?.argType])
   useEffect(() => {
-    setDisplay(
-      focusClassArgFieldNum == `data.class.classArg.${argIndex}.argId`
-        ? 'block'
-        : 'none',
-    )
-    setVisibility(focusClassArgFieldNum == `data.class.classArg.${argIndex}.argId` ? 'visible' : 'hidden')
+    setTimeout(()=>{
+      setDisplay(
+        focusClassArgFieldNum == `data.class.classArg.${argIndex}.argId`
+          ? 'block'
+          : 'none',
+      )
+      setVisibility(focusClassArgFieldNum == `data.class.classArg.${argIndex}.argId` ? 'visible' : 'hidden')
+    },3000)
   }, [focusClassArgFieldNum])
 
   return(
-    <HStack spacing={6} justify='center' key={item.id}>
+    <HStack spacing={6} justify='center' key={argIndex}>
       <Box>-</Box>
       <FormControl isRequired isInvalid={!!classArgErrorState?.argName}>
         <Editable defaultValue={item.argName} onFocus={focusFunc} onBlur={blurFunc}>
@@ -429,9 +436,6 @@ const ClassArgField: FC<classArgsProps> = memo((props)=>{
           <FormErrorMessage>{classArgErrorState?.argName?.message}</FormErrorMessage>
         </Editable>
       </FormControl>
-      <Box>{'('}</Box>
-
-      <Box>{')'}</Box>
       <Box>{': '}</Box>
       <FormControl isRequired isInvalid={!!classArgErrorState?.argType}>
         <Editable defaultValue={item.argType} onFocus={focusFunc} onBlur={blurFunc}>

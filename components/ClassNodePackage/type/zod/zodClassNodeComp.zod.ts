@@ -2,7 +2,7 @@
 import { z } from 'zod'
 
 const funcArgSchema = z.object({
-  argId: z.number({ required_error: 'argId is required' }).min(1),
+  argId: z.number({ required_error: 'argId is required' }),
   argName: z
     .string({ required_error: 'className is required' })
     .min(1, { message: 'Must be 1 or more characters long' }),
@@ -12,7 +12,7 @@ const funcArgSchema = z.object({
 })
 
 const classArgSchema = z.object({
-  argId: z.number({ required_error: 'argId is required' }).min(1),
+  argId: z.number({ required_error: 'argId is required' }),
   argName: z
     .string({ required_error: 'className is required' })
     .min(1, { message: 'Must be 1 or more characters long' }),
@@ -48,7 +48,7 @@ const classObjSchema = z.object({
   className: z
     .string({ required_error: 'className is required' })
     .min(1, { message: 'Must be 1 or more characters long' })
-    .max(8),
+    .max(8, { message: 'Must be 1 or more characters long' }),
   classArgSchema: z.array(classArgSchema),
 })
 
