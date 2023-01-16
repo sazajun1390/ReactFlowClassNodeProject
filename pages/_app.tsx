@@ -4,7 +4,7 @@ import { extendTheme, createMultiStyleConfigHelpers, type ThemeConfig } from '@c
 import { ReactFlowProvider, useReactFlow } from 'reactflow'
 import { AnimatePresence } from 'framer-motion'
 import { cardAnatomy } from '@chakra-ui/anatomy'
-import 'reactflow/dist/style.css'
+import 'reactflow/dist/base.css';
 import '@reactflow/node-resizer/dist/style.css'
 import 'firebaseui/dist/firebaseui.css'
 

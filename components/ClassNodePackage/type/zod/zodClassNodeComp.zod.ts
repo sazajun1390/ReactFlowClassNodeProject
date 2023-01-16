@@ -2,27 +2,27 @@
 import { z } from 'zod'
 
 const funcArgSchema = z.object({
-  argId: z.number({ required_error: 'argId is required' }),
+  argId: z.number({ invalid_type_error: "Please select a payment tier." }).min(1, { message: 'Must be 1 or more characters long' }),
   argName: z
-    .string({ required_error: 'className is required' })
+    .string({ required_error: 'className is required',invalid_type_error: "Please select a payment tier." })
     .min(1, { message: 'Must be 1 or more characters long' }),
   argType: z
-    .string({ required_error: 'className is required' })
+    .string({ required_error: 'className is required',invalid_type_error: "Please select a payment tier." })
     .min(1, { message: 'Must be 1 or more characters long' }),
 })
 
 const classArgSchema = z.object({
-  argId: z.number({ required_error: 'argId is required' }),
+  argId: z.number().min(1, { message: 'Must be 1 or more characters long' }),
   argName: z
-    .string({ required_error: 'className is required' })
+    .string()
     .min(1, { message: 'Must be 1 or more characters long' }),
   argType: z
-    .string({ required_error: 'className is required' })
+    .string()
     .min(1, { message: 'Must be 1 or more characters long' }),
 })
 
 const variableObjSchema = z.object({
-  VarId: z.number({ required_error: 'className is required' }).min(1),
+  VarId: z.number().min(1, { message: 'Must be 1 or more characters long' }),
   variableName: z
     .string({ required_error: 'className is required' })
     .min(1, { message: 'Must be 1 or more characters long' }),
@@ -32,13 +32,13 @@ const variableObjSchema = z.object({
 })
 
 const functionObjSchema = z.object({
-  FuncId: z.number({ required_error: 'className is required' }).min(1),
+  FuncId: z.number().min(1, { message: 'Must be 1 or more characters long' }),
   functionName: z
-    .string({ required_error: 'className is required' })
+    .string()
     .min(1, { message: 'Must be 1 or more characters long' }),
   funcArgs: z.array(funcArgSchema),
   funcType: z
-    .string({ required_error: 'className is required' })
+    .string()
     .min(1, { message: 'Must be 1 or more characters long' }),
 })
 

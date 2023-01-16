@@ -38,6 +38,7 @@ import {
   DrawerContent,
   DrawerCloseButton,
   Text as ChakraText,
+  Button,
 } from '@chakra-ui/react'
 import type { Edge, Connection } from 'reactflow'
 
@@ -70,6 +71,7 @@ import { json } from 'stream/consumers'
 import FloatingConnectionLine from '../components/ClassNodePackage/ConnectionLin'
 import FloatingEdge from '../components/ClassNodePackage/FloatingEdge'
 import { getEdgeParams } from '../components/ClassNodePackage/utils'
+import { EditIcon } from '@chakra-ui/icons'
 
 const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ NodeData, EdgeData }) => {
   type NodeDragPosition = {
@@ -79,12 +81,12 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ No
     }
   }
   const { height, width } = useToGetWindowSize()
-
+  const { addNodes } = useReactFlow()
   const [nodes, setNodes, onNodesChange] = useNodesState(NodeData)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(EdgeData)
+  const [edges, setEdges, onEdgesChange] = useEdgesState([])
   //const { EditorIsOpen, EditorOnOpen, EditorOnClose } = useEditorDisclojure();
-  const { getIntersectingNodes, getNodes, getEdges } = useReactFlow()
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>()
+  const { getIntersectingNodes } = useReactFlow()
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
 
 
   const onConnect = useCallback((connection: Connection) => {
@@ -144,68 +146,64 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ No
 
   const onInit = (rfi: ReactFlowInstance) => setReactFlowInstance(rfi)
 
-  const onNodeDragStart = (e: DragEvent, nodeType: string) => {
+  const onNodeDragStart = useCallback((e: DragEvent, nodeType: string) => {
     e.dataTransfer.setData('application/reactflow', nodeType)
     e.dataTransfer.effectAllowed = 'move'
-  }
+  },[])
 
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault()
     event.dataTransfer.dropEffect = 'move'
   }, [])
 
+  const currentUserUid = auth.currentUser?.uid
+  const dbRef = ref(realDB, 'users/' + currentUserUid + '/room1')
+
+  const setNodeToDB = ()=>{
+    const nodeRef = ref(realDB, 'users/' + currentUserUid + '/room1/Nodes' )
+    
+    
+  }
   const onNodeDrop = useCallback(
     (event: DragEvent) => {
       event.preventDefault()
 
       const type = event.dataTransfer.getData('application/reactflow')
-
+      console.log(type)
       if (typeof type === 'undefined' || !type) {
         return
       }
 
       const newNode: Node<any> = {
-        id: String(getNodes().length+1),
+        id: String(nodes.length+1),
         position: {
           x: event.clientX,
           y: event.clientY,
         },
         type,
-        data: { label: 'data' },
+        data: type==='custom'? defaultClassData :  { label: 'data' },
       }
-      
-      const NewClassNode: Node<ClassNodeData> = {
-        id: String(getNodes().length+1),
-        position: {
-          x: event.clientX,
-          y: event.clientY,
-        },
-        type: 'custom',
-        data: defaultClassData
-      }
+
+
 
       setNodes((nds) => {
         console.log(nds)
-        if(type === 'custom'){
-          nds.push(NewClassNode)
-        }else{
-          type == 'UserMapGroup' ? nds.unshift(newNode) : nds.push(newNode)
+        const concatNodes = [newNode]
+        switch (type){
+          case 'UserMapGroup': return concatNodes.concat(nds)
+          default: return nds.concat(newNode)
         }
-        return nds
       })
     },
-    [reactFlowInstance],
+    [reactFlowInstance,event],
   )
 
   const onNodeDrag = useCallback((M: MouseEvent, node: Node) => {
     const intersections = getIntersectingNodes(node).map((n) => n.id)
-    const getData = getNodes()
 
     intersections.map((id) => {})
   }, [])
 
-  const currentUserUid = auth.currentUser?.uid
-  const dbRef = ref(realDB, 'users/' + currentUserUid + '/room1')
   const updateData = async () => {
     update(dbRef, {
       Nodes: nodes
@@ -214,11 +212,22 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ No
 
   const interval = setInterval(() => {
     updateData()
-  }, 4000)
+  }, 15000)
+
+
+  
+  useEffect(() => {
+    updateData()
+  }, [])
+
 
   useEffect(() => {
-    ;() => clearInterval(interval)
-  }, [])
+    console.log(nodes)
+  },[nodes])
+  useEffect(()=>{
+    setEdges(edges)
+  },[edges])
+
 
   return (
     <div>
@@ -229,8 +238,8 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ No
       <Navbar />
       <Box w={width} h={height} top='16px'>
         <ReactFlow
-          defaultNodes={nodes}
-          defaultEdges={edges}
+          nodes={nodes}
+          edges={edges}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           onConnect={onConnect}
@@ -278,6 +287,9 @@ const FLowEditPage: NextPage<{ NodeData: FlowNode[], EdgeData: Edge[] }> = ({ No
                 draggable
               >
                 <ChakraText>Class</ChakraText>
+              </Box>
+              <Box>
+                <Button leftIcon={<EditIcon />} type='submit' form='classNodeForm' onClick={()=>{updateData()}}></Button>
               </Box>
             </Box>
           </Panel>

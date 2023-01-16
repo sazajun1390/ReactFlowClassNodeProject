@@ -84,10 +84,9 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     denyEdit: state.denyEdit,
   }))
   const [isOpen, setOpen] = useState(false)
-  const [nodeClass, setNodeClass] = useState(data)
   const methods = useForm<ClassNode>({
     defaultValues: {
-      ...nodeClass,
+      ...data,
     },
     resolver: zodResolver(classNodeSchema),
     mode: 'all',
@@ -108,17 +107,25 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     isOpen ? allowEdit : denyEdit
   }, [isOpen])
   
-  useEffect(()=>{
-    setInterval(()=>{
-      setNodes((nodes) => {
-        return nodes.map((node) => {
-          if (node.id === watch('id')){
-            node.data=watch('data')
-          }
-          return node
-        })
+  const clickSubmit = useCallback(()=>{
+    setNodes((nodes) => {
+      return nodes.map((node) => {
+        if (node.id === watch('id')){
+          node.data=watch('data')
+        }
+        return node
       })
-    },3000)
+    })
+  },[watch('data')])
+  useEffect(()=>{
+    setNodes((nodes) => {
+      return nodes.map((node) => {
+        if (node.id === watch('id')){
+          node.data=watch('data')
+        }
+        return node
+      })
+    })
   },[watch('data')])
 
   const onSubmit: SubmitHandler<ClassNode> = async (data) => {
@@ -139,7 +146,6 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
     )
     */
   }
-
   const handleStyle = {
     width: '15px',
     height: '10px',
@@ -173,7 +179,6 @@ const ClassNodeComp: FC<NodeProps<ClassNodeData>> = (props) => {
   }, [errors.data?.class?.className])
 
   useEffect(()=>{
-    console.log(errors)
     console.log(isSubmitting)
   },[isValidating])
   const onInvalid = () => console.error(errors)

@@ -8,6 +8,9 @@ import { DataSnapshot, getDatabase } from 'firebase-admin/database'
   projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
   clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
   privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+
+  
+  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string)),
 }*/
 
 /**
@@ -33,6 +36,7 @@ export const firebaseAdmin =
   admin.apps[0] ||
   admin.initializeApp({
     credential: admin.credential.cert(apiadmin),
+    
     databaseURL: "https://reactumleditor-default-rtdb.asia-southeast1.firebasedatabase.app"
   })
 
